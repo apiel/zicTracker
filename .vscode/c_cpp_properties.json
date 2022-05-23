@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "name": "Linux",
+      "forcedInclude": [],
+      "defines": ["USBCON"],
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/clang",
+      "cStandard": "c11",
+      "cppStandard": "c++14",
+      "includePath": ["../zic/**"]
+    }
+  ],
+  "version": 4
+}

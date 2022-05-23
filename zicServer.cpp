@@ -4,8 +4,8 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "../zic/wavetables/wavetable_Bank.h"
-#include "../zic/zic_wave_wavetable.h"
+#include "wavetables/wavetable_Bank.h"
+#include "zic_wave_wavetable.h"
 #include "RtAudio.h"
 
 #define FORMAT RTAUDIO_SINT16
@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
             &options)
             == 0
         && dac.isStreamOpen() == true && dac.startStream() == 0) {
-            
+
         std::cout << "\nPlaying ... quit with Ctrl-C (buffer size = "
                   << bufferFrames << ").\n";
 
