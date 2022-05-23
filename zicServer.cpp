@@ -9,7 +9,11 @@
 #include "../zic/wavetables/wavetable_Bank.h"
 
 #define FORMAT RTAUDIO_SINT16
-#define CHANNELS 2
+#define CHANNELS 1
+
+#ifndef SAMPLE_RATE
+#define SAMPLE_RATE 44100
+#endif
 
 void errorCallback(RtAudioErrorType /*type*/, const std::string &errorText)
 {
@@ -63,7 +67,7 @@ int saw(void *outputBuffer, void * /*inputBuffer*/, unsigned int nBufferFrames,
 
 int main(int argc, char *argv[])
 {
-    unsigned int bufferFrames, fs, device = 0, offset = 0;
+    unsigned int bufferFrames, device = 0, offset = 0;
 
     // Specify our own error callback function.
     RtAudio dac(RtAudio::UNSPECIFIED, &errorCallback);
@@ -73,8 +77,6 @@ int main(int argc, char *argv[])
         std::cout << "\nNo audio devices found!\n";
         exit(1);
     }
-
-    fs = (unsigned int)44100;
 
     double *data = (double *)calloc(CHANNELS, sizeof(double));
 
@@ -99,7 +101,7 @@ int main(int argc, char *argv[])
     // An error in the openStream() function can be detected either by
     // checking for a non-zero return value OR by a subsequent call to
     // isStreamOpen().
-    if (dac.openStream(&oParams, NULL, FORMAT, fs, &bufferFrames, &saw, (void *)data, &options))
+    if (dac.openStream(&oParams, NULL, FORMAT, SAMPLE_RATE, &bufferFrames, &saw, (void *)data, &options))
     {
         goto cleanup;
     }
