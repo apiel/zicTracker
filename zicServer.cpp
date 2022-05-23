@@ -6,7 +6,8 @@
 
 #include "RtAudio.h"
 
-// #include "../zic/zic_wave_wavetable.h"
+#include "../zic/zic_wave_wavetable.h"
+#include "../zic/wavetables/wavetable_Bank.h"
 
 typedef signed short MY_TYPE;
 #define FORMAT RTAUDIO_SINT16
@@ -43,6 +44,8 @@ const unsigned int callbackReturnValue = 1; // 1 = stop and drain, 2 = abort
 double streamTimePrintIncrement = 1.0;      // seconds
 double streamTimePrintTime = 1.0;           // seconds
 
+Zic_Wave_Wavetable wave(&wavetable_Bank);
+
 // Interleaved buffers
 int saw(void *outputBuffer, void * /*inputBuffer*/, unsigned int nBufferFrames,
         double streamTime, RtAudioStreamStatus status, void *data)
@@ -63,13 +66,14 @@ int saw(void *outputBuffer, void * /*inputBuffer*/, unsigned int nBufferFrames,
 
   for (i = 0; i < nBufferFrames; i++)
   {
-    for (j = 0; j < channels; j++)
-    {
-      *buffer++ = (MY_TYPE)(lastValues[j] * SCALE * 0.5);
-      lastValues[j] += BASE_RATE * (j + 1 + (j * 0.1));
-      if (lastValues[j] >= 1.0)
-        lastValues[j] -= 2.0;
-    }
+    // for (j = 0; j < channels; j++)
+    // {
+    //   *buffer++ = (MY_TYPE)(lastValues[j] * SCALE * 0.5);
+    //   lastValues[j] += BASE_RATE * (j + 1 + (j * 0.1));
+    //   if (lastValues[j] >= 1.0)
+    //     lastValues[j] -= 2.0;
+    // }
+    *buffer++ = wave.next();
   }
 
   frameCounter += nBufferFrames;
