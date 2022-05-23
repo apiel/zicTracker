@@ -22,12 +22,6 @@ void errorCallback(RtAudioErrorType /*type*/, const std::string &errorText)
 }
 
 RtAudio::StreamOptions options;
-unsigned int frameCounter = 0;
-bool checkCount = false;
-unsigned int nFrames = 0;
-const unsigned int callbackReturnValue = 1; // 1 = stop and drain, 2 = abort
-double streamTimePrintIncrement = 1.0;      // seconds
-double streamTimePrintTime = 1.0;           // seconds
 
 Zic_Wave_Wavetable wave(&wavetable_Bank);
 
@@ -43,24 +37,12 @@ int saw(void *outputBuffer, void * /*inputBuffer*/, unsigned int nBufferFrames,
         std::cout << "Stream underflow detected!" << std::endl;
     }
 
-    if (streamTime >= streamTimePrintTime)
-    {
-        std::cout << "streamTime = " << streamTime << std::endl;
-        streamTimePrintTime += streamTimePrintIncrement;
-    }
-
     for (i = 0; i < nBufferFrames; i++)
     {
         *buffer++ = wave.next();
 #if CHANNELS == 2
         *buffer++ = *(buffer - 1);
 #endif
-    }
-
-    frameCounter += nBufferFrames;
-    if (checkCount && (frameCounter >= nFrames))
-    {
-        return callbackReturnValue;
     }
     return 0;
 }
@@ -114,15 +96,15 @@ int main(int argc, char *argv[])
         goto cleanup;
     }
 
-    if (checkCount)
-    {
-        while (dac.isStreamRunning() == true)
-        {
-            usleep(100000);
-        }
-    }
-    else
-    {
+    // if (checkCount)
+    // {
+    //     while (dac.isStreamRunning() == true)
+    //     {
+    //         usleep(100000);
+    //     }
+    // }
+    // else
+    // {
         std::cout << "\nPlaying ... quit with Ctrl-C (buffer size = " << bufferFrames << ").\n";
 
         while (dac.isStreamRunning())
@@ -135,7 +117,7 @@ int main(int argc, char *argv[])
         {
             dac.stopStream(); // or could call dac.abortStream();
         }
-    }
+    // }
 
 cleanup:
     if (dac.isStreamOpen())
