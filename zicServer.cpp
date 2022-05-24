@@ -4,8 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "wavetables/wavetable_Bank.h"
-#include "zic_wave_wavetable.h"
+#include "app/app_tracks.h"
 #include "RtAudio.h"
 
 #define FORMAT RTAUDIO_SINT16
@@ -24,7 +23,7 @@ void errorCallback(RtAudioErrorType /*type*/, const std::string& errorText)
 
 RtAudio::StreamOptions options;
 
-Zic_Wave_Wavetable wave(&wavetable_Bank);
+App_Tracks tracks;
 
 // Interleaved buffers
 int saw(void* outputBuffer,
@@ -42,12 +41,18 @@ int saw(void* outputBuffer,
     }
 
     for (i = 0; i < nBufferFrames; i++) {
-        *buffer++ = wave.next();
+        *buffer++ = tracks.sample();
+        // std::cout << *buffer << std::endl;
 #if CHANNELS == 2
         *buffer++ = *(buffer - 1);
 #endif
     }
     return 0;
+}
+
+void start() {
+    tracks.looper->setLoopMode(true);
+    tracks.looper->on(60);
 }
 
 int main(int argc, char* argv[])
@@ -64,6 +69,8 @@ int main(int argc, char* argv[])
 
     options.flags = RTAUDIO_HOG_DEVICE;
     options.flags |= RTAUDIO_SCHEDULE_REALTIME;
+
+    start();
 
     unsigned int bufferFrames = 512;
     // An error in the openStream() function can be detected either by
@@ -85,6 +92,8 @@ int main(int argc, char* argv[])
 
         while (dac.isStreamRunning()) {
             sleep(1);
+            // Create tempo base on sample_rate
+            // tracks.next();
         }
 
         // Block released ... stop the stream
