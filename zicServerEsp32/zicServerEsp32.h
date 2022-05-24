@@ -9,8 +9,6 @@
 #include <wavetables/wavetable_Bank.h>
 
 AudioKit kit;
-const int BUFFER_SIZE = 512;
-int16_t buffer[BUFFER_SIZE];
 
 Zic_Wave_Wavetable wave(&wavetable_Bank);
 
@@ -30,15 +28,11 @@ void zicServerEsp32Loop()
         int16_t ch[2];
     } sampleDataU;
 
-    for (int i = 0; i < BUFFER_SIZE; ++i) {
-        // sampleDataU.ch[0] = int16_t(*fr_sample * 16383.0f); /* some bits missing here */
-        // sampleDataU.ch[1] = int16_t(*fl_sample * 16383.0f);
-
+    for (int i = 0; i < 512; ++i) {
         sampleDataU.ch[0] = wave.next() * 3;
         sampleDataU.ch[1] = sampleDataU.ch[0];
         kit.write((const char*)&sampleDataU.sample, 4);
     }
-    // kit.write(buffer, BUFFER_SIZE);
 }
 
 #endif
