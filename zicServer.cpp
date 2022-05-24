@@ -84,7 +84,7 @@ int main(int argc, char* argv[])
                   << bufferFrames << ").\n";
 
         while (dac.isStreamRunning()) {
-            usleep(100000);
+            sleep(1);
         }
 
         // Block released ... stop the stream

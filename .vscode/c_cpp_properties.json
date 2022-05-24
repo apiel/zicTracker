@@ -8,7 +8,7 @@
       "compilerPath": "/usr/bin/clang",
       "cStandard": "c11",
       "cppStandard": "c++14",
-      "includePath": ["../zic/**"]
+      "includePath": ["../zic/**", "/home/alex/Arduino/libraries/**"]
     }
   ],
   "version": 4
