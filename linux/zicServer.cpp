@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "RtAudio.h"
-#include "app/app.h"
+#include "../app/app.h"
 #include <zic_seq_tempo.h>
 
 #define FORMAT RTAUDIO_SINT16

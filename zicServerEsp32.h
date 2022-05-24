@@ -5,10 +5,12 @@
 
 #include <AudioKitHAL.h>
 
-#include <zic_wave_wavetable.h>
-#include <wavetables/wavetable_Bank.h>
+// #include <zic_wave_wavetable.h>
+// #include <wavetables/wavetable_Bank.h>
+#include "app/app.h"
 
 AudioKit kit;
+App app;
 
 Zic_Wave_Wavetable wave(&wavetable_Bank);
 
@@ -19,6 +21,7 @@ void zicServerEsp32Init()
     // open in write mode
     AudioKitConfig cfg = kit.defaultConfig(AudioOutput);
     kit.begin(cfg);
+    app.start();
 }
 
 void zicServerEsp32Loop()
@@ -29,7 +32,7 @@ void zicServerEsp32Loop()
     } sampleDataU;
 
     for (int i = 0; i < 512; ++i) {
-        sampleDataU.ch[0] = wave.next() * 3;
+        sampleDataU.ch[0] = app.sample() * 3;
         sampleDataU.ch[1] = sampleDataU.ch[0];
         kit.write((const char*)&sampleDataU.sample, 4);
     }

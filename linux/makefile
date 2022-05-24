@@ -1,5 +1,5 @@
 # zic lib folder
-ZIC_LIB=../zic
+ZIC_LIB=../../zic
 
 all: build run
 
