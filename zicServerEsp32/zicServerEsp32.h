@@ -5,8 +5,8 @@
 
 #include <AudioKitHAL.h>
 
-#include <wavetables/wavetable_Bank.h>
 #include <zic_wave_wavetable.h>
+#include <wavetables/wavetable_Bank.h>
 
 AudioKit kit;
 const int BUFFER_SIZE = 512;
@@ -25,18 +25,20 @@ void zicServerEsp32Init()
 
 void zicServerEsp32Loop()
 {
-    // static union sampleTUNT {
-    //     uint32_t sample;
-    //     int16_t ch[2];
-    // } sampleDataU;
+    static union sampleTUNT {
+        uint32_t sample;
+        int16_t ch[2];
+    } sampleDataU;
 
     for (int i = 0; i < BUFFER_SIZE; ++i) {
         // sampleDataU.ch[0] = int16_t(*fr_sample * 16383.0f); /* some bits missing here */
         // sampleDataU.ch[1] = int16_t(*fl_sample * 16383.0f);
-        
-        buffer[i] = wave.next() * 100;
+
+        sampleDataU.ch[0] = wave.next() * 5;
+        sampleDataU.ch[1] = sampleDataU.ch[0];
+        kit.write((const char*)&sampleDataU.sample, 4);
     }
-    kit.write(buffer, BUFFER_SIZE);
+    // kit.write(buffer, BUFFER_SIZE);
 }
 
 #endif
