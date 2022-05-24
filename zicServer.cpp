@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "RtAudio.h"
-#include "app/app_tracks.h"
+#include "app/app.h"
 #include <zic_seq_tempo.h>
 
 #define FORMAT RTAUDIO_SINT16
@@ -14,6 +14,8 @@
 #ifndef SAMPLE_RATE
 #define SAMPLE_RATE 44100
 #endif
+
+App app;
 
 void errorCallback(RtAudioErrorType /*type*/, const std::string& errorText)
 {
@@ -24,9 +26,6 @@ void errorCallback(RtAudioErrorType /*type*/, const std::string& errorText)
 
 RtAudio::StreamOptions options;
 
-// TODO put all this in app!!
-Zic_Seq_Tempo<> tempo;
-App_Tracks tracks;
 
 // Interleaved buffers
 int saw(void* outputBuffer,
@@ -45,22 +44,14 @@ int saw(void* outputBuffer,
 
     for (i = 0; i < nBufferFrames; i++) {
         // TODO move this in app
-        if (tempo.next()) {
-            tracks.next();
-        }
-        *buffer++ = tracks.sample();
+       
+        *buffer++ = app.sample();
         // std::cout << *buffer << std::endl;
 #if CHANNELS == 2
         *buffer++ = *(buffer - 1);
 #endif
     }
     return 0;
-}
-
-void start()
-{
-    tracks.looper->setLoopMode(true);
-    tracks.looper->on(60);
 }
 
 int main(int argc, char* argv[])
@@ -78,7 +69,7 @@ int main(int argc, char* argv[])
     options.flags = RTAUDIO_HOG_DEVICE;
     options.flags |= RTAUDIO_SCHEDULE_REALTIME;
 
-    start();
+    app.start();
 
     unsigned int bufferFrames = 512;
     // An error in the openStream() function can be detected either by
