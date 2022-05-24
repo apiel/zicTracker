@@ -4,8 +4,9 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "app/app_tracks.h"
 #include "RtAudio.h"
+#include "app/app_tracks.h"
+#include <zic_seq_tempo.h>
 
 #define FORMAT RTAUDIO_SINT16
 #define CHANNELS 1
@@ -23,6 +24,8 @@ void errorCallback(RtAudioErrorType /*type*/, const std::string& errorText)
 
 RtAudio::StreamOptions options;
 
+// TODO put all this in app!!
+Zic_Seq_Tempo<> tempo;
 App_Tracks tracks;
 
 // Interleaved buffers
@@ -41,6 +44,10 @@ int saw(void* outputBuffer,
     }
 
     for (i = 0; i < nBufferFrames; i++) {
+        // TODO move this in app
+        if (tempo.next()) {
+            tracks.next();
+        }
         *buffer++ = tracks.sample();
         // std::cout << *buffer << std::endl;
 #if CHANNELS == 2
@@ -50,7 +57,8 @@ int saw(void* outputBuffer,
     return 0;
 }
 
-void start() {
+void start()
+{
     tracks.looper->setLoopMode(true);
     tracks.looper->on(60);
 }
