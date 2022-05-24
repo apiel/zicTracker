@@ -34,7 +34,7 @@ void zicServerEsp32Loop()
         // sampleDataU.ch[0] = int16_t(*fr_sample * 16383.0f); /* some bits missing here */
         // sampleDataU.ch[1] = int16_t(*fl_sample * 16383.0f);
 
-        sampleDataU.ch[0] = wave.next() * 5;
+        sampleDataU.ch[0] = wave.next() * 3;
         sampleDataU.ch[1] = sampleDataU.ch[0];
         kit.write((const char*)&sampleDataU.sample, 4);
     }
