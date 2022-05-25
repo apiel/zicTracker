@@ -1,11 +1,21 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
 
+#include "../app/app.h"
+
+#ifndef SAMPLE_RATE
+#define SAMPLE_RATE 44100
+#endif
+
+#define CHANNELS 1
+
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
+App app;
+
 typedef struct {
-    SDL_Window* window;
+    SDL_AudioDeviceID audioDevice;
     bool keyEvent = false;
     bool keyUp = false;
     bool keyDown = false;
@@ -85,12 +95,54 @@ bool handleEvent()
     return true;
 }
 
+void audioCallBack(void* userdata, Uint8* stream, int len)
+{
+    int16_t* buffer = (int16_t*)stream;
+
+    for (int i = 0; i < len; i++) {
+//         *buffer++ = app.sample();
+//         // std::cout << *buffer << std::endl;
+// #if CHANNELS == 2
+//         *buffer++ = *(buffer - 1);
+// #endif
+        buffer[i] = app.sample();
+        // SDL_Log("sound %d", buffer[i]);
+    }
+}
+
+bool initAudio()
+{
+    SDL_AudioSpec spec, aspec;
+
+    SDL_zero(spec);
+    spec.freq = SAMPLE_RATE;
+    spec.format = AUDIO_S16;
+    spec.channels = CHANNELS;
+    spec.samples = 512;
+    spec.callback = audioCallBack;
+    spec.userdata = NULL;
+
+    if ((ui.audioDevice = SDL_OpenAudioDevice(nullptr, 0, &spec, &aspec, SDL_AUDIO_ALLOW_ANY_CHANGE)) <= 0) {
+        fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
+        return false;
+    }
+
+    // Start playing, "unpause"
+    SDL_PauseAudioDevice(ui.audioDevice, 0);
+
+    return true;
+}
+
 int main(int argc, char* args[])
 {
     SDL_Window* window = NULL;
     SDL_Surface* screenSurface = NULL;
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    if (!initAudio()) {
         return 1;
     }
 
@@ -108,6 +160,8 @@ int main(int argc, char* args[])
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
     SDL_UpdateWindowSurface(window);
 
+    app.start();
+
     while (handleEvent()) {
         if (ui.keyEvent) {
             SDL_Log("key pressed Up %d Down %d Left %d Right %d A %d B %d Y %d X %d",
@@ -116,6 +170,7 @@ int main(int argc, char* args[])
         }
     }
 
+    SDL_CloseAudioDevice(ui.audioDevice);
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
