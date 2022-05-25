@@ -6,7 +6,6 @@
 
 #include "RtAudio.h"
 #include "../app/app.h"
-#include <zic_seq_tempo.h>
 
 #define FORMAT RTAUDIO_SINT16
 #define CHANNELS 1
@@ -28,7 +27,7 @@ RtAudio::StreamOptions options;
 
 
 // Interleaved buffers
-int saw(void* outputBuffer,
+int audioCallBack(void* outputBuffer,
     void* /*inputBuffer*/,
     unsigned int nBufferFrames,
     double streamTime,
@@ -43,8 +42,6 @@ int saw(void* outputBuffer,
     }
 
     for (i = 0; i < nBufferFrames; i++) {
-        // TODO move this in app
-       
         *buffer++ = app.sample();
         // std::cout << *buffer << std::endl;
 #if CHANNELS == 2
@@ -80,7 +77,7 @@ int main(int argc, char* argv[])
             FORMAT,
             SAMPLE_RATE,
             &bufferFrames,
-            &saw,
+            &audioCallBack,
             (void*)data,
             &options)
             == 0
@@ -91,8 +88,6 @@ int main(int argc, char* argv[])
 
         while (dac.isStreamRunning()) {
             sleep(1);
-            // Create tempo base on sample_rate
-            // tracks.next();
         }
 
         // Block released ... stop the stream
