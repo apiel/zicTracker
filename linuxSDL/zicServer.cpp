@@ -19,25 +19,10 @@ typedef struct {
 
 Ui ui;
 
-void clearKeyEvent()
-{
-    ui.keyEvent = false;
-
-    // ui.keyUp = false;
-    // ui.keyDown = false;
-    // ui.keyLeft = false;
-    // ui.keyRight = false;
-    // ui.keyA = false;
-    // ui.keyB = false;
-    // ui.keyY = false;
-    // ui.keyX = false;
-}
-
 void handleKeyboard(SDL_KeyboardEvent* event)
 {
     // SDL_Log("handleKeyboard %d", event->repeat);
 
-    ui.keyEvent = true;
     switch (event->keysym.scancode) {
     case SDL_SCANCODE_UP:
         ui.keyUp = event->type == SDL_KEYDOWN;
@@ -52,20 +37,23 @@ void handleKeyboard(SDL_KeyboardEvent* event)
         ui.keyLeft = event->type == SDL_KEYDOWN;
         break;
     case SDL_SCANCODE_A:
-        ui.keyA = event->type == SDL_KEYDOWN && event->repeat == 0;
+        ui.keyA = event->type == SDL_KEYDOWN; // && event->repeat == 0;
         break;
     case SDL_SCANCODE_S: // TODO Those should be configurable
-        ui.keyB = event->type == SDL_KEYDOWN && event->repeat == 0;
+        ui.keyB = event->type == SDL_KEYDOWN; // && event->repeat == 0;
         break;
     case SDL_SCANCODE_Z:
-        ui.keyY = event->type == SDL_KEYDOWN && event->repeat == 0;
+        ui.keyY = event->type == SDL_KEYDOWN; // && event->repeat == 0;
         break;
     case SDL_SCANCODE_X:
-        ui.keyX = event->type == SDL_KEYDOWN && event->repeat == 0;
+        ui.keyX = event->type == SDL_KEYDOWN; // && event->repeat == 0;
         break;
     default:
         break;
     }
+
+    ui.keyEvent = true;
+    // ui.keyEvent = ui.keyUp || ui.keyDown || ui.keyLeft || ui.keyRight || ui.keyA || ui.keyB || ui.keyY || ui.keyX;
 }
 
 bool handleEvent()
@@ -124,7 +112,7 @@ int main(int argc, char* args[])
         if (ui.keyEvent) {
             SDL_Log("key pressed Up %d Down %d Left %d Right %d A %d B %d Y %d X %d",
                 ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyB, ui.keyY, ui.keyX);
-            clearKeyEvent();
+            ui.keyEvent = false;
         }
     }
 
