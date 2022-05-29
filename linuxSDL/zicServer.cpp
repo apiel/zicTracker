@@ -8,6 +8,7 @@
 #endif
 
 #define CHANNELS 1
+// #define CHANNELS 2 // to be fixed
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -100,13 +101,9 @@ void audioCallBack(void* userdata, Uint8* stream, int len)
     int16_t* buffer = (int16_t*)stream;
 
     for (int i = 0; i < len; i++) {
-//         *buffer++ = app.sample();
-//         // std::cout << *buffer << std::endl;
-// #if CHANNELS == 2
-//         *buffer++ = *(buffer - 1);
-// #endif
         buffer[i] = app.sample();
-        // SDL_Log("sound %d", buffer[i]);
+        i++;
+        buffer[i] = buffer[i - 1];
     }
 }
 
@@ -118,7 +115,7 @@ bool initAudio()
     spec.freq = SAMPLE_RATE;
     spec.format = AUDIO_S16;
     spec.channels = CHANNELS;
-    spec.samples = 512;
+    spec.samples = 128;
     spec.callback = audioCallBack;
     spec.userdata = NULL;
 
@@ -126,6 +123,8 @@ bool initAudio()
         fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
         return false;
     }
+
+    SDL_Log("aspec freq %d channel %d sample %d format %d", aspec.freq, aspec.channels, aspec.samples, aspec.format);
 
     // Start playing, "unpause"
     SDL_PauseAudioDevice(ui.audioDevice, 0);
@@ -168,6 +167,9 @@ int main(int argc, char* args[])
                 ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyB, ui.keyY, ui.keyX);
             ui.keyEvent = false;
         }
+#ifdef TEMPO_CUSTOM_TIME
+        app.next(SDL_GetTicks());
+#endif
     }
 
     SDL_CloseAudioDevice(ui.audioDevice);
