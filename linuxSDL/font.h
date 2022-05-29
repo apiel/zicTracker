@@ -27,9 +27,9 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, U
     }
 }
 
-void draw_string(SDL_Surface* surface, const char* text, Uint16 orig_x, Uint16 orig_y, Uint32 color, Uint8 size = 1)
+void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uint32 color, Uint8 size = 1)
 {
-    Uint16 x = orig_x, y = orig_y;
+	Uint16 orig_x = x;
     while (*text) {
         if (*text == '\n') {
             x = orig_x;
