@@ -61,7 +61,11 @@ void devicesInfo(RtAudio* dac)
     for (int i = 0; i <= devices; i++) {
         info = dac->getDeviceInfo(i);
         // Print, for example, the maximum number of output channels for each device
-        std::cout << i << ". " << info.name << " (ch " << info.outputChannels << ")\n";
+        std::cout << i << ". " << info.name << " (ch " << info.outputChannels;
+        if (info.isDefaultOutput) {
+            std::cout << " - default";
+        }
+        std::cout << ")" << std::endl;
     }
 }
 
@@ -70,7 +74,6 @@ int main(int argc, char* argv[])
     // Specify our own error callback function.
     RtAudio dac(RtAudio::UNSPECIFIED, &errorCallback);
     dac.showWarnings(true);
-    devicesInfo(&dac);
 
     double* data = (double*)calloc(CHANNELS, sizeof(double));
 
@@ -78,7 +81,14 @@ int main(int argc, char* argv[])
     RtAudio::StreamParameters oParams;
     oParams.nChannels = CHANNELS;
     if (argc > 1) {
-        oParams.deviceId = (unsigned int)atoi(argv[1]);
+        // NOTE could even skip this part!
+        if (std::string(argv[1]) == "--list" || std::string(argv[1]) == "-l") {
+            devicesInfo(&dac);
+        } else {
+            oParams.deviceId = (unsigned int)atoi(argv[1]);
+        }
+    } else {
+        oParams.deviceId = dac.getDefaultOutputDevice();
     }
 
     options.flags = RTAUDIO_HOG_DEVICE;
