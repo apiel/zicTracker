@@ -4,8 +4,8 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "RtAudio.h"
 #include "../app/app.h"
+#include "RtAudio.h"
 
 #define FORMAT RTAUDIO_SINT16
 #define CHANNELS 1
@@ -25,7 +25,6 @@ void errorCallback(RtAudioErrorType /*type*/, const std::string& errorText)
 
 RtAudio::StreamOptions options;
 
-
 // Interleaved buffers
 int audioCallBack(void* outputBuffer,
     void* /*inputBuffer*/,
@@ -42,13 +41,28 @@ int audioCallBack(void* outputBuffer,
     }
 
     for (i = 0; i < nBufferFrames; i++) {
-        *buffer++ = app.sample();
+        int16_t sample = app.sample();
+        *buffer++ = sample;
         // std::cout << *buffer << std::endl;
 #if CHANNELS == 2
-        *buffer++ = *(buffer - 1);
+        *buffer++ = sample;
 #endif
     }
     return 0;
+}
+
+void devicesInfo(RtAudio* dac)
+{
+    // Determine the number of devices available
+    int devices = dac->getDeviceCount();
+
+    // Scan through devices for various capabilities
+    RtAudio::DeviceInfo info;
+    for (int i = 0; i <= devices; i++) {
+        info = dac->getDeviceInfo(i);
+        // Print, for example, the maximum number of output channels for each device
+        std::cout << i << ". " << info.name << " (ch " << info.outputChannels << ")\n";
+    }
 }
 
 int main(int argc, char* argv[])
@@ -56,12 +70,16 @@ int main(int argc, char* argv[])
     // Specify our own error callback function.
     RtAudio dac(RtAudio::UNSPECIFIED, &errorCallback);
     dac.showWarnings(true);
+    devicesInfo(&dac);
 
     double* data = (double*)calloc(CHANNELS, sizeof(double));
 
     // Set our stream parameters for output only.
     RtAudio::StreamParameters oParams;
     oParams.nChannels = CHANNELS;
+    if (argc > 1) {
+        oParams.deviceId = (unsigned int)atoi(argv[1]);
+    }
 
     options.flags = RTAUDIO_HOG_DEVICE;
     options.flags |= RTAUDIO_SCHEDULE_REALTIME;

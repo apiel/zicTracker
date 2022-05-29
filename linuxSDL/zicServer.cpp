@@ -167,9 +167,6 @@ int main(int argc, char* args[])
                 ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyB, ui.keyY, ui.keyX);
             ui.keyEvent = false;
         }
-#ifdef TEMPO_CUSTOM_TIME
-        app.next(SDL_GetTicks());
-#endif
     }
 
     SDL_CloseAudioDevice(ui.audioDevice);

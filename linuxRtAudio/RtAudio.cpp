@@ -9145,6 +9145,7 @@ bool RtApiPulse::probeDeviceOpen( unsigned int device, StreamMode mode,
     errorText_ = "PulseAudio device does not support input.";
     return false;
   }
+  //printf("Current device %d %d (%d) %s\n", device, rt_pa_info.dev[device].info.outputChannels, rt_pa_info.dev[device].info.isDefaultOutput, rt_pa_info.dev[device].info.name.c_str());
   if (mode==OUTPUT && rt_pa_info.dev[device].info.outputChannels == 0) {
     errorText_ = "PulseAudio device does not support output.";
     return false;
