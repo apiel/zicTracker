@@ -8,7 +8,7 @@
 #endif
 
 #define CHANNELS 1
-// #define CHANNELS 2 // to be fixed
+//  #define CHANNELS 2 // to be fixed
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -98,12 +98,23 @@ bool handleEvent()
 
 void audioCallBack(void* userdata, Uint8* stream, int len)
 {
-    int16_t* buffer = (int16_t*)stream;
+    static union sampleTUNT {
+        Uint8 ch[2];
+        int16_t sample;
+    } sampleDataU;
 
     for (int i = 0; i < len; i++) {
-        buffer[i] = app.sample();
+        sampleDataU.sample = app.sample();
+        stream[i] = sampleDataU.ch[0];
         i++;
-        buffer[i] = buffer[i - 1];
+        stream[i] = sampleDataU.ch[1];
+
+#if CHANNELS == 2
+        i++;
+        buffer[i] = sampleDataU.ch[0];
+        i++;
+        buffer[i] = sampleDataU.ch[1];
+#endif
     }
 }
 
