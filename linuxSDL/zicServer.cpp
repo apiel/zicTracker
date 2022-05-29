@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "../app/app.h"
+#include "font.h"
 
 #ifndef SAMPLE_RATE
 #define SAMPLE_RATE 44100
@@ -167,7 +168,10 @@ int main(int argc, char* args[])
         return 1;
     }
     screenSurface = SDL_GetWindowSurface(window);
-    SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+    //SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+
+    draw_string(screenSurface, "Hello Alex # ! Yo", 10, 10, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+
     SDL_UpdateWindowSurface(window);
 
     app.start();
@@ -178,6 +182,7 @@ int main(int argc, char* args[])
                 ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyB, ui.keyY, ui.keyX);
             ui.keyEvent = false;
         }
+        // SDL_Delay(10);
     }
 
     SDL_CloseAudioDevice(ui.audioDevice);
