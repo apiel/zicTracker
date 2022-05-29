@@ -9,7 +9,7 @@ static const unsigned char embedded_font[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x0
 #define FONT_H 8
 #define FONT_W 6
 
-void draw_char(SDL_Surface* surface, unsigned char symbol, int x, int y, unsigned short color, uint8_t size)
+void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, Uint32 color, Uint8 size)
 {
     x += (FONT_H - 1) * 1;
     if (symbol > 127) {
@@ -27,9 +27,9 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, int x, int y, unsigne
     }
 }
 
-void draw_string(SDL_Surface* surface, const char* text, int orig_x, int orig_y, unsigned short color, uint8_t size = 1)
+void draw_string(SDL_Surface* surface, const char* text, Uint16 orig_x, Uint16 orig_y, Uint32 color, Uint8 size = 1)
 {
-    int x = orig_x, y = orig_y;
+    Uint16 x = orig_x, y = orig_y;
     while (*text) {
         if (*text == '\n') {
             x = orig_x;
