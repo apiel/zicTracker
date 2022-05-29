@@ -20,7 +20,7 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, int x, int y, unsigne
     for (int i = 0, ys = 0; i < FONT_W; i++, ptr++, ys += 1) {
         for (int col = FONT_H - FONT_W, xs = x - col; col < FONT_H; col++, xs -= 1) {
             if ((*ptr & 1 << col) && y + ys < surface->h && xs < surface->w) {
-                SDL_Rect r = { xs * size, ys * size, size, size };
+                SDL_Rect r = { xs * size, y + ys * size, size, size };
                 SDL_FillRect(surface, &r, color);
             }
         }
