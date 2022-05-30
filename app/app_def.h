@@ -21,4 +21,13 @@ enum
     UI_KEY_COUNT
 };
 
+typedef struct {
+    bool Up = false;
+    bool Down = false;
+    bool Right = false;
+    bool Left = false;
+    bool A = false;
+    bool Y = false;
+} UiKeys;
+
 #endif

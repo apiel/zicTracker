@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "../app/app.h"
+#include "../app/app_def.h"
 #include "font.h"
 
 #ifndef SAMPLE_RATE
@@ -31,22 +32,22 @@ void handleKeyboard(SDL_KeyboardEvent* event)
     // SDL_Log("handleKeyboard %d", event->repeat);
     switch (event->keysym.scancode) {
     case SDL_SCANCODE_UP:
-        bit = 0;
+        bit = UI_KEY_UP;
         break;
     case SDL_SCANCODE_DOWN:
-        bit = 1;
+        bit = UI_KEY_DOWN;
         break;
     case SDL_SCANCODE_LEFT:
-        bit = 2;
+        bit = UI_KEY_LEFT;
         break;
     case SDL_SCANCODE_RIGHT:
-        bit = 3;
+        bit = UI_KEY_RIGHT;
         break;
     case SDL_SCANCODE_A:
-        bit = 4;
+        bit = UI_KEY_A;
         break;
     case SDL_SCANCODE_Z: // Y of german keyboard. Should be configurable!
-        bit = 5;
+        bit = UI_KEY_Y;
         break;
     default:
         return;
@@ -173,6 +174,7 @@ int main(int argc, char* args[])
     while (handleEvent()) {
         if (ui.keysChanged) {
             SDL_Log("%d", ui.keys);
+            app.handleUi(ui.keys);
             ui.keysChanged = false;
             // ui.keys = 0;
         }
