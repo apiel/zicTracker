@@ -18,7 +18,7 @@ App app;
 
 typedef struct {
     SDL_AudioDeviceID audioDevice;
-    bool keyEvent = false;
+    bool keysChanged = false;
     bool keyUp = false;
     bool keyDown = false;
     bool keyRight = false;
@@ -27,45 +27,54 @@ typedef struct {
     bool keyB = false;
     bool keyX = false;
     bool keyY = false;
+    Uint8 keys = 0;
 } Ui;
 
 Ui ui;
 
+void setUiKeys(SDL_KeyboardEvent* event, uint8_t n)
+{
+    if (event->type == SDL_KEYDOWN) {
+        ui.keys |= 1 << n; // Set bit to 1
+    } else {
+        ui.keys &= ~(1 << n); // unset bit (to 0)
+    }
+}
+
 void handleKeyboard(SDL_KeyboardEvent* event)
 {
     // SDL_Log("handleKeyboard %d", event->repeat);
-
     switch (event->keysym.scancode) {
     case SDL_SCANCODE_UP:
         ui.keyUp = event->type == SDL_KEYDOWN;
+        setUiKeys(event, 0);
         break;
     case SDL_SCANCODE_DOWN:
         ui.keyDown = event->type == SDL_KEYDOWN;
-        break;
-    case SDL_SCANCODE_RIGHT:
-        ui.keyRight = event->type == SDL_KEYDOWN;
+        setUiKeys(event, 1);
         break;
     case SDL_SCANCODE_LEFT:
         ui.keyLeft = event->type == SDL_KEYDOWN;
+        setUiKeys(event, 2);
+        break;
+    case SDL_SCANCODE_RIGHT:
+        ui.keyRight = event->type == SDL_KEYDOWN;
+        setUiKeys(event, 3);
         break;
     case SDL_SCANCODE_A:
         ui.keyA = event->type == SDL_KEYDOWN; // && event->repeat == 0;
-        break;
-    case SDL_SCANCODE_S: // TODO Those should be configurable
-        ui.keyB = event->type == SDL_KEYDOWN; // && event->repeat == 0;
+        setUiKeys(event, 4);
         break;
     case SDL_SCANCODE_Z:
         ui.keyY = event->type == SDL_KEYDOWN; // && event->repeat == 0;
-        break;
-    case SDL_SCANCODE_X:
-        ui.keyX = event->type == SDL_KEYDOWN; // && event->repeat == 0;
+        setUiKeys(event, 5);
         break;
     default:
-        break;
+        return;
     }
 
-    ui.keyEvent = true;
-    // ui.keyEvent = ui.keyUp || ui.keyDown || ui.keyLeft || ui.keyRight || ui.keyA || ui.keyB || ui.keyY || ui.keyX;
+    ui.keysChanged = true;
+    // ui.keysChanged = ui.keyUp || ui.keyDown || ui.keyLeft || ui.keyRight || ui.keyA || ui.keyB || ui.keyY || ui.keyX;
 }
 
 bool handleEvent()
@@ -178,7 +187,7 @@ int main(int argc, char* args[])
     app.start();
 
     while (handleEvent()) {
-        if (ui.keyEvent) {
+        if (ui.keysChanged) {
             Uint8 keys = ui.keyUp << 0
                 | ui.keyDown << 1
                 | ui.keyLeft << 2
@@ -186,9 +195,10 @@ int main(int argc, char* args[])
                 | ui.keyA << 4
                 | ui.keyY << 5;
 
-            SDL_Log("%d%d%d%d%d%d: %d",
-                ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyY, keys);
-            ui.keyEvent = false;
+            SDL_Log("%d%d%d%d%d%d: %d = %d",
+                ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyY, keys, ui.keys);
+            ui.keysChanged = false;
+            // ui.keys = 0;
         }
         // SDL_Delay(10);
     }
