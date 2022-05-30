@@ -127,7 +127,8 @@ bool initAudio()
     spec.freq = SAMPLE_RATE;
     spec.format = AUDIO_S16;
     spec.channels = CHANNELS;
-    spec.samples = 128;
+    // spec.samples = 128;
+    spec.samples = 2048;
     spec.callback = audioCallBack;
     spec.userdata = NULL;
 
