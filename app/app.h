@@ -4,6 +4,17 @@
 #include "./app_tracks.h"
 #include <zic_seq_tempo.h>
 
+typedef struct {
+    bool keyUp = false;
+    bool keyDown = false;
+    bool keyRight = false;
+    bool keyLeft = false;
+    bool keyA = false;
+    bool keyB = false;
+    bool keyX = false;
+    bool keyY = false;
+} UiKey;
+
 class App {
 public:
     Zic_Seq_Tempo<> tempo;
@@ -25,7 +36,10 @@ public:
         return tracks.sample();
     }
 
-    char * ui(uint8_t keys) {
+    char* handleUi(uint8_t keys)
+    {
+        printf("%d%d%d%d%d%d",
+            ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyY);
         return display;
     }
 };

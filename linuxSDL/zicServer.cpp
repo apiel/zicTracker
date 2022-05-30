@@ -19,14 +19,6 @@ App app;
 typedef struct {
     SDL_AudioDeviceID audioDevice;
     bool keysChanged = false;
-    bool keyUp = false;
-    bool keyDown = false;
-    bool keyRight = false;
-    bool keyLeft = false;
-    bool keyA = false;
-    bool keyB = false;
-    bool keyX = false;
-    bool keyY = false;
     Uint8 keys = 0;
 } Ui;
 
@@ -39,27 +31,21 @@ void handleKeyboard(SDL_KeyboardEvent* event)
     // SDL_Log("handleKeyboard %d", event->repeat);
     switch (event->keysym.scancode) {
     case SDL_SCANCODE_UP:
-        ui.keyUp = event->type == SDL_KEYDOWN;
         bit = 0;
         break;
     case SDL_SCANCODE_DOWN:
-        ui.keyDown = event->type == SDL_KEYDOWN;
         bit = 1;
         break;
     case SDL_SCANCODE_LEFT:
-        ui.keyLeft = event->type == SDL_KEYDOWN;
         bit = 2;
         break;
     case SDL_SCANCODE_RIGHT:
-        ui.keyRight = event->type == SDL_KEYDOWN;
         bit = 3;
         break;
     case SDL_SCANCODE_A:
-        ui.keyA = event->type == SDL_KEYDOWN; // && event->repeat == 0;
         bit = 4;
         break;
-    case SDL_SCANCODE_Z:
-        ui.keyY = event->type == SDL_KEYDOWN; // && event->repeat == 0;
+    case SDL_SCANCODE_Z: // Y of german keyboard. Should be configurable!
         bit = 5;
         break;
     default:
@@ -73,7 +59,6 @@ void handleKeyboard(SDL_KeyboardEvent* event)
     }
 
     ui.keysChanged = true;
-    // ui.keysChanged = ui.keyUp || ui.keyDown || ui.keyLeft || ui.keyRight || ui.keyA || ui.keyB || ui.keyY || ui.keyX;
 }
 
 bool handleEvent()
@@ -187,15 +172,7 @@ int main(int argc, char* args[])
 
     while (handleEvent()) {
         if (ui.keysChanged) {
-            Uint8 keys = ui.keyUp << 0
-                | ui.keyDown << 1
-                | ui.keyLeft << 2
-                | ui.keyRight << 3
-                | ui.keyA << 4
-                | ui.keyY << 5;
-
-            SDL_Log("%d%d%d%d%d%d: %d = %d",
-                ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyY, keys, ui.keys);
+            SDL_Log("%d", ui.keys);
             ui.keysChanged = false;
             // ui.keys = 0;
         }
