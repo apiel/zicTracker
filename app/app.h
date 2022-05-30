@@ -9,6 +9,8 @@ public:
     Zic_Seq_Tempo<> tempo;
     App_Tracks tracks;
 
+    char display[128];
+
     void start()
     {
         tracks.looper->setLoopMode(true);
@@ -21,6 +23,10 @@ public:
             tracks.next();
         }
         return tracks.sample();
+    }
+
+    char * ui(uint8_t keys) {
+        return display;
     }
 };
 

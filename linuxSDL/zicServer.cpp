@@ -169,7 +169,7 @@ int main(int argc, char* args[])
         return 1;
     }
     screenSurface = SDL_GetWindowSurface(window);
-    //SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+    // SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 
     draw_string(screenSurface, "Hello Alex # !\nYo 1234567890\nC#4 D-5", 10, 30, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF), 2);
 
@@ -179,8 +179,15 @@ int main(int argc, char* args[])
 
     while (handleEvent()) {
         if (ui.keyEvent) {
-            SDL_Log("key pressed Up %d Down %d Left %d Right %d A %d B %d Y %d X %d",
-                ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyB, ui.keyY, ui.keyX);
+            Uint8 keys = ui.keyUp << 0
+                | ui.keyDown << 1
+                | ui.keyLeft << 2
+                | ui.keyRight << 3
+                | ui.keyA << 4
+                | ui.keyY << 5;
+
+            SDL_Log("%d%d%d%d%d%d: %d",
+                ui.keyUp, ui.keyDown, ui.keyLeft, ui.keyRight, ui.keyA, ui.keyY, keys);
             ui.keyEvent = false;
         }
         // SDL_Delay(10);
