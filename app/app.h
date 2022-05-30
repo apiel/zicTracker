@@ -35,6 +35,8 @@ public:
         keys.A = (keysBin >> UI_KEY_A) & 1;
         keys.Y = (keysBin >> UI_KEY_Y) & 1;
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
+
+        sprintf(display, "%d%d%d%d%d%d", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
         return display;
     }
 };

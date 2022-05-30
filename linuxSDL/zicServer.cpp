@@ -174,9 +174,12 @@ int main(int argc, char* args[])
     while (handleEvent()) {
         if (ui.keysChanged) {
             SDL_Log("%d", ui.keys);
-            app.handleUi(ui.keys);
+            char* display = app.handleUi(ui.keys);
             ui.keysChanged = false;
-            // ui.keys = 0;
+
+            SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
+            draw_string(screenSurface, display, 10, 30, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF), 2);
+            SDL_UpdateWindowSurface(window);
         }
         // SDL_Delay(10);
     }
