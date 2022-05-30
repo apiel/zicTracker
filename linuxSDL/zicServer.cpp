@@ -32,45 +32,44 @@ typedef struct {
 
 Ui ui;
 
-void setUiKeys(SDL_KeyboardEvent* event, uint8_t n)
-{
-    if (event->type == SDL_KEYDOWN) {
-        ui.keys |= 1 << n; // Set bit to 1
-    } else {
-        ui.keys &= ~(1 << n); // unset bit (to 0)
-    }
-}
-
 void handleKeyboard(SDL_KeyboardEvent* event)
 {
+    uint8_t bit;
+
     // SDL_Log("handleKeyboard %d", event->repeat);
     switch (event->keysym.scancode) {
     case SDL_SCANCODE_UP:
         ui.keyUp = event->type == SDL_KEYDOWN;
-        setUiKeys(event, 0);
+        bit = 0;
         break;
     case SDL_SCANCODE_DOWN:
         ui.keyDown = event->type == SDL_KEYDOWN;
-        setUiKeys(event, 1);
+        bit = 1;
         break;
     case SDL_SCANCODE_LEFT:
         ui.keyLeft = event->type == SDL_KEYDOWN;
-        setUiKeys(event, 2);
+        bit = 2;
         break;
     case SDL_SCANCODE_RIGHT:
         ui.keyRight = event->type == SDL_KEYDOWN;
-        setUiKeys(event, 3);
+        bit = 3;
         break;
     case SDL_SCANCODE_A:
         ui.keyA = event->type == SDL_KEYDOWN; // && event->repeat == 0;
-        setUiKeys(event, 4);
+        bit = 4;
         break;
     case SDL_SCANCODE_Z:
         ui.keyY = event->type == SDL_KEYDOWN; // && event->repeat == 0;
-        setUiKeys(event, 5);
+        bit = 5;
         break;
     default:
         return;
+    }
+
+    if (event->type == SDL_KEYDOWN) {
+        ui.keys |= 1 << bit; // Set bit to 1
+    } else {
+        ui.keys &= ~(1 << bit); // unset bit (to 0)
     }
 
     ui.keysChanged = true;
