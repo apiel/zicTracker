@@ -44,7 +44,23 @@ public:
     };
     uint8_t currentMenu = 0;
 
-    uint8_t render(UiKeys* keys, char& display)
+    void render(char *display)
+    {
+        strcpy(display, "");
+        for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
+            if (i != 0 && menu[i].isBase) {
+                strcat(display, "\n");
+            }
+            if (i == currentMenu) {
+                sprintf(display + strlen(display), "~1%c~0 ", menu[i].key);
+            } else {
+                sprintf(display + strlen(display), "%c ", menu[i].key);
+            }
+        }
+        sprintf(display + strlen(display), "\n\n%s", menu[currentMenu].name);
+    }
+
+    uint8_t update(UiKeys* keys, char * display)
     {
         if (keys->A) {
             if (keys->Right) {
@@ -60,19 +76,8 @@ public:
                     menuPlus();
                 } while (!menu[currentMenu].isBase);
             }
-            strcpy(&display, "");
-            for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
-                if (i != 0 && menu[i].isBase) {
-                    strcat(&display, "\n");
-                }
-                if (i == currentMenu) {
-                    sprintf(&display + strlen(&display), "~1%c~0 ", menu[i].key);
-                } else {
-                    sprintf(&display + strlen(&display), "%c ", menu[i].key);
-                }
-            }
-            sprintf(&display + strlen(&display), "\n\n%s", menu[currentMenu].name);
-            return VIEW_DONE;
+            render(display);
+            return VIEW_CHANGED;
         }
         return VIEW_NONE;
     }

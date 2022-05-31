@@ -5,7 +5,7 @@
 
 enum{
     VIEW_NONE,
-    VIEW_DONE,
+    VIEW_CHANGED,
 };
 
 enum

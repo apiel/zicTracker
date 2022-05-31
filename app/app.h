@@ -40,7 +40,7 @@ public:
         keys.B = (keysBin >> UI_KEY_B) & 1;
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
-        if (menuView.render(&keys, *display)) {
+        if (menuView.update(&keys, display)) {
         } else {
             sprintf(display, "%d%d%d%d%d%d", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.B);
         }
