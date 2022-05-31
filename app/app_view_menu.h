@@ -11,6 +11,7 @@
 typedef struct {
     const char* name;
     const char key;
+    uint8_t view;
     bool isBase = false;
 } Menu;
 
@@ -33,17 +34,17 @@ public:
     UiKeys keys;
 
     Menu menu[APP_MENU_SIZE] = {
-        { "Track", 'T', true },
-        { "Track Loop", 'L' },
-        { "Track pattern", 'P' },
-        { "Pattern", 'P', true },
-        { "Pattern edit", 'E' },
-        { "Instrument", 'I', true },
-        { "Instrument edit", 'E' },
+        { "Track", 'T', VIEW_TRACK, true },
+        { "Track Loop", 'L', VIEW_TRACK_LOOP },
+        { "Track pattern", 'P', VIEW_TRACK_PATTERN },
+        { "Pattern", 'P', VIEW_PATTERN, true },
+        { "Pattern edit", 'E', VIEW_PATTERN_EDIT },
+        { "Instrument", 'I', VIEW_INSTRUMENT, true },
+        { "Instrument edit", 'E', VIEW_INSTRUMENT_EDIT },
     };
     uint8_t currentMenu = 0;
 
-    uint8_t render(UiKeys* keys, char &display)
+    uint8_t render(UiKeys* keys, char& display)
     {
         if (keys->A) {
             if (keys->Right) {

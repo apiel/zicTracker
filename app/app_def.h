@@ -10,6 +10,18 @@ enum{
 
 enum
 {
+    VIEW_TRACK,
+    VIEW_TRACK_LOOP,
+    VIEW_TRACK_PATTERN,
+    VIEW_PATTERN,
+    VIEW_PATTERN_EDIT,
+    VIEW_INSTRUMENT,
+    VIEW_INSTRUMENT_EDIT,
+    VIEW_COUNT
+};
+
+enum
+{
     TRACK_1,
     TRACK_2,
     TRACK_3,
