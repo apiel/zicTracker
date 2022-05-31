@@ -29,16 +29,15 @@ void setColor(const SDL_PixelFormat* format, unsigned char color)
 
 bool draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, Uint8 size)
 {
-    if (symbol == COLOR_SYMBOL) {
-        readColor = true;
-        return false;
-    }
     if (readColor) {
         readColor = false;
         if (symbol != COLOR_SYMBOL) {
             setColor(surface->format, symbol);
             return false;
         }
+    } else if (symbol == COLOR_SYMBOL) {
+        readColor = true;
+        return false;
     }
 
     x += (FONT_H - 1) * 1;
