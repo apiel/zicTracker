@@ -86,9 +86,9 @@ public:
             } else if (keys->Down) {
                 if (sel + 7 < 8 * 7) {
                     sel += 7;
-                    // if (sel > pos) {
-                    //     pos += 7;
-                    // }
+                    if (sel > pos + (7 * APP_VIEW_TRACK_LOOP_ROW)) {
+                        pos += 7;
+                    }
                 }
             } else if (keys->Right) {
                 if (sel % 7 < 6) {
