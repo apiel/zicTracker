@@ -4,6 +4,7 @@
 #include "./app_def.h"
 #include "./app_tracks.h"
 #include "./app_view_menu.h"
+#include "./app_view_trackLoop.h"
 #include <zic_seq_tempo.h>
 
 class App {
@@ -15,6 +16,7 @@ public:
     UiKeys keys;
 
     App_View_Menu menuView;
+    App_View_TrackLoop trackLoopView;
 
     void start()
     {
@@ -30,6 +32,20 @@ public:
         return tracks.sample();
     }
 
+    void render() {
+        uint8_t view = menuView.getView();
+        switch (view)
+        {
+        case VIEW_TRACK_LOOP:
+            trackLoopView.render(display);
+            break;
+        
+        default:
+            sprintf(display, "%d%d%d%d%d%d", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.B);
+            break;
+        }
+    }
+
     char* handleUi(uint8_t keysBin)
     {
         keys.Up = (keysBin >> UI_KEY_UP) & 1;
@@ -42,7 +58,7 @@ public:
 
         if (menuView.update(&keys, display)) {
         } else {
-            sprintf(display, "%d%d%d%d%d%d", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.B);
+            render();
         }
         return display;
     }

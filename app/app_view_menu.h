@@ -12,7 +12,7 @@ typedef struct {
     bool isBase = false;
 } Menu;
 
-class App_View_Menu: App_View {
+class App_View_Menu : App_View {
 protected:
     void menuPlus()
     {
@@ -41,7 +41,12 @@ public:
     };
     uint8_t currentMenu = 0;
 
-    void render(char *display)
+    uint8_t getView()
+    {
+        return menu[currentMenu].view;
+    }
+
+    void render(char* display)
     {
         strcpy(display, "");
         for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
@@ -57,7 +62,7 @@ public:
         sprintf(display + strlen(display), "\n\n%s", menu[currentMenu].name);
     }
 
-    uint8_t update(UiKeys* keys, char * display)
+    uint8_t update(UiKeys* keys, char* display)
     {
         if (keys->A) {
             if (keys->Right) {
