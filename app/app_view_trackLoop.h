@@ -46,9 +46,13 @@ public:
     {
         if (keys->Up || keys->Down || keys->Right || keys->Left) {
             if (keys->Up) {
-                pos -= 7;
+                if ((int16_t)pos - 7 >= 0) {
+                    pos -= 7;
+                }
             } else if (keys->Down) {
-                pos += 7;
+                if (pos + 7 < (10 - APP_VIEW_TRACK_LOOP_ROW) * 7) {
+                    pos += 7;
+                }
             } else if (keys->Right) {
                 if (pos % 7 != 8 - APP_VIEW_TRACK_LOOP_ROW) {
                     pos++;
