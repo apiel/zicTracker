@@ -17,6 +17,7 @@ protected:
     App_Tracks* tracks;
 
     uint8_t pos = 3 * 7;
+    uint8_t sel = 4 * 7;
 
 public:
     App_View_TrackLoop(App_Tracks* _tracks)
@@ -34,9 +35,16 @@ public:
                     strcat(display, " ");
                 }
                 uint8_t note = naturalNotes[n + pos];
+                bool selected = sel == n + pos;
+                if (selected) {
+                    strcat(display, "~b~1");
+                }
                 strcat(display, getNoteStr(note));
                 octave[0] = '0' + getNoteOctave(note);
                 strcat(display, octave);
+                if (selected) {
+                    strcat(display, "~0");
+                }
             }
             strcat(display, "\n");
         }
@@ -45,6 +53,23 @@ public:
     uint8_t update(UiKeys* keys, char* display)
     {
         if (keys->Up || keys->Down || keys->Right || keys->Left) {
+            // if (keys->Up) {
+            //     if ((int16_t)pos - 7 >= 0) {
+            //         pos -= 7;
+            //     }
+            // } else if (keys->Down) {
+            //     if (pos + 7 < (10 - APP_VIEW_TRACK_LOOP_ROW) * 7) {
+            //         pos += 7;
+            //     }
+            // } else if (keys->Right) {
+            //     if (pos % 7 != 8 - APP_VIEW_TRACK_LOOP_ROW) {
+            //         pos++;
+            //     }
+            // } else if (keys->Left) {
+            //     if (pos % 7 != 0) {
+            //         pos--;
+            //     }
+            // }
             if (keys->Up) {
                 if ((int16_t)pos - 7 >= 0) {
                     pos -= 7;

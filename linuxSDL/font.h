@@ -12,6 +12,7 @@ static const unsigned char embedded_font[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x0
 #define COLOR_SYMBOL '~'
 
 Uint32 fontColor = 0;
+Uint32 bgColor = 0;
 bool readColor = false;
 
 void setColor(const SDL_PixelFormat* format, unsigned char color)
@@ -21,8 +22,13 @@ void setColor(const SDL_PixelFormat* format, unsigned char color)
         fontColor = SDL_MapRGB(format, 73, 219, 158);
         break;
 
+    case 'b':
+        bgColor = SDL_MapRGB(format, 39, 69, 94);
+        break;
+
     default:
         fontColor = SDL_MapRGB(format, 0xFF, 0xFF, 0xFF);
+        bgColor = 0;
         break;
     }
 }
@@ -63,6 +69,10 @@ void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uin
             x = orig_x;
             y += FONT_H * size;
         } else {
+            if (bgColor) {
+                SDL_Rect r = { x * size, y, FONT_H * size, FONT_W * size };
+                SDL_FillRect(surface, &r, bgColor);
+            }
             draw_char(surface, *text, x, y, size);
             x += FONT_W * size;
         }
