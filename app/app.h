@@ -18,6 +18,11 @@ public:
     App_View_Menu menuView;
     App_View_TrackLoop trackLoopView;
 
+    App()
+        : trackLoopView(&tracks)
+    {
+    }
+
     void start()
     {
         tracks.looper->setLoopMode(true);
@@ -32,14 +37,14 @@ public:
         return tracks.sample();
     }
 
-    void render() {
+    void render()
+    {
         uint8_t view = menuView.getView();
-        switch (view)
-        {
+        switch (view) {
         case VIEW_TRACK_LOOP:
             trackLoopView.render(display);
             break;
-        
+
         default:
             sprintf(display, "%d%d%d%d%d%d", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.B);
             break;
@@ -58,7 +63,16 @@ public:
 
         if (menuView.update(&keys, display)) {
         } else {
-            render();
+            bool rendered = false;
+            uint8_t view = menuView.getView();
+            switch (view) {
+            case VIEW_TRACK_LOOP:
+                rendered = trackLoopView.update(&keys, display);
+                break;
+            }
+            if (!rendered) {
+                render();
+            }
         }
         return display;
     }

@@ -27,19 +27,8 @@ void setColor(const SDL_PixelFormat* format, unsigned char color)
     }
 }
 
-bool draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, Uint8 size)
+void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, Uint8 size)
 {
-    if (readColor) {
-        readColor = false;
-        if (symbol != COLOR_SYMBOL) {
-            setColor(surface->format, symbol);
-            return false;
-        }
-    } else if (symbol == COLOR_SYMBOL) {
-        readColor = true;
-        return false;
-    }
-
     x += (FONT_H - 1) * 1;
     if (symbol > 127) {
         symbol -= 128;
@@ -54,7 +43,6 @@ bool draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, U
             }
         }
     }
-    return true;
 }
 
 void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uint8 size = 1, Uint32 color = 255)
@@ -64,10 +52,18 @@ void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uin
     }
     Uint16 orig_x = x;
     while (*text) {
-        if (*text == '\n') {
+        if (readColor) {
+            readColor = false;
+            if (*text != COLOR_SYMBOL) {
+                setColor(surface->format, *text);
+            }
+        } else if (*text == COLOR_SYMBOL) {
+            readColor = true;
+        } else if (*text == '\n') {
             x = orig_x;
             y += FONT_H * size;
-        } else if (draw_char(surface, *text, x, y, size)) {
+        } else {
+            draw_char(surface, *text, x, y, size);
             x += FONT_W * size;
         }
         text++;
