@@ -1,6 +1,13 @@
 #ifndef APP_DEF_H_
 #define APP_DEF_H_
 
+#include <stdint.h>
+
+enum{
+    VIEW_NONE,
+    VIEW_DONE,
+};
+
 enum
 {
     TRACK_1,

@@ -3,15 +3,8 @@
 
 #include "./app_def.h"
 #include "./app_tracks.h"
+#include "./app_view_menu.h"
 #include <zic_seq_tempo.h>
-
-#define APP_MENU_SIZE 7
-
-typedef struct {
-    const char* name;
-    const char key;
-    bool isBase = false;
-} Menu;
 
 class App {
 public:
@@ -21,16 +14,7 @@ public:
     char display[128];
     UiKeys keys;
 
-    Menu menu[APP_MENU_SIZE] = {
-        { "Track", 'T', true },
-        { "Track Loop", 'L' },
-        { "Track pattern", 'P' },
-        { "Pattern", 'P', true },
-        { "Pattern edit", 'E' },
-        { "Instrument", 'I', true },
-        { "Instrument edit", 'E' },
-    };
-    uint8_t currentMenu = 0;
+    App_View_Menu menuView;
 
     void start()
     {
@@ -46,19 +30,6 @@ public:
         return tracks.sample();
     }
 
-    void menuPlus()
-    {
-        currentMenu = (currentMenu + 1) % APP_MENU_SIZE;
-    }
-
-    void menuMinus()
-    {
-        currentMenu--;
-        if (currentMenu == 255) {
-            currentMenu = APP_MENU_SIZE - 1;
-        }
-    }
-
     char* handleUi(uint8_t keysBin)
     {
         keys.Up = (keysBin >> UI_KEY_UP) & 1;
@@ -69,32 +40,7 @@ public:
         keys.B = (keysBin >> UI_KEY_B) & 1;
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
-        if (keys.A) {
-            if (keys.Right) {
-                menuPlus();
-            } else if (keys.Left) {
-                menuMinus();
-            } else if (keys.Up) {
-                do {
-                    menuMinus();
-                } while (!menu[currentMenu].isBase);
-            } else if (keys.Down) {
-                do {
-                    menuPlus();
-                } while (!menu[currentMenu].isBase);
-            }
-            strcpy(display, "");
-            for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
-                if (i != 0 && menu[i].isBase) {
-                    strcat(display, "\n");
-                }
-                if (i == currentMenu) {
-                    sprintf(display + strlen(display), "~1%c~0 ", menu[i].key);
-                } else {
-                    sprintf(display + strlen(display), "%c ", menu[i].key);
-                }
-            }
-            sprintf(display + strlen(display), "\n\n%s", menu[currentMenu].name);
+        if (menuView.render(&keys, *display)) {
         } else {
             sprintf(display, "%d%d%d%d%d%d", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.B);
         }
