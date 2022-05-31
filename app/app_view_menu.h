@@ -1,10 +1,7 @@
 #ifndef APP_VIEW_MENU_H_
 #define APP_VIEW_MENU_H_
 
-#include "./app_def.h"
-
-#include <cstring>
-#include <stdio.h>
+#include "./app_view.h"
 
 #define APP_MENU_SIZE 7
 
@@ -15,7 +12,7 @@ typedef struct {
     bool isBase = false;
 } Menu;
 
-class App_View_Menu {
+class App_View_Menu: App_View {
 protected:
     void menuPlus()
     {
