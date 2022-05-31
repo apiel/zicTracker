@@ -9,8 +9,38 @@ static const unsigned char embedded_font[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x0
 #define FONT_H 8
 #define FONT_W 6
 
-void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, Uint32 color, Uint8 size)
+#define COLOR_SYMBOL '~'
+
+Uint32 fontColor = 0;
+bool readColor = false;
+
+void setColor(const SDL_PixelFormat* format, unsigned char color)
 {
+    switch (color) {
+    case '1':
+        fontColor = SDL_MapRGB(format, 0x00, 0xFF, 0xFF);
+        break;
+
+    default:
+        fontColor = SDL_MapRGB(format, 0xFF, 0xFF, 0xFF);
+        break;
+    }
+}
+
+bool draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, Uint8 size)
+{
+    if (symbol == COLOR_SYMBOL) {
+        readColor = true;
+        return false;
+    }
+    if (readColor) {
+        readColor = false;
+        if (symbol != COLOR_SYMBOL) {
+            setColor(surface->format, symbol);
+            return false;
+        }
+    }
+
     x += (FONT_H - 1) * 1;
     if (symbol > 127) {
         symbol -= 128;
@@ -21,21 +51,24 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, U
         for (int col = FONT_H - FONT_W, xs = x - col; col < FONT_H; col++, xs -= 1) {
             if ((*ptr & 1 << col) && y + ys < surface->h && xs < surface->w) {
                 SDL_Rect r = { xs * size, y + ys * size, size, size };
-                SDL_FillRect(surface, &r, color);
+                SDL_FillRect(surface, &r, fontColor);
             }
         }
     }
+    return true;
 }
 
-void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uint32 color, Uint8 size = 1)
+void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uint8 size = 1, Uint32 color = 255)
 {
-	Uint16 orig_x = x;
+    if (color != 255) {
+        setColor(surface->format, color);
+    }
+    Uint16 orig_x = x;
     while (*text) {
         if (*text == '\n') {
             x = orig_x;
             y += FONT_H * size;
-        } else {
-            draw_char(surface, *text, x, y, color, size);
+        } else if (draw_char(surface, *text, x, y, size)) {
             x += FONT_W * size;
         }
         text++;

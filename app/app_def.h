@@ -17,7 +17,7 @@ enum
     UI_KEY_LEFT,
     UI_KEY_RIGHT,
     UI_KEY_A,
-    UI_KEY_Y,
+    UI_KEY_B,
     UI_KEY_COUNT
 };
 
@@ -27,7 +27,7 @@ typedef struct {
     bool Right = false;
     bool Left = false;
     bool A = false;
-    bool Y = false;
+    bool B = false;
 } UiKeys;
 
 #endif

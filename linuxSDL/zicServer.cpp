@@ -46,8 +46,8 @@ void handleKeyboard(SDL_KeyboardEvent* event)
     case SDL_SCANCODE_A:
         bit = UI_KEY_A;
         break;
-    case SDL_SCANCODE_Z: // Y of german keyboard. Should be configurable!
-        bit = UI_KEY_Y;
+    case SDL_SCANCODE_S: // Should be configurable!
+        bit = UI_KEY_B;
         break;
     default:
         return;
@@ -59,6 +59,7 @@ void handleKeyboard(SDL_KeyboardEvent* event)
         ui.keys &= ~(1 << bit); // unset bit (to 0)
     }
 
+    // we could skip keyChange on A repeat
     ui.keysChanged = true;
 }
 
@@ -165,7 +166,7 @@ int main(int argc, char* args[])
     screenSurface = SDL_GetWindowSurface(window);
     // SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 
-    draw_string(screenSurface, "Hello Alex # !\nYo 1234567890\nC#4 D-5", 10, 30, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF), 2);
+    draw_string(screenSurface, "Zic", 30, 100, 5, '0');
 
     SDL_UpdateWindowSurface(window);
 
@@ -178,7 +179,7 @@ int main(int argc, char* args[])
             ui.keysChanged = false;
 
             SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
-            draw_string(screenSurface, display, 10, 30, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF), 2);
+            draw_string(screenSurface, display, 10, 30, 2);
             SDL_UpdateWindowSurface(window);
         }
         // SDL_Delay(10);
