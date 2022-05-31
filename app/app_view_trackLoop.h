@@ -18,6 +18,7 @@ protected:
 
     uint8_t pos = 3 * 7;
     uint8_t sel = 4 * 7;
+    uint8_t play = 4 * 7;
 
 public:
     App_View_TrackLoop(App_Tracks* _tracks)
@@ -35,14 +36,19 @@ public:
                     strcat(display, " ");
                 }
                 uint8_t note = naturalNotes[n + pos];
-                bool selected = sel == n + pos;
-                if (selected) {
-                    strcat(display, "~b~1");
+                bool colored = false;
+                if (sel == n + pos) {
+                    strcat(display, "~b");
+                    colored = true;
+                }
+                if (play == n + pos) {
+                    strcat(display, "~1");
+                    colored = true;
                 }
                 strcat(display, getNoteStr(note));
                 octave[0] = '0' + getNoteOctave(note);
                 strcat(display, octave);
-                if (selected) {
+                if (colored) {
                     strcat(display, "~0");
                 }
             }
@@ -71,22 +77,35 @@ public:
             //     }
             // }
             if (keys->Up) {
-                if ((int16_t)pos - 7 >= 0) {
-                    pos -= 7;
+                if ((int16_t)sel - 7 >= 0) {
+                    sel -= 7;
+                    if (sel < pos) {
+                        pos -= 7;
+                    }
                 }
             } else if (keys->Down) {
-                if (pos + 7 < (10 - APP_VIEW_TRACK_LOOP_ROW) * 7) {
-                    pos += 7;
+                if (sel + 7 < 8 * 7) {
+                    sel += 7;
+                    // if (sel > pos) {
+                    //     pos += 7;
+                    // }
                 }
             } else if (keys->Right) {
-                if (pos % 7 != 8 - APP_VIEW_TRACK_LOOP_ROW) {
-                    pos++;
+                if (sel % 7 < 6) {
+                    sel++;
+                    if (sel % 7 > 7 - APP_VIEW_TRACK_LOOP_COL) {
+                        pos++;
+                    }
                 }
             } else if (keys->Left) {
-                if (pos % 7 != 0) {
-                    pos--;
+                if (sel % 7 != 0) {
+                    sel--;
+                    if (sel % 7 < pos % 7) {
+                        pos--;
+                    }
                 }
             }
+            SDL_Log("pos %d,%d sel %d,%d", pos, pos % 7, sel, sel % 7);
             render(display);
             return VIEW_CHANGED;
         }
