@@ -18,7 +18,7 @@ void setColor(const SDL_PixelFormat* format, unsigned char color)
 {
     switch (color) {
     case '1':
-        fontColor = SDL_MapRGB(format, 0x00, 0xFF, 0xFF);
+        fontColor = SDL_MapRGB(format, 73, 219, 158);
         break;
 
     default:

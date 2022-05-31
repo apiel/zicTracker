@@ -46,6 +46,19 @@ public:
         return tracks.sample();
     }
 
+    void menuPlus()
+    {
+        currentMenu = (currentMenu + 1) % APP_MENU_SIZE;
+    }
+
+    void menuMinus()
+    {
+        currentMenu--;
+        if (currentMenu == 255) {
+            currentMenu = APP_MENU_SIZE - 1;
+        }
+    }
+
     char* handleUi(uint8_t keysBin)
     {
         keys.Up = (keysBin >> UI_KEY_UP) & 1;
@@ -57,6 +70,19 @@ public:
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
         if (keys.A) {
+            if (keys.Right) {
+                menuPlus();
+            } else if (keys.Left) {
+                menuMinus();
+            } else if (keys.Up) {
+                do {
+                    menuMinus();
+                } while (!menu[currentMenu].isBase);
+            } else if (keys.Down) {
+                do {
+                    menuPlus();
+                } while (!menu[currentMenu].isBase);
+            }
             strcpy(display, "");
             for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
                 if (i != 0 && menu[i].isBase) {
