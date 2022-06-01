@@ -43,6 +43,16 @@ public:
             strcat(display, "~0");
         }
     }
+
+    uint8_t update(UiKeys* keys, char* display)
+    {
+        if (keys->B) {
+            uint8_t note = naturalNotes[cursor];
+            tracks->looper->on(note);
+        } else {
+            App_View_Table::update(keys, display);
+        }
+    }
 };
 
 #endif
