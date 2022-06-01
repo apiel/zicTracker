@@ -6,8 +6,16 @@
 template <uint8_t VISIBLE_ROW, uint8_t VISIBLE_COL, uint8_t TOTAL_COL>
 class App_View_Table : App_View {
 public:
-    uint16_t pos = 0;
+    uint16_t startPos = 0;
     uint16_t cursor = 0;
+    uint16_t TOTAL_ROW = 0;
+    uint16_t TOTAL_CELL = 0;
+
+    App_View_Table(uint16_t totalRow)
+        : TOTAL_ROW(totalRow)
+        , TOTAL_CELL(totalRow * TOTAL_COL)
+    {
+    }
 
     virtual void renderPos(char* display, uint16_t pos) = 0;
 
@@ -34,51 +42,50 @@ public:
                 if (col != 0) {
                     colSeparator(display);
                 }
-                renderPos(display, n + pos);
+                renderPos(display, n + startPos);
             }
             rowSeparator(display);
         }
     }
 
-    // uint8_t update(UiKeys* keys, char* display)
-    // {
-    //     if (keys->Up || keys->Down || keys->Right || keys->Left) {
-    //         if (keys->Up) {
-    //             if ((int16_t)cursor - 7 >= 0) {
-    //                 cursor -= 7;
-    //                 if (cursor < pos) {
-    //                     pos -= 7;
-    //                 }
-    //             }
-    //         } else if (keys->Down) {
-    //             if (cursor + 7 < 8 * 7) {
-    //                 cursor += 7;
-    //                 // FIXME fixme
-    //                 if (cursor > pos + (7 * APP_VIEW_TRACK_LOOP_ROW)) {
-    //                     pos += 7;
-    //                 }
-    //             }
-    //         } else if (keys->Right) {
-    //             if (cursor % 7 < 6) {
-    //                 cursor++;
-    //                 if (cursor % 7 > 7 - APP_VIEW_TRACK_LOOP_COL) {
-    //                     pos++;
-    //                 }
-    //             }
-    //         } else if (keys->Left) {
-    //             if (cursor % 7 != 0) {
-    //                 cursor--;
-    //                 if (cursor % 7 < pos % 7) {
-    //                     pos--;
-    //                 }
-    //             }
-    //         }
-    //         SDL_Log("pos %d,%d cursor %d,%d", pos, pos % 7, cursor, cursor % 7);
-    //         render(display);
-    //         return VIEW_CHANGED;
-    //     }
-    //     return VIEW_NONE;
-    // }
+    uint8_t update(UiKeys* keys, char* display)
+    {
+        if (keys->Up || keys->Down || keys->Right || keys->Left) {
+            if (keys->Up) {
+                if ((int16_t)cursor >= TOTAL_COL) {
+                    cursor -= TOTAL_COL;
+                    if (cursor < startPos) {
+                        startPos -= TOTAL_COL;
+                    }
+                }
+            } else if (keys->Down) {
+                if (cursor + TOTAL_COL < TOTAL_CELL) {
+                    cursor += TOTAL_COL;
+                    if (cursor >= startPos + (TOTAL_COL * VISIBLE_ROW)) {
+                        startPos += TOTAL_COL;
+                    }
+                }
+            } else if (keys->Right) {
+                if (cursor % TOTAL_COL < 6) {
+                    cursor++;
+                    if (cursor % TOTAL_COL > TOTAL_COL - VISIBLE_COL) {
+                        startPos++;
+                    }
+                }
+            } else if (keys->Left) {
+                if (cursor % TOTAL_COL != 0) {
+                    cursor--;
+                    if (cursor % TOTAL_COL < startPos % TOTAL_COL) {
+                        startPos--;
+                    }
+                }
+            }
+            SDL_Log("startPos %d,%d cursor %d,%d", startPos, startPos % TOTAL_COL, cursor, cursor % TOTAL_COL);
+            render(display);
+            return VIEW_CHANGED;
+        }
+        return VIEW_NONE;
+    }
 };
 
 #endif
