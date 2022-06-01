@@ -24,7 +24,7 @@ public:
             strcat(display, "~b");
             colored = true;
         }
-        if (tracks->looper->play == note) {
+        if (tracks->looper->nextToPlay == note) {
             strcat(display, "~1");
             colored = true;
         }
@@ -41,9 +41,10 @@ public:
         if (keys->B) {
             uint8_t note = naturalNotes[cursor];
             tracks->looper->on(note);
-        } else {
-            App_View_Table::update(keys, display);
+            render(display);
+            return VIEW_CHANGED;
         }
+        return App_View_Table::update(keys, display);
     }
 };
 

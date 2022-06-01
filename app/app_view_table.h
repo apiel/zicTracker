@@ -29,22 +29,27 @@ public:
         strcat(display, " ");
     }
 
-    void rowSeparator(char* display)
+    void endRow(char* display)
     {
         strcat(display, "\n");
+    }
+
+    void startRow(char* display)
+    {
     }
 
     void render(char* display)
     {
         initDisplay(display);
         for (uint8_t row = 0, n = 0; row < VISIBLE_ROW; row++, n += TOTAL_COL - VISIBLE_COL) {
+            startRow(display);
             for (uint8_t col = 0; col < VISIBLE_COL; col++, n++) {
                 if (col != 0) {
                     colSeparator(display);
                 }
                 renderPos(display, n + startPos);
             }
-            rowSeparator(display);
+            endRow(display);
         }
     }
 
