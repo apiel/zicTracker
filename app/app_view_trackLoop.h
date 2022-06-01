@@ -16,11 +16,10 @@ class App_View_TrackLoop : public App_View_Table<5, 4, 7> {
 protected:
     App_Tracks* tracks;
 
-    uint8_t playNote = 60;
-
 public:
     App_View_TrackLoop(App_Tracks* _tracks)
-        : App_View_Table(9), tracks(_tracks)
+        : App_View_Table(9)
+        , tracks(_tracks)
     {
     }
 
@@ -33,7 +32,7 @@ public:
             strcat(display, "~b");
             colored = true;
         }
-        if (playNote == note) {
+        if (tracks->looper->play == note) {
             strcat(display, "~1");
             colored = true;
         }

@@ -66,21 +66,22 @@ public:
                     }
                 }
             } else if (keys->Right) {
-                if (cursor % TOTAL_COL < 6) {
+                if (cursor % TOTAL_COL < TOTAL_COL - 1) {
                     cursor++;
-                    if (cursor % TOTAL_COL > TOTAL_COL - VISIBLE_COL) {
+                    if ((cursor % TOTAL_COL) - (startPos % TOTAL_COL) == VISIBLE_COL) {
                         startPos++;
                     }
                 }
             } else if (keys->Left) {
-                if (cursor % TOTAL_COL != 0) {
+                if (cursor % TOTAL_COL > 0) {
                     cursor--;
                     if (cursor % TOTAL_COL < startPos % TOTAL_COL) {
                         startPos--;
                     }
                 }
             }
-            SDL_Log("startPos %d,%d cursor %d,%d", startPos, startPos % TOTAL_COL, cursor, cursor % TOTAL_COL);
+            // SDL_Log("startPos %d,%d cursor %d,%d", startPos, startPos % TOTAL_COL, cursor, cursor % TOTAL_COL);
+            // SDL_Log("%d == %d", (cursor % TOTAL_COL) - (startPos % TOTAL_COL), VISIBLE_COL);
             render(display);
             return VIEW_CHANGED;
         }
