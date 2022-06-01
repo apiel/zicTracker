@@ -4,14 +4,6 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
-#ifndef APP_VIEW_TRACK_LOOP_COL
-#define APP_VIEW_TRACK_LOOP_COL 4
-#endif
-
-#ifndef APP_VIEW_TRACK_LOOP_ROW
-#define APP_VIEW_TRACK_LOOP_ROW 5
-#endif
-
 class App_View_TrackLoop : public App_View_Table<5, 4, 7> {
 protected:
     App_Tracks* tracks;
