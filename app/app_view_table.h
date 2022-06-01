@@ -17,39 +17,39 @@ public:
     {
     }
 
-    virtual void renderPos(char* display, uint16_t pos) = 0;
+    virtual void renderCell(char* display, uint16_t pos, uint16_t row, uint8_t col) = 0;
 
-    void initDisplay(char* display)
+    virtual void initDisplay(char* display)
     {
         strcpy(display, "");
     }
 
-    void colSeparator(char* display)
+    virtual void colSeparator(char* display)
     {
         strcat(display, " ");
     }
 
-    void endRow(char* display)
+    virtual void endRow(char* display, uint16_t row)
     {
         strcat(display, "\n");
     }
 
-    void startRow(char* display)
+    virtual void startRow(char* display, uint16_t row)
     {
     }
 
     void render(char* display)
     {
         initDisplay(display);
-        for (uint8_t row = 0, n = 0; row < VISIBLE_ROW; row++, n += TOTAL_COL - VISIBLE_COL) {
-            startRow(display);
+        for (uint16_t row = 0, n = 0; row < VISIBLE_ROW; row++, n += TOTAL_COL - VISIBLE_COL) {
+            startRow(display, row);
             for (uint8_t col = 0; col < VISIBLE_COL; col++, n++) {
                 if (col != 0) {
                     colSeparator(display);
                 }
-                renderPos(display, n + startPos);
+                renderCell(display, n + startPos, row, col);
             }
-            endRow(display);
+            endRow(display, row);
         }
     }
 

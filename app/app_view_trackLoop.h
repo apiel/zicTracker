@@ -15,12 +15,12 @@ public:
     {
     }
 
-    void renderPos(char* display, uint16_t _pos)
+    void renderCell(char* display, uint16_t pos, uint16_t row, uint8_t col)
     {
         char octave[1];
-        uint8_t note = naturalNotes[_pos];
+        uint8_t note = naturalNotes[pos];
         bool colored = false;
-        if (cursor == _pos) {
+        if (cursor == pos) {
             strcat(display, "~b");
             colored = true;
         }
