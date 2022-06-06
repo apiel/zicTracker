@@ -127,7 +127,7 @@ bool initAudio()
     spec.callback = audioCallBack;
     spec.userdata = NULL;
 
-    if ((ui.audioDevice = SDL_OpenAudioDevice(nullptr, 0, &spec, &aspec, SDL_AUDIO_ALLOW_ANY_CHANGE)) <= 0) {
+    if ((ui.audioDevice = SDL_OpenAudioDevice(NULL, 0, &spec, &aspec, SDL_AUDIO_ALLOW_ANY_CHANGE)) <= 0) {
         fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
         return false;
     }

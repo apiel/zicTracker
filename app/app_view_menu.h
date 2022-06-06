@@ -7,7 +7,7 @@
 
 typedef struct {
     const char* name;
-    const char key;
+    char key;
     uint8_t view;
     bool isBase = false;
 } Menu;
