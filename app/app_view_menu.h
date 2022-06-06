@@ -9,7 +9,7 @@ typedef struct {
     const char* name;
     char key;
     uint8_t view;
-    bool isBase = false;
+    bool isBase; // = false;
 } Menu;
 
 class App_View_Menu : App_View {
@@ -32,12 +32,12 @@ public:
 
     Menu menu[APP_MENU_SIZE] = {
         { "Track", 'T', VIEW_TRACK, true },
-        { "Track Loop", 'L', VIEW_TRACK_LOOP },
-        { "Track pattern", 'P', VIEW_TRACK_PATTERN },
+        { "Track Loop", 'L', VIEW_TRACK_LOOP, false },
+        { "Track pattern", 'P', VIEW_TRACK_PATTERN, false },
         { "Pattern", 'P', VIEW_PATTERN, true },
-        { "Pattern edit", 'E', VIEW_PATTERN_EDIT },
+        { "Pattern edit", 'E', VIEW_PATTERN_EDIT, false },
         { "Instrument", 'I', VIEW_INSTRUMENT, true },
-        { "Instrument edit", 'E', VIEW_INSTRUMENT_EDIT },
+        { "Instrument edit", 'E', VIEW_INSTRUMENT_EDIT, false },
     };
     uint8_t currentMenu = 0;
 
