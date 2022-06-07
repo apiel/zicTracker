@@ -13,6 +13,7 @@
 // #include <zic_wave_wavetable.h>
 // #include <wavetables/wavetable_Bank.h>
 #include "app/app.h"
+#include "app/app_def.h"
 
 #define SCREEN_W 128 // OLED display width, in pixels
 #define SCREEN_H 64 // OLED display height, in pixels
@@ -41,7 +42,7 @@ void initDisplay()
     }
 
     d.clearDisplay();
-    d.setTextColor(WHITE);
+    d.setTextColor(INVERSE);
     d.setTextSize(1);
     d.setCursor(0, 0);
 
@@ -68,6 +69,16 @@ void handleButton()
     // Serial.print("\n");
 }
 
+void render(Display* display)
+{
+    d.clearDisplay();
+    d.setCursor(0, 0);
+    // d.fillRect(0,0,SCREEN_W*0.5, SCREEN_H*0.5, WHITE);
+    // d.setTextColor(INVERSE);
+    d.print(display->text);
+    d.display();
+}
+
 void zicServerEsp32Init()
 {
     LOGLEVEL_AUDIOKIT = AudioKitInfo;
@@ -85,10 +96,7 @@ void zicServerEsp32Init()
     initDisplay();
     Serial.println("Start esp32 zic server");
 
-    d.clearDisplay();
-    d.setCursor(0, 0);
-    d.println(app.render());
-    d.display();
+    render(app.render());
 }
 
 void zicServerEsp32Loop()
@@ -106,13 +114,7 @@ void zicServerEsp32Loop()
 
     if (keysChanged) {
         keysChanged = false;
-        char* text2display = app.handleUi(keys);
-        d.clearDisplay();
-        d.setCursor(0, 0);
-        // d.fillRect(0,0,SCREEN_W*0.5, SCREEN_H*0.5, WHITE);
-        d.setTextColor(INVERSE);
-        d.println(text2display);
-        d.display();
+        render(app.handleUi(keys));
     }
 }
 

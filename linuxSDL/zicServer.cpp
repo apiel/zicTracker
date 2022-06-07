@@ -143,7 +143,7 @@ bool initAudio()
 void render(SDL_Window* window, SDL_Surface* screenSurface, Display* display)
 {
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
-    draw_string(screenSurface, display->text, 10, 30, 2);
+    draw_string(screenSurface, display->text, 10, 30, 1);
     SDL_UpdateWindowSurface(window);
 }
 
