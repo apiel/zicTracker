@@ -28,6 +28,9 @@ Zic_Wave_Wavetable wave(&wavetable_Bank);
 
 Adafruit_SSD1306 d(SCREEN_W, SCREEN_H, &Wire, -1);
 
+uint8_t keys = 0;
+bool keysChanged = false;
+
 void initDisplay()
 {
     // should here just have available ...??
@@ -47,13 +50,22 @@ void initDisplay()
     d.display();
 }
 
-void buttonLoop()
+void handleButton()
 {
+    // Serial.print("BTN: ");
+    uint8_t _keys = 0;
     for (uint8_t p = 0; p < PIN_KEYS_COUNT; p++) {
+        // Serial.print(digitalRead(pinKeys[p]) == LOW);
         if (digitalRead(pinKeys[p]) == LOW) {
-            Serial.printf("PIN_KEY %d pressed\n", p);
+            _keys |= 1 << p;
         }
     }
+    if (_keys != keys) {
+        keysChanged = true;
+        keys = _keys;
+        Serial.printf("Keys %d\n", keys);
+    }
+    // Serial.print("\n");
 }
 
 void zicServerEsp32Init()
@@ -67,6 +79,7 @@ void zicServerEsp32Init()
 
     for (uint8_t p = 0; p < PIN_KEYS_COUNT; p++) {
         pinMode(pinKeys[p], INPUT_PULLUP);
+        attachInterrupt(digitalPinToInterrupt(pinKeys[p]), handleButton, CHANGE);
     }
 
     initDisplay();
@@ -90,8 +103,6 @@ void zicServerEsp32Loop()
         sampleDataU.ch[1] = sampleDataU.ch[0];
         kit.write((const char*)&sampleDataU.sample, 4);
     }
-
-    buttonLoop();
 }
 
 #endif
