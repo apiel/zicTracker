@@ -9,10 +9,23 @@
 // #include <wavetables/wavetable_Bank.h>
 #include "app/app.h"
 
+#define PIN_KEYS_COUNT 6
+
+uint8_t pinKeys[PIN_KEYS_COUNT] = { 36, 13, 19, 23, 18, 5 };
+
 AudioKit kit;
 App app;
 
 Zic_Wave_Wavetable wave(&wavetable_Bank);
+
+void buttonLoop()
+{
+    for (uint8_t p = 0; p < PIN_KEYS_COUNT; p++) {
+        if (digitalRead(pinKeys[p]) == LOW) {
+            Serial.printf("PIN_KEY %d pressed\n", p);
+        }
+    }
+}
 
 void zicServerEsp32Init()
 {
@@ -22,6 +35,10 @@ void zicServerEsp32Init()
     AudioKitConfig cfg = kit.defaultConfig(AudioOutput);
     kit.begin(cfg);
     app.start();
+
+    for (uint8_t p = 0; p < PIN_KEYS_COUNT; p++) {
+        pinMode(pinKeys[p], INPUT_PULLUP);
+    }
 }
 
 void zicServerEsp32Loop()
@@ -36,6 +53,8 @@ void zicServerEsp32Loop()
         sampleDataU.ch[1] = sampleDataU.ch[0];
         kit.write((const char*)&sampleDataU.sample, 4);
     }
+
+    buttonLoop();
 }
 
 #endif
