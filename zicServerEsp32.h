@@ -78,6 +78,8 @@ void render(Display* display)
     // d.fillRect(0,0,SCREEN_W*0.5, SCREEN_H*0.5, WHITE);
     // d.setTextColor(INVERSE);
     d.print(display->text);
+    Serial.println("-");
+    Serial.println(display->text);
     d.display();
 }
 

@@ -5,6 +5,7 @@
 #include "./app_view_table.h"
 
 class App_View_TrackLoop : public App_View_Table<7, 6, 7> {
+// class App_View_TrackLoop : public App_View_Table<6, 5, 7> {
 protected:
     App_Tracks* tracks;
 
@@ -21,7 +22,9 @@ public:
         uint8_t note = naturalNotes[pos];
         strcat(display->text, tracks->looper->nextToPlay == note ? ">" : " ");
         if (cursor == pos) {
-            strcat(display->text, "[");
+            // TODO use a class for display to have a setter
+            display->cursorPos = display->text + strlen(display->text);
+            display->cursorLen = 2;
         }
         strcat(display->text, getNoteStr(note));
         octave[0] = '0' + getNoteOctave(note);

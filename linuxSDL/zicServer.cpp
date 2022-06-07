@@ -145,7 +145,10 @@ bool initAudio()
 void render(SDL_Window* window, SDL_Surface* screenSurface, Display* display)
 {
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
-    draw_string(screenSurface, display->text, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
+    // draw_cursor(screenSurface, display->cursorPos, display->cursorLen, TEXT_SIZE);
+    // draw_cursor(screenSurface, display->cursorRow, display->cursorCol, display->cursorLen, TEXT_SIZE);
+    // draw_string(screenSurface, display->text, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
+    draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
     SDL_UpdateWindowSurface(window);
 }
 
@@ -183,7 +186,7 @@ int main(int argc, char* args[])
     //     SDL_Delay(10);
     // }
 
-    draw_string(screenSurface, "Zic", 2, 20, 5);
+    // draw_string(screenSurface, "Zic", 2, 20, 5);
 
     SDL_UpdateWindowSurface(window);
 

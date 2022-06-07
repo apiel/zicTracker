@@ -42,6 +42,8 @@ public:
 
     Display* render()
     {
+        display.cursorLen = 0;
+        
         uint8_t view = menuView.getView();
         switch (view) {
         case VIEW_TRACK_LOOP:
@@ -57,6 +59,8 @@ public:
 
     Display* handleUi(uint8_t keysBin)
     {
+        display.cursorLen = 0;
+
         keys.Up = (keysBin >> UI_KEY_UP) & 1;
         keys.Down = (keysBin >> UI_KEY_DOWN) & 1;
         keys.Left = (keysBin >> UI_KEY_LEFT) & 1;

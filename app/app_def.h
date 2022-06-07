@@ -8,7 +8,9 @@
 
 typedef struct {
     char text[MAX_DISPLAY_TEXT];
-    uint8_t cursorPos;
+    char * cursorPos;
+    uint8_t cursorRow;
+    uint8_t cursorCol;
     uint8_t cursorLen;
 } Display;
 
