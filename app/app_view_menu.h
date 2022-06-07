@@ -54,10 +54,10 @@ public:
                 strcat(display->text, "\n");
             }
             if (i == currentMenu) {
-                sprintf(display->text + strlen(display->text), "[%c ", menu[i].key);
-            } else {
-                sprintf(display->text + strlen(display->text), "%c ", menu[i].key);
+                display->cursorPos = display->text + strlen(display->text);
+                display->cursorLen = 1;
             }
+            sprintf(display->text + strlen(display->text), "%c ", menu[i].key);
         }
         sprintf(display->text + strlen(display->text), "\n\n%s", menu[currentMenu].name);
     }

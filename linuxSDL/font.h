@@ -13,7 +13,6 @@
 #define COLOR_SYMBOL '~'
 
 Uint32 fontColor = 0;
-Uint32 bgColor = 0;
 
 void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, Uint8 size)
 {
@@ -36,54 +35,7 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, U
 void init_default_string_color(SDL_Surface* surface)
 {
     fontColor = SDL_MapRGB(surface->format, 0xFF, 0xFF, 0xFF);
-    bgColor = 0;
 }
-
-// void draw_cursor(SDL_Surface* surface, Uint16 pos, Uint8 len, Uint8 size = 1)
-// {
-//     if (len) {
-//         Uint16 x = 10;
-//         Uint16 y = 10;
-//         SDL_Rect r = { x * size, y, FONT_H * size, FONT_W * size * len };
-//         SDL_FillRect(surface, &r, SDL_MapRGB(surface->format, 39, 69, 94));
-//     }
-// }
-void draw_cursor(SDL_Surface* surface, Uint8 row, Uint8 col, Uint8 len, Uint8 size = 1)
-{
-    if (len) {
-        Uint16 x = col * FONT_W * size;
-        Uint16 y = row * FONT_H * size;
-        SDL_Rect r = { x, y, FONT_H * size, FONT_W * size * len };
-        SDL_FillRect(surface, &r, SDL_MapRGB(surface->format, 39, 69, 94));
-    }
-}
-
-// void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uint8 size = 1)
-// {
-//     Uint16 orig_x = x;
-//     while (*text) {
-//         if (*text == '\n') {
-//             x = orig_x;
-//             y += (FONT_H + LINE_SPACING) * size;
-//         } else {
-//             if (*text == '>') { // Play symbol
-//                 fontColor = SDL_MapRGB(surface->format, 73, 219, 158);
-//             } else if (*text == '[') {
-//                 bgColor = SDL_MapRGB(surface->format, 39, 69, 94);
-//             } else if (*text == ' ' || *text == '\n') {
-//                 init_default_string_color(surface);
-//             }
-
-//             if (bgColor) {
-//                 SDL_Rect r = { x * size, y, FONT_H * size, FONT_W * size };
-//                 SDL_FillRect(surface, &r, bgColor);
-//             }
-//             draw_char(surface, *text, x, y, size);
-//             x += FONT_W; // * size;
-//         }
-//         text++;
-//     }
-// }
 
 void draw_string(SDL_Surface* surface, Display* display, Uint16 x, Uint16 y, Uint8 size = 1)
 {
@@ -96,15 +48,8 @@ void draw_string(SDL_Surface* surface, Display* display, Uint16 x, Uint16 y, Uin
         } else {
             if (*text == '>') { // Play symbol
                 fontColor = SDL_MapRGB(surface->format, 73, 219, 158);
-            } else if (*text == '[') {
-                bgColor = SDL_MapRGB(surface->format, 39, 69, 94);
             } else if (*text == ' ' || *text == '\n') {
                 init_default_string_color(surface);
-            }
-
-            if (bgColor) {
-                SDL_Rect r = { x * size, y, FONT_H * size, FONT_W * size };
-                SDL_FillRect(surface, &r, bgColor);
             }
 
             if (display->cursorLen && text >= display->cursorPos && text < display->cursorPos + display->cursorLen) {
