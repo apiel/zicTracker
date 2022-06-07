@@ -6,8 +6,7 @@
 #include "fontData.h"
 
 #define FONT_H 8
-#define FONT_W 8
-#define LINE_SPACING 4
+#define FONT_W 6
 
 #define COLOR_SYMBOL '~'
 
@@ -67,7 +66,7 @@ void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uin
             readColor = true;
         } else if (*text == '\n') {
             x = orig_x;
-            y += (FONT_H + LINE_SPACING) * size;
+            y += FONT_H * size;
         } else {
             if (bgColor) {
                 SDL_Rect r = { x * size, y, FONT_H * size, FONT_W * size };
