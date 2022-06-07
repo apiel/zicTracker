@@ -3,10 +3,10 @@
 
 // ESP32 dev module -> audio kit
 
-#include <AudioKitHAL.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Arduino.h>
+#include <AudioKitHAL.h>
 #include <SPI.h>
 #include <Wire.h>
 
@@ -42,7 +42,8 @@ void initDisplay()
     d.setTextSize(1);
     d.setCursor(0, 0);
 
-    d.println("abcdefghijklmntpqrstu");
+    // Max char per row 21, and 8 row max
+    d.println("Zic");
     d.display();
 }
 
@@ -70,6 +71,11 @@ void zicServerEsp32Init()
 
     initDisplay();
     Serial.println("Start esp32 zic server");
+
+    d.clearDisplay();
+    d.setCursor(0, 0);
+    d.println(app.render());
+    d.display();
 }
 
 void zicServerEsp32Loop()
