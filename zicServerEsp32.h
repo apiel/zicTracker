@@ -61,9 +61,9 @@ void handleButton()
         }
     }
     if (_keys != keys) {
-        keysChanged = true;
         keys = _keys;
-        Serial.printf("Keys %d\n", keys);
+        keysChanged = true;
+        // Serial.printf("Keys %d\n", keys);
     }
     // Serial.print("\n");
 }
@@ -102,6 +102,15 @@ void zicServerEsp32Loop()
         sampleDataU.ch[0] = app.sample() * 3;
         sampleDataU.ch[1] = sampleDataU.ch[0];
         kit.write((const char*)&sampleDataU.sample, 4);
+    }
+
+    if (keysChanged) {
+        keysChanged = false;
+        char* text2display = app.handleUi(keys);
+        d.clearDisplay();
+        d.setCursor(0, 0);
+        d.println(text2display);
+        d.display();
     }
 }
 
