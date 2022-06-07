@@ -54,7 +54,7 @@ public:
                 strcat(display->text, "\n");
             }
             if (i == currentMenu) {
-                sprintf(display->text + strlen(display->text), "~1%c~0 ", menu[i].key);
+                sprintf(display->text + strlen(display->text), "~b%c~0 ", menu[i].key);
             } else {
                 sprintf(display->text + strlen(display->text), "%c ", menu[i].key);
             }

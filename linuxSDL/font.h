@@ -18,17 +18,8 @@ bool readColor = false;
 void setColor(const SDL_PixelFormat* format, unsigned char color)
 {
     switch (color) {
-    case '1':
-        fontColor = SDL_MapRGB(format, 73, 219, 158);
-        break;
-
     case 'b':
         bgColor = SDL_MapRGB(format, 39, 69, 94);
-        break;
-
-    default:
-        fontColor = SDL_MapRGB(format, 0xFF, 0xFF, 0xFF);
-        bgColor = 0;
         break;
     }
 }
@@ -51,11 +42,14 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, U
     }
 }
 
-void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uint8 size = 1, Uint32 color = 255)
+void init_default_string_color(SDL_Surface* surface)
 {
-    if (color != 255) {
-        setColor(surface->format, color);
-    }
+    fontColor = SDL_MapRGB(surface->format, 0xFF, 0xFF, 0xFF);
+    bgColor = 0;
+}
+
+void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uint8 size = 1)
+{
     Uint16 orig_x = x;
     while (*text) {
         if (readColor) {
@@ -69,6 +63,12 @@ void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uin
             x = orig_x;
             y += (FONT_H + LINE_SPACING) * size;
         } else {
+            if (*text == '>') { // Play symbol
+                fontColor = SDL_MapRGB(surface->format, 73, 219, 158);
+            } else if (*text == ' ') {
+                init_default_string_color(surface);
+            }
+
             if (bgColor) {
                 SDL_Rect r = { x * size, y, FONT_H * size, FONT_W * size };
                 SDL_FillRect(surface, &r, bgColor);

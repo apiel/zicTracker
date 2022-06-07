@@ -173,6 +173,8 @@ int main(int argc, char* args[])
         return 1;
     }
     screenSurface = SDL_GetWindowSurface(window);
+    init_default_string_color(screenSurface);
+
     // SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 
     // draw_string(screenSurface, "abcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\n", 2, TEXT_SIZE * FONT_H, TEXT_SIZE, '0');
@@ -181,7 +183,7 @@ int main(int argc, char* args[])
     //     SDL_Delay(10);
     // }
 
-    draw_string(screenSurface, "Zic", 2, 20, 5, '0');
+    draw_string(screenSurface, "Zic", 2, 20, 5);
 
     SDL_UpdateWindowSurface(window);
 

@@ -4,7 +4,7 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
-class App_View_TrackLoop : public App_View_Table<5, 4, 7> {
+class App_View_TrackLoop : public App_View_Table<7, 6, 7> {
 protected:
     App_Tracks* tracks;
 
@@ -19,21 +19,13 @@ public:
     {
         char octave[1];
         uint8_t note = naturalNotes[pos];
-        bool colored = false;
+        strcat(display->text, tracks->looper->nextToPlay == note ? ">" : " ");
         if (cursor == pos) {
             strcat(display->text, "~b");
-            colored = true;
-        }
-        if (tracks->looper->nextToPlay == note) {
-            strcat(display->text, "~1");
-            colored = true;
         }
         strcat(display->text, getNoteStr(note));
         octave[0] = '0' + getNoteOctave(note);
         strcat(display->text, octave);
-        if (colored) {
-            strcat(display->text, "~0");
-        }
     }
 
     uint8_t update(UiKeys* keys, Display* display)
@@ -45,6 +37,10 @@ public:
             return VIEW_CHANGED;
         }
         return App_View_Table::update(keys, display);
+    }
+
+    void colSeparator(Display* display) override
+    {
     }
 };
 
