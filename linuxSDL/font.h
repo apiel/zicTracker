@@ -7,7 +7,7 @@
 
 #define FONT_H 8
 #define FONT_W 8
-#define LINE_SPACING 4
+#define LINE_SPACING 8
 
 #define COLOR_SYMBOL '~'
 

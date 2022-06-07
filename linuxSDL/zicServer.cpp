@@ -12,8 +12,10 @@
 #define CHANNELS 1
 //  #define CHANNELS 2 // to be fixed
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
+
+#define TEXT_SIZE 2
 
 App app;
 
@@ -143,7 +145,7 @@ bool initAudio()
 void render(SDL_Window* window, SDL_Surface* screenSurface, Display* display)
 {
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
-    draw_string(screenSurface, display->text, 2, 2, 2);
+    draw_string(screenSurface, display->text, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
     SDL_UpdateWindowSurface(window);
 }
 
@@ -173,15 +175,15 @@ int main(int argc, char* args[])
     screenSurface = SDL_GetWindowSurface(window);
     // SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 
-    // draw_string(screenSurface, "abcdefghijklmnopqrstu", 2, 2, 2, '0');
-
-    draw_string(screenSurface, "Zic", 30, 100, 5, '0');
-
-    SDL_UpdateWindowSurface(window);
-
-    // while (1) {
+    // draw_string(screenSurface, "abcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\n", 2, TEXT_SIZE * FONT_H, TEXT_SIZE, '0');
+    // SDL_UpdateWindowSurface(window);
+    // while (handleEvent()) {
     //     SDL_Delay(10);
     // }
+
+    draw_string(screenSurface, "Zic", 2, 20, 5, '0');
+
+    SDL_UpdateWindowSurface(window);
 
     app.start();
     render(window, screenSurface, app.render());
