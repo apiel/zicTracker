@@ -13,16 +13,6 @@
 
 Uint32 fontColor = 0;
 Uint32 bgColor = 0;
-bool readColor = false;
-
-void setColor(const SDL_PixelFormat* format, unsigned char color)
-{
-    switch (color) {
-    case 'b':
-        bgColor = SDL_MapRGB(format, 39, 69, 94);
-        break;
-    }
-}
 
 void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, Uint8 size)
 {
@@ -52,20 +42,15 @@ void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uin
 {
     Uint16 orig_x = x;
     while (*text) {
-        if (readColor) {
-            readColor = false;
-            if (*text != COLOR_SYMBOL) {
-                setColor(surface->format, *text);
-            }
-        } else if (*text == COLOR_SYMBOL) {
-            readColor = true;
-        } else if (*text == '\n') {
+        if (*text == '\n') {
             x = orig_x;
             y += (FONT_H + LINE_SPACING) * size;
         } else {
             if (*text == '>') { // Play symbol
                 fontColor = SDL_MapRGB(surface->format, 73, 219, 158);
-            } else if (*text == ' ') {
+            } else if (*text == '[') {
+                bgColor = SDL_MapRGB(surface->format, 39, 69, 94);
+            } else if (*text == ' ' || *text == '\n') {
                 init_default_string_color(surface);
             }
 

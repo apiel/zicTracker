@@ -21,7 +21,7 @@ public:
         uint8_t note = naturalNotes[pos];
         strcat(display->text, tracks->looper->nextToPlay == note ? ">" : " ");
         if (cursor == pos) {
-            strcat(display->text, "~b");
+            strcat(display->text, "[");
         }
         strcat(display->text, getNoteStr(note));
         octave[0] = '0' + getNoteOctave(note);
