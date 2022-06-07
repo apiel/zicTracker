@@ -13,7 +13,7 @@ public:
     Zic_Seq_Tempo<> tempo;
     App_Tracks tracks;
 
-    char display[128];
+    Display display = { "", 0, 0 };
     UiKeys keys;
 
     App_View_Menu menuView;
@@ -40,22 +40,22 @@ public:
         return tracks.sample();
     }
 
-    char* render()
+    Display* render()
     {
         uint8_t view = menuView.getView();
         switch (view) {
         case VIEW_TRACK_LOOP:
-            trackLoopView.render(display);
+            trackLoopView.render(&display);
             break;
 
         default:
-            trackView.render(display);
+            trackView.render(&display);
             break;
         }
-        return display;
+        return &display;
     }
 
-    char* handleUi(uint8_t keysBin)
+    Display* handleUi(uint8_t keysBin)
     {
         keys.Up = (keysBin >> UI_KEY_UP) & 1;
         keys.Down = (keysBin >> UI_KEY_DOWN) & 1;
@@ -65,23 +65,23 @@ public:
         keys.B = (keysBin >> UI_KEY_B) & 1;
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
-        if (menuView.update(&keys, display)) {
+        if (menuView.update(&keys, &display)) {
         } else {
             bool rendered = false;
             uint8_t view = menuView.getView();
             switch (view) {
             case VIEW_TRACK:
-                rendered = trackView.update(&keys, display);
+                rendered = trackView.update(&keys, &display);
                 break;
             case VIEW_TRACK_LOOP:
-                rendered = trackLoopView.update(&keys, display);
+                rendered = trackLoopView.update(&keys, &display);
                 break;
             }
             if (!rendered) {
                 render();
             }
         }
-        return display;
+        return &display;
     }
 };
 

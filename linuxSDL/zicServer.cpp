@@ -140,10 +140,10 @@ bool initAudio()
     return true;
 }
 
-void render(SDL_Window *window, SDL_Surface *screenSurface, char* display)
+void render(SDL_Window* window, SDL_Surface* screenSurface, Display* display)
 {
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
-    draw_string(screenSurface, display, 10, 30, 2);
+    draw_string(screenSurface, display->text, 10, 30, 2);
     SDL_UpdateWindowSurface(window);
 }
 
@@ -183,9 +183,8 @@ int main(int argc, char* args[])
     while (handleEvent()) {
         if (ui.keysChanged) {
             SDL_Log("%d", ui.keys);
-            char* display = app.handleUi(ui.keys);
             ui.keysChanged = false;
-            render(window, screenSurface, display);
+            render(window, screenSurface, app.handleUi(ui.keys));
         }
         // SDL_Delay(10);
     }

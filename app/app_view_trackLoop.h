@@ -15,28 +15,28 @@ public:
     {
     }
 
-    void renderCell(char* display, uint16_t pos, uint16_t row, uint8_t col)
+    void renderCell(Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
         char octave[1];
         uint8_t note = naturalNotes[pos];
         bool colored = false;
         if (cursor == pos) {
-            strcat(display, "~b");
+            strcat(display->text, "~b");
             colored = true;
         }
         if (tracks->looper->nextToPlay == note) {
-            strcat(display, "~1");
+            strcat(display->text, "~1");
             colored = true;
         }
-        strcat(display, getNoteStr(note));
+        strcat(display->text, getNoteStr(note));
         octave[0] = '0' + getNoteOctave(note);
-        strcat(display, octave);
+        strcat(display->text, octave);
         if (colored) {
-            strcat(display, "~0");
+            strcat(display->text, "~0");
         }
     }
 
-    uint8_t update(UiKeys* keys, char* display)
+    uint8_t update(UiKeys* keys, Display* display)
     {
         if (keys->B) {
             uint8_t note = naturalNotes[cursor];

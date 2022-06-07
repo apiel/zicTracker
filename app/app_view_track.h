@@ -15,17 +15,17 @@ public:
     {
     }
 
-    void startRow(char* display, uint16_t row) override
+    void startRow(Display* display, uint16_t row) override
     {
-        sprintf(display + strlen(display), "Track%d ", row + 1);
+        sprintf(display->text + strlen(display->text), "Track%d ", row + 1);
     }
 
-    void renderCell(char* display, uint16_t pos, uint16_t row, uint8_t col)
+    void renderCell(Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
         if (col == 0) {
-            strcat(display, "ON ");
+            strcat(display->text, "ON ");
         } else {
-            strcat(display, "001");
+            strcat(display->text, "001");
         }
     }
 

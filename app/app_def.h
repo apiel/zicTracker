@@ -3,6 +3,14 @@
 
 #include <stdint.h>
 
+#define MAX_DISPLAY_TEXT 176 // 21*8 + 8\n
+
+typedef struct {
+    char text[MAX_DISPLAY_TEXT];
+    uint8_t cursorPos;
+    uint8_t cursorLen;
+} Display;
+
 enum{
     VIEW_NONE,
     VIEW_CHANGED,

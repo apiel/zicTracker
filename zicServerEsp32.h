@@ -109,6 +109,8 @@ void zicServerEsp32Loop()
         char* text2display = app.handleUi(keys);
         d.clearDisplay();
         d.setCursor(0, 0);
+        // d.fillRect(0,0,SCREEN_W*0.5, SCREEN_H*0.5, WHITE);
+        d.setTextColor(INVERSE);
         d.println(text2display);
         d.display();
     }

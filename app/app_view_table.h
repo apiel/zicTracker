@@ -17,28 +17,28 @@ public:
     {
     }
 
-    virtual void renderCell(char* display, uint16_t pos, uint16_t row, uint8_t col) = 0;
+    virtual void renderCell(Display* display, uint16_t pos, uint16_t row, uint8_t col) = 0;
 
-    virtual void initDisplay(char* display)
+    virtual void initDisplay(Display* display)
     {
-        strcpy(display, "");
+        strcpy(display->text, "");
     }
 
-    virtual void colSeparator(char* display)
+    virtual void colSeparator(Display* display)
     {
-        strcat(display, " ");
+        strcat(display->text, " ");
     }
 
-    virtual void endRow(char* display, uint16_t row)
+    virtual void endRow(Display* display, uint16_t row)
     {
-        strcat(display, "\n");
+        strcat(display->text, "\n");
     }
 
-    virtual void startRow(char* display, uint16_t row)
+    virtual void startRow(Display* display, uint16_t row)
     {
     }
 
-    void render(char* display)
+    void render(Display* display)
     {
         initDisplay(display);
         for (uint16_t row = 0, n = 0; row < VISIBLE_ROW; row++, n += TOTAL_COL - VISIBLE_COL) {
@@ -53,7 +53,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, char* display)
+    uint8_t update(UiKeys* keys, Display* display)
     {
         if (keys->Up || keys->Down || keys->Right || keys->Left) {
             if (keys->Up) {

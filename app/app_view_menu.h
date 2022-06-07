@@ -46,23 +46,23 @@ public:
         return menu[currentMenu].view;
     }
 
-    void render(char* display)
+    void render(Display* display)
     {
-        strcpy(display, "");
+        strcpy(display->text, "");
         for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
             if (i != 0 && menu[i].isBase) {
-                strcat(display, "\n");
+                strcat(display->text, "\n");
             }
             if (i == currentMenu) {
-                sprintf(display + strlen(display), "~1%c~0 ", menu[i].key);
+                sprintf(display->text + strlen(display->text), "~1%c~0 ", menu[i].key);
             } else {
-                sprintf(display + strlen(display), "%c ", menu[i].key);
+                sprintf(display->text + strlen(display->text), "%c ", menu[i].key);
             }
         }
-        sprintf(display + strlen(display), "\n\n%s", menu[currentMenu].name);
+        sprintf(display->text + strlen(display->text), "\n\n%s", menu[currentMenu].name);
     }
 
-    uint8_t update(UiKeys* keys, char* display)
+    uint8_t update(UiKeys* keys, Display* display)
     {
         if (keys->A) {
             if (keys->Right) {

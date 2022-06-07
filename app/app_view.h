@@ -9,8 +9,8 @@
 class App_View
 {
 public:
-    virtual void render(char *display) = 0;
-    virtual uint8_t update(UiKeys* keys, char * display) = 0;
+    virtual void render(Display *display) = 0;
+    virtual uint8_t update(UiKeys* keys, Display * display) = 0;
 };
 
 #endif
