@@ -4,10 +4,18 @@
 // ESP32 dev module -> audio kit
 
 #include <AudioKitHAL.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Arduino.h>
+#include <SPI.h>
+#include <Wire.h>
 
 // #include <zic_wave_wavetable.h>
 // #include <wavetables/wavetable_Bank.h>
 #include "app/app.h"
+
+#define SCREEN_W 128 // OLED display width, in pixels
+#define SCREEN_H 64 // OLED display height, in pixels
 
 #define PIN_KEYS_COUNT 6
 
@@ -17,6 +25,26 @@ AudioKit kit;
 App app;
 
 Zic_Wave_Wavetable wave(&wavetable_Bank);
+
+Adafruit_SSD1306 d(SCREEN_W, SCREEN_H, &Wire, -1);
+
+void initDisplay()
+{
+    // should here just have available ...??
+    if (!d.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+        Serial.println(F("SSD1306 allocation failed"));
+        for (;;)
+            ; // Don't proceed, loop forever
+    }
+
+    d.clearDisplay();
+    d.setTextColor(WHITE);
+    d.setTextSize(1);
+    d.setCursor(0, 0);
+
+    d.println("abcdefghijklmntpqrstu");
+    d.display();
+}
 
 void buttonLoop()
 {
@@ -39,6 +67,9 @@ void zicServerEsp32Init()
     for (uint8_t p = 0; p < PIN_KEYS_COUNT; p++) {
         pinMode(pinKeys[p], INPUT_PULLUP);
     }
+
+    initDisplay();
+    Serial.println("Start esp32 zic server");
 }
 
 void zicServerEsp32Loop()
