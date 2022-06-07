@@ -74,7 +74,7 @@ void draw_string(SDL_Surface* surface, const char* text, Uint16 x, Uint16 y, Uin
                 SDL_FillRect(surface, &r, bgColor);
             }
             draw_char(surface, *text, x, y, size);
-            x += FONT_W * size;
+            x += FONT_W; // * size;
         }
         text++;
     }

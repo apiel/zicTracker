@@ -46,6 +46,8 @@ void initDisplay()
     d.setTextSize(1);
     d.setCursor(0, 0);
 
+    // d.println("abcdefghijklmnopqrstu");
+
     // Max char per row 21, and 8 row max
     d.println("Zic");
     d.display();

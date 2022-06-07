@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define MAX_DISPLAY_TEXT 176 // 21*8 + 8\n
+                             // but should actually be 20*8 to fit console
 
 typedef struct {
     char text[MAX_DISPLAY_TEXT];

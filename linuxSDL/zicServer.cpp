@@ -143,7 +143,7 @@ bool initAudio()
 void render(SDL_Window* window, SDL_Surface* screenSurface, Display* display)
 {
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
-    draw_string(screenSurface, display->text, 10, 30, 1);
+    draw_string(screenSurface, display->text, 2, 2, 2);
     SDL_UpdateWindowSurface(window);
 }
 
@@ -173,9 +173,15 @@ int main(int argc, char* args[])
     screenSurface = SDL_GetWindowSurface(window);
     // SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
 
+    // draw_string(screenSurface, "abcdefghijklmnopqrstu", 2, 2, 2, '0');
+
     draw_string(screenSurface, "Zic", 30, 100, 5, '0');
 
     SDL_UpdateWindowSurface(window);
+
+    // while (1) {
+    //     SDL_Delay(10);
+    // }
 
     app.start();
     render(window, screenSurface, app.render());
