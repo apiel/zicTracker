@@ -2,11 +2,11 @@
 #define APP_H_
 
 #include "./app_def.h"
+#include "./app_display.h"
 #include "./app_tracks.h"
 #include "./app_view_menu.h"
 #include "./app_view_track.h"
 #include "./app_view_trackLoop.h"
-#include "./app_display.h"
 #include <zic_seq_tempo.h>
 
 class App {
@@ -43,8 +43,9 @@ public:
 
     App_Display* render()
     {
+        // TODO find a better place way to reset cursor
         display.cursorLen = 0;
-        
+
         uint8_t view = menuView.getView();
         switch (view) {
         case VIEW_TRACK_LOOP:
@@ -60,6 +61,7 @@ public:
 
     App_Display* handleUi(uint8_t keysBin)
     {
+        // TODO find a better place way to reset cursor
         display.cursorLen = 0;
 
         keys.Up = (keysBin >> UI_KEY_UP) & 1;

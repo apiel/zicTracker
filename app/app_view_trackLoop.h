@@ -23,9 +23,6 @@ public:
         uint8_t note = naturalNotes[pos];
         strcat(display->text, tracks->looper->nextToPlay == note ? ">" : " ");
         if (cursor == pos) {
-            // // TODO use a class for display to have a setter
-            // display->cursorPos = display->text + strlen(display->text);
-            // display->cursorLen = 2;
             display->setCursor(2);
         }
         strcat(display->text, getNoteStr(note));
