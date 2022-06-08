@@ -72,11 +72,36 @@ void handleButton()
     // Serial.print("\n");
 }
 
+#define TOP_MARGIN 4
+
+#define FONT_H 8
+#define FONT_W 6
+
+void drawCursor(App_Display* display)
+{
+    uint16_t x = 0;
+    uint16_t y = TOP_MARGIN;
+    const char* text = display->text;
+    while (*text) {
+        if (*text == '\n') {
+            x = 0;
+            y += (FONT_H);
+        } else {
+            if (display->cursorLen && text >= display->cursorPos && text < display->cursorPos + display->cursorLen) {
+                d.fillRect(x - 2, y - 1, FONT_W + 2, FONT_H + 2, WHITE);
+            }
+            x += FONT_W;
+        }
+        text++;
+    }
+}
+
 void render(App_Display* display)
 {
     d.clearDisplay();
-    d.setCursor(0, 0);
+    d.setCursor(0, TOP_MARGIN);
     // d.fillRect(0,0,SCREEN_W*0.5, SCREEN_H*0.5, WHITE);
+    drawCursor(display);
     // d.setTextColor(INVERSE);
     d.print(display->text);
     Serial.println("-");

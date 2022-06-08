@@ -53,7 +53,7 @@ void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y,
             }
 
             if (display->cursorLen && text >= display->cursorPos && text < display->cursorPos + display->cursorLen) {
-                SDL_Rect r = { x * size - 2, y, FONT_H * size, FONT_W * size };
+                SDL_Rect r = { x * size - 2, y, FONT_W * size, FONT_H * size };
                 SDL_FillRect(surface, &r, SDL_MapRGB(surface->format, 39, 69, 94));
             }
 

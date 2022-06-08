@@ -55,9 +55,9 @@ public:
                 strcat(display->text, "\n");
             }
             if (i == currentMenu) {
-                display->setCursor(1);
+                display->setCursor(1, 1);
             }
-            sprintf(display->text + strlen(display->text), "%c ", menu[i].key);
+            sprintf(display->text + strlen(display->text), " %c", menu[i].key);
         }
         sprintf(display->text + strlen(display->text), "\n\n%s", menu[currentMenu].name);
     }
