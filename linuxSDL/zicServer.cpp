@@ -3,6 +3,7 @@
 
 #include "../app/app.h"
 #include "../app/app_def.h"
+#include "../app/app_display.h"
 #include "font.h"
 
 #ifndef SAMPLE_RATE
@@ -142,7 +143,7 @@ bool initAudio()
     return true;
 }
 
-void render(SDL_Window* window, SDL_Surface* screenSurface, Display* display)
+void render(SDL_Window* window, SDL_Surface* screenSurface, App_Display* display)
 {
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);

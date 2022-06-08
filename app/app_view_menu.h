@@ -2,6 +2,7 @@
 #define APP_VIEW_MENU_H_
 
 #include "./app_view.h"
+#include "./app_display.h"
 
 #define APP_MENU_SIZE 7
 
@@ -46,7 +47,7 @@ public:
         return menu[currentMenu].view;
     }
 
-    void render(Display* display)
+    void render(App_Display* display)
     {
         strcpy(display->text, "");
         for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
@@ -54,15 +55,16 @@ public:
                 strcat(display->text, "\n");
             }
             if (i == currentMenu) {
-                display->cursorPos = display->text + strlen(display->text);
-                display->cursorLen = 1;
+                // display->cursorPos = display->text + strlen(display->text);
+                // display->cursorLen = 1;
+                display->setCursor(1);
             }
             sprintf(display->text + strlen(display->text), "%c ", menu[i].key);
         }
         sprintf(display->text + strlen(display->text), "\n\n%s", menu[currentMenu].name);
     }
 
-    uint8_t update(UiKeys* keys, Display* display)
+    uint8_t update(UiKeys* keys, App_Display* display)
     {
         if (keys->A) {
             if (keys->Right) {

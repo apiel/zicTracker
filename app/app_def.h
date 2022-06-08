@@ -3,17 +3,6 @@
 
 #include <stdint.h>
 
-#define MAX_DISPLAY_TEXT 176 // 21*8 + 8\n
-                             // but should actually be 20*8 to fit console
-
-typedef struct {
-    char text[MAX_DISPLAY_TEXT];
-    char * cursorPos;
-    uint8_t cursorRow;
-    uint8_t cursorCol;
-    uint8_t cursorLen;
-} Display;
-
 enum{
     VIEW_NONE,
     VIEW_CHANGED,

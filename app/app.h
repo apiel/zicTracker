@@ -6,6 +6,7 @@
 #include "./app_view_menu.h"
 #include "./app_view_track.h"
 #include "./app_view_trackLoop.h"
+#include "./app_display.h"
 #include <zic_seq_tempo.h>
 
 class App {
@@ -13,7 +14,7 @@ public:
     Zic_Seq_Tempo<> tempo;
     App_Tracks tracks;
 
-    Display display = { "", 0, 0 };
+    App_Display display;
     UiKeys keys;
 
     App_View_Menu menuView;
@@ -40,7 +41,7 @@ public:
         return tracks.sample();
     }
 
-    Display* render()
+    App_Display* render()
     {
         display.cursorLen = 0;
         
@@ -57,7 +58,7 @@ public:
         return &display;
     }
 
-    Display* handleUi(uint8_t keysBin)
+    App_Display* handleUi(uint8_t keysBin)
     {
         display.cursorLen = 0;
 

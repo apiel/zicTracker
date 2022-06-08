@@ -2,6 +2,7 @@
 #define APP_VIEW_TABLE_H_
 
 #include "./app_view.h"
+#include "./app_display.h"
 
 template <uint8_t VISIBLE_ROW, uint8_t VISIBLE_COL, uint8_t TOTAL_COL>
 class App_View_Table : App_View {
@@ -17,28 +18,28 @@ public:
     {
     }
 
-    virtual void renderCell(Display* display, uint16_t pos, uint16_t row, uint8_t col) = 0;
+    virtual void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col) = 0;
 
-    virtual void initDisplay(Display* display)
+    virtual void initDisplay(App_Display* display)
     {
         strcpy(display->text, "");
     }
 
-    virtual void colSeparator(Display* display)
+    virtual void colSeparator(App_Display* display)
     {
         strcat(display->text, " ");
     }
 
-    virtual void endRow(Display* display, uint16_t row)
+    virtual void endRow(App_Display* display, uint16_t row)
     {
         strcat(display->text, "\n");
     }
 
-    virtual void startRow(Display* display, uint16_t row)
+    virtual void startRow(App_Display* display, uint16_t row)
     {
     }
 
-    void render(Display* display)
+    void render(App_Display* display)
     {
         initDisplay(display);
         for (uint16_t row = 0, n = 0; row < VISIBLE_ROW; row++, n += TOTAL_COL - VISIBLE_COL) {
@@ -53,7 +54,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, Display* display)
+    uint8_t update(UiKeys* keys, App_Display* display)
     {
         if (keys->Up || keys->Down || keys->Right || keys->Left) {
             if (keys->Up) {

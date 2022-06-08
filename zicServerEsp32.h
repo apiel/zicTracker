@@ -14,6 +14,7 @@
 // #include <wavetables/wavetable_Bank.h>
 #include "app/app.h"
 #include "app/app_def.h"
+#include "app/app_display.h"
 
 #define SCREEN_W 128 // OLED display width, in pixels
 #define SCREEN_H 64 // OLED display height, in pixels
@@ -71,7 +72,7 @@ void handleButton()
     // Serial.print("\n");
 }
 
-void render(Display* display)
+void render(App_Display* display)
 {
     d.clearDisplay();
     d.setCursor(0, 0);

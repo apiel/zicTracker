@@ -3,6 +3,7 @@
 
 #include "./app_tracks.h"
 #include "./app_view_table.h"
+#include "./app_display.h"
 
 class App_View_Track : public App_View_Table<4, 2, 2> {
 protected:
@@ -15,12 +16,12 @@ public:
     {
     }
 
-    void startRow(Display* display, uint16_t row) override
+    void startRow(App_Display* display, uint16_t row) override
     {
         sprintf(display->text + strlen(display->text), "Track%d ", row + 1);
     }
 
-    void renderCell(Display* display, uint16_t pos, uint16_t row, uint8_t col)
+    void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
         if (col == 0) {
             strcat(display->text, "ON ");
@@ -29,7 +30,7 @@ public:
         }
     }
 
-    // uint8_t update(UiKeys* keys, char* display)
+    // uint8_t update(UiKeys* keys, App_Display* display)
     // {
     //     if (keys->B) {
     //         uint8_t note = naturalNotes[cursor];

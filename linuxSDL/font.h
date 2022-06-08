@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "../app/app_def.h"
+#include "../app/app_display.h"
 #include "fontData.h"
 
 #define FONT_H 8
@@ -37,7 +37,7 @@ void init_default_string_color(SDL_Surface* surface)
     fontColor = SDL_MapRGB(surface->format, 0xFF, 0xFF, 0xFF);
 }
 
-void draw_string(SDL_Surface* surface, Display* display, Uint16 x, Uint16 y, Uint8 size = 1)
+void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y, Uint8 size = 1)
 {
     Uint16 orig_x = x;
     const char* text = display->text;
@@ -53,7 +53,7 @@ void draw_string(SDL_Surface* surface, Display* display, Uint16 x, Uint16 y, Uin
             }
 
             if (display->cursorLen && text >= display->cursorPos && text < display->cursorPos + display->cursorLen) {
-                SDL_Rect r = { x * size, y, FONT_H * size, FONT_W * size };
+                SDL_Rect r = { x * size - 2, y, FONT_H * size, FONT_W * size };
                 SDL_FillRect(surface, &r, SDL_MapRGB(surface->format, 39, 69, 94));
             }
 
