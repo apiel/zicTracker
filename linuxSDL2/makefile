@@ -7,11 +7,13 @@ ZIC_LIB=../../zic
 # default
 SDL2_CONFIG=
 CC=g++ -o zicServer
+ZIC_TARGET=0
 
 # Open Dingux
 OPENDINGUX_ROOT=/opt/gcw0-toolchain
 OPENDINGUX_CC=$(OPENDINGUX_ROOT)/usr/bin/mipsel-gcw0-linux-uclibc-g++ -o zicServer.elf -std=c++11
 OPENDINGUX_SDL2_CONFIG=$(OPENDINGUX_ROOT)/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/
+OPENDINGUX_TARGET=1
 
 # Miyoo
 MIYOO_ROOT=/opt/miyoomini-toolchain
@@ -24,10 +26,10 @@ miyoo:
 	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)" SDL2_CONFIG="$(MIYOO_SDL2_CONFIG)" build
 
 opendingux:
-	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL2_CONFIG="$(OPENDINGUX_SDL2_CONFIG)" build opk
+	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL2_CONFIG="$(OPENDINGUX_SDL2_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
 
 build:
-	$(CC) -Wall -D__LINUX_PULSE__ zicServer.cpp -I$(ZIC_LIB) `$(SDL2_CONFIG)sdl2-config --cflags --libs`
+	$(CC) -Wall -D__LINUX_PULSE__ zicServer.cpp -I$(ZIC_LIB) `$(SDL2_CONFIG)sdl2-config --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET)
 
 run:
 	./zicServer
