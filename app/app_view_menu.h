@@ -64,7 +64,7 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
-        if (keys->A) {
+        if (keys->B) {
             if (keys->Right) {
                 menuPlus();
             } else if (keys->Left) {

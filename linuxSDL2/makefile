@@ -1,3 +1,6 @@
+# for FTP EOF
+.ONESHELL:
+
 # zic lib folder
 ZIC_LIB=../../zic
 
@@ -31,5 +34,11 @@ run:
 
 opk:
 	./opk.sh
-	# ftp
-	# echo 'opkrun /media/data/apps/zicServer.opk' | telnet opendingux.local
+	ftp -n <<EOF
+	open 10.1.1.2
+	user root none
+	cd apps
+	put zicServer.opk
+	EOF
+
+# echo 'opkrun /media/data/apps/zicServer.opk' | telnet opendingux.local

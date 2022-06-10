@@ -18,6 +18,24 @@
 
 #define TEXT_SIZE 2
 
+// LAPTOP
+// #define KEY_UP SDL_SCANCODE_UP
+// #define KEY_DOWN SDL_SCANCODE_DOWN
+// #define KEY_LEFT SDL_SCANCODE_LEFT
+// #define KEY_RIGHT SDL_SCANCODE_RIGHT
+// #define KEY_A SDL_SCANCODE_S
+// #define KEY_B SDL_SCANCODE_A
+// #define KEY_MENU SDL_SCANCODE_ESCAPE
+
+// OPENDINGUX
+#define KEY_UP SDL_SCANCODE_UP
+#define KEY_DOWN SDL_SCANCODE_DOWN
+#define KEY_LEFT SDL_SCANCODE_LEFT
+#define KEY_RIGHT SDL_SCANCODE_RIGHT
+#define KEY_A 224
+#define KEY_B 226
+#define KEY_MENU 40
+
 App app;
 
 typedef struct {
@@ -28,32 +46,35 @@ typedef struct {
 
 Ui ui;
 
-void handleKeyboard(SDL_KeyboardEvent* event)
+bool handleKeyboard(SDL_KeyboardEvent* event)
 {
     uint8_t bit;
 
+    // SDL_Log("handleKeyboard %d", event->keysym.scancode);
     // SDL_Log("handleKeyboard %d", event->repeat);
     switch (event->keysym.scancode) {
-    case SDL_SCANCODE_UP:
+    case KEY_UP:
         bit = UI_KEY_UP;
         break;
-    case SDL_SCANCODE_DOWN:
+    case KEY_DOWN:
         bit = UI_KEY_DOWN;
         break;
-    case SDL_SCANCODE_LEFT:
+    case KEY_LEFT:
         bit = UI_KEY_LEFT;
         break;
-    case SDL_SCANCODE_RIGHT:
+    case KEY_RIGHT:
         bit = UI_KEY_RIGHT;
         break;
-    case SDL_SCANCODE_A:
+    case KEY_A:
         bit = UI_KEY_A;
         break;
-    case SDL_SCANCODE_S: // Should be configurable!
+    case KEY_B: // Should be configurable!
         bit = UI_KEY_B;
         break;
+    case KEY_MENU:
+        return false;
     default:
-        return;
+        break;
     }
 
     if (event->type == SDL_KEYDOWN) {
@@ -64,6 +85,8 @@ void handleKeyboard(SDL_KeyboardEvent* event)
 
     // we could skip keyChange on A repeat
     ui.keysChanged = true;
+
+    return true;
 }
 
 bool handleEvent()
@@ -77,8 +100,7 @@ bool handleEvent()
 
         case SDL_KEYUP:
         case SDL_KEYDOWN:
-            handleKeyboard(&event.key);
-            break;
+            return handleKeyboard(&event.key);
         // could be useful to simulate a pot
         // case SDL_MOUSEWHEEL:
         //     break;
