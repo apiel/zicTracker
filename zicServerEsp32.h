@@ -100,12 +100,12 @@ void render(App_Display* display)
 {
     d.clearDisplay();
     d.setCursor(0, TOP_MARGIN);
-    // d.fillRect(0,0,SCREEN_W*0.5, SCREEN_H*0.5, WHITE);
+
     drawCursor(display);
-    // d.setTextColor(INVERSE);
-    d.print(display->text);
     Serial.println("-");
     Serial.println(display->text);
+
+    d.print(display->text);
     d.display();
 }
 

@@ -19,15 +19,12 @@ public:
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
-        char octave[1];
         uint8_t note = naturalNotes[pos];
-        strcat(display->text, tracks->looper->nextToPlay == note ? ">" : " ");
         if (cursor == pos) {
-            display->setCursor(2);
+            display->setCursor(2, 1);
         }
-        strcat(display->text, getNoteStr(note));
-        octave[0] = '0' + getNoteOctave(note);
-        strcat(display->text, octave);
+        sprintf(display->text + strlen(display->text), "%c%s%d",
+            tracks->looper->nextToPlay == note ? '>' : ' ', getNoteStr(note), getNoteOctave(note));
     }
 
     uint8_t update(UiKeys* keys, App_Display* display)

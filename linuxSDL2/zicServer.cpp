@@ -146,6 +146,7 @@ bool initAudio()
 void render(SDL_Window* window, SDL_Surface* screenSurface, App_Display* display)
 {
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
+    SDL_Log("\n%s\n", display->text);
     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
     SDL_UpdateWindowSurface(window);
 }
@@ -193,7 +194,6 @@ int main(int argc, char* args[])
 
     while (handleEvent()) {
         if (ui.keysChanged) {
-            SDL_Log("%d", ui.keys);
             ui.keysChanged = false;
             render(window, screenSurface, app.handleUi(ui.keys));
         }
