@@ -29,7 +29,7 @@ opendingux:
 	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL2_CONFIG="$(OPENDINGUX_SDL2_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
 
 build:
-	$(CC) -Wall -D__LINUX_PULSE__ zicServer.cpp -I$(ZIC_LIB) `$(SDL2_CONFIG)sdl2-config --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET)
+	$(CC) -Wall zicServer.cpp -I$(ZIC_LIB) `$(SDL2_CONFIG)sdl2-config --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET)
 
 run:
 	./zicServer

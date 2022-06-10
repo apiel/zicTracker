@@ -6,17 +6,7 @@
 #include "../app/app_display.h"
 #include "font.h"
 
-#ifndef SAMPLE_RATE
-#define SAMPLE_RATE 44100
-#endif
-
-#define CHANNELS 1
-//  #define CHANNELS 2 // to be fixed
-
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
-
-#define TEXT_SIZE 2
+#define __LINUX_PULSE__
 
 #if ZIC_TARGET == 1
 // OPENDINGUX
@@ -37,6 +27,18 @@
 #define KEY_B SDL_SCANCODE_A
 #define KEY_MENU SDL_SCANCODE_ESCAPE
 #endif
+
+#ifndef SAMPLE_RATE
+#define SAMPLE_RATE 44100
+#endif
+
+#define CHANNELS 1
+//  #define CHANNELS 2 // to be fixed
+
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
+
+#define TEXT_SIZE 2
 
 App app;
 
@@ -201,16 +203,6 @@ int main(int argc, char* args[])
     }
     screenSurface = SDL_GetWindowSurface(window);
     init_default_string_color(screenSurface);
-
-    // SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
-
-    // draw_string(screenSurface, "abcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\nabcdefghijklmnopqrstu\n", 2, TEXT_SIZE * FONT_H, TEXT_SIZE, '0');
-    // SDL_UpdateWindowSurface(window);
-    // while (handleEvent()) {
-    //     SDL_Delay(10);
-    // }
-
-    // draw_string(screenSurface, "Zic", 2, 20, 5);
 
     SDL_UpdateWindowSurface(window);
 
