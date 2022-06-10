@@ -18,8 +18,6 @@
 
 #define TEXT_SIZE 2
 
-
-
 #if ZIC_TARGET == 1
 // OPENDINGUX
 #define KEY_UP SDL_SCANCODE_UP
@@ -43,7 +41,6 @@
 App app;
 
 typedef struct {
-    SDL_AudioDeviceID audioDevice;
     bool keysChanged = false;
     Uint8 keys = 0;
 } Ui;
@@ -143,7 +140,7 @@ void audioCallBack(void* userdata, Uint8* stream, int len)
     }
 }
 
-bool initAudio()
+SDL_AudioDeviceID initAudio()
 {
     SDL_AudioSpec spec, aspec;
 
@@ -156,7 +153,8 @@ bool initAudio()
     spec.callback = audioCallBack;
     spec.userdata = NULL;
 
-    if ((ui.audioDevice = SDL_OpenAudioDevice(NULL, 0, &spec, &aspec, SDL_AUDIO_ALLOW_ANY_CHANGE)) <= 0) {
+    SDL_AudioDeviceID audioDevice = SDL_OpenAudioDevice(NULL, 0, &spec, &aspec, SDL_AUDIO_ALLOW_ANY_CHANGE);
+    if (audioDevice <= 0) {
         fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
         return false;
     }
@@ -164,9 +162,9 @@ bool initAudio()
     SDL_Log("aspec freq %d channel %d sample %d format %d", aspec.freq, aspec.channels, aspec.samples, aspec.format);
 
     // Start playing, "unpause"
-    SDL_PauseAudioDevice(ui.audioDevice, 0);
+    SDL_PauseAudioDevice(audioDevice, 0);
 
-    return true;
+    return audioDevice;
 }
 
 void render(SDL_Window* window, SDL_Surface* screenSurface, App_Display* display)
@@ -186,7 +184,8 @@ int main(int argc, char* args[])
         return 1;
     }
 
-    if (!initAudio()) {
+    SDL_AudioDeviceID audioDevice = initAudio();
+    if (!audioDevice) {
         return 1;
     }
 
@@ -226,7 +225,7 @@ int main(int argc, char* args[])
         // SDL_Delay(10);
     }
 
-    SDL_CloseAudioDevice(ui.audioDevice);
+    SDL_CloseAudioDevice(audioDevice);
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
