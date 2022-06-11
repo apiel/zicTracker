@@ -31,7 +31,7 @@
 #define KEY_B 39
 #define KEY_MENU 9
 
-// MIYOO
+// // MIYOO
 // #define KEY_UP 103
 // #define KEY_DOWN 108
 // #define KEY_LEFT 105
@@ -159,8 +159,7 @@ bool initAudio()
 
     printf("aspec freq %d channel %d sample %d format %d", aspec.freq, aspec.channels, aspec.samples, aspec.format);
 
-    // // Start playing, "unpause"
-    // SDL_PauseAudioDevice(ui.audioDevice, 0);
+    // Start playing, "unpause"
     SDL_PauseAudio(0);
 
     return true;
@@ -181,9 +180,13 @@ int main(int argc, char* args[])
         return 1;
     }
 
-    // if (!initAudio()) {
-    //     return 1;
-    // }
+    char driver[50];
+    SDL_VideoDriverName(driver, 50);
+    printf("Current video driver %s\n", driver);
+
+    if (SDL_getenv("ZIC_SKIP_AUDIO") == NULL && !initAudio()) {
+        return 1;
+    }
 
     SDL_Surface* screenSurface = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
     if (screenSurface == 0) {

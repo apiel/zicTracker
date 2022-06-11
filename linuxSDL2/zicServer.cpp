@@ -8,6 +8,7 @@
 
 #define __LINUX_PULSE__
 
+// might use SDL_getenv("ZIC_SKIP_AUDIO") or config file instead
 #if ZIC_TARGET == 1
 // OPENDINGUX
 #define KEY_UP SDL_SCANCODE_UP
@@ -187,7 +188,7 @@ int main(int argc, char* args[])
     }
 
     SDL_AudioDeviceID audioDevice = initAudio();
-    if (!audioDevice) {
+    if (SDL_getenv("ZIC_SKIP_AUDIO") == NULL && !audioDevice) {
         return 1;
     }
 
