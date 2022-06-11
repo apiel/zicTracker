@@ -29,7 +29,7 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
-        if (keys->B) {
+        if (keys->A) {
             uint8_t note = naturalNotes[cursor];
             tracks->looper->on(note);
             render(display);

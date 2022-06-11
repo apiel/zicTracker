@@ -54,7 +54,7 @@ bool handleKeyboard(SDL_KeyboardEvent* event)
 {
     uint8_t bit;
 
-    // SDL_Log("handleKeyboard %d", event->keysym.scancode);
+    SDL_Log("handleKeyboard %d", event->keysym.scancode);
     // SDL_Log("handleKeyboard %d", event->repeat);
     switch (event->keysym.scancode) {
     case KEY_UP:

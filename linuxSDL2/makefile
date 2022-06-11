@@ -43,4 +43,5 @@ opk:
 	put zicServer.opk
 	EOF
 
-# echo 'opkrun /media/data/apps/zicServer.opk' | telnet opendingux.local
+# echo 'opkrun /media/data/apps/zicServer.opk' | telnet 10.1.1.2
+# echo 'opkrun /media/data/apps/zicServer.opk' | nc 10.1.1.2 23
