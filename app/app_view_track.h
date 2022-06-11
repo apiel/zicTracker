@@ -1,9 +1,9 @@
 #ifndef APP_VIEW_TRACK_H_
 #define APP_VIEW_TRACK_H_
 
+#include "./app_display.h"
 #include "./app_tracks.h"
 #include "./app_view_table.h"
-#include "./app_display.h"
 
 class App_View_Track : public App_View_Table<4, 2, 2> {
 protected:
@@ -18,15 +18,20 @@ public:
 
     void startRow(App_Display* display, uint16_t row) override
     {
-        sprintf(display->text + strlen(display->text), "Track%d ", row + 1);
+        sprintf(display->text + strlen(display->text), "%cTrack%d ", tracks->trackId == row ? '*' : ' ', row + 1);
     }
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
         if (col == 0) {
-            strcat(display->text, "ON ");
+            if (tracks->tracks[row]->looper.loopOn) {
+                strcat(display->text, ">ON");
+            } else {
+                strcat(display->text, "OFF");
+            }
         } else {
-            strcat(display->text, "001");
+            // nextToPlay is wrong!
+            sprintf(display->text + strlen(display->text), "%03d ", tracks->tracks[row]->looper.nextToPlay);
         }
     }
 
