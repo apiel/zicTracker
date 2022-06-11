@@ -71,6 +71,7 @@ void devicesInfo(RtAudio* dac)
 
 int main(int argc, char* argv[])
 {
+    std::cout << "Hello reaudio" << std::endl;
     // Specify our own error callback function.
     RtAudio dac(RtAudio::UNSPECIFIED, &errorCallback);
     dac.showWarnings(true);
