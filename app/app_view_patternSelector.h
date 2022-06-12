@@ -1,9 +1,12 @@
-#ifndef APP_VIEW_TRACK_H_
-#define APP_VIEW_TRACK_H_
+#ifndef APP_VIEW_PATTERN_SELECTOR_H_
+#define APP_VIEW_PATTERN_SELECTOR_H_
 
 #include "./app_display.h"
 #include "./app_tracks.h"
 #include "./app_view_table.h"
+
+// There will be 6x6 pattern in 6 bank, so a total of 256 for a single project
+//              1 - 36      A,B,C,D,E,F                   no project limit but must be loaded from SD
 
 #define VIEW_TRACK_COL 2
 
