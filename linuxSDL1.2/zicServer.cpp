@@ -40,6 +40,9 @@
 // #define KEY_B 29
 // #define KEY_MENU 1
 
+
+// SDL_AUDIODRIVER=dsp ??
+
 App app;
 
 typedef struct {

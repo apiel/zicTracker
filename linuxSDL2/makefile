@@ -19,11 +19,12 @@ OPENDINGUX_TARGET=1
 MIYOO_ROOT=/opt/miyoomini-toolchain
 MIYOO_CC=$(MIYOO_ROOT)/usr/bin/arm-linux-gnueabihf-g++ -o zicServerMiyoo
 MIYOO_SDL2_CONFIG=$(MIYOO_ROOT)/usr/arm-linux-gnueabihf/sysroot/usr/bin/
+MIYOO_TARGET=2
 
 linux: build run
 
 miyoo:
-	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)" SDL2_CONFIG="$(MIYOO_SDL2_CONFIG)" build
+	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)" SDL2_CONFIG="$(MIYOO_SDL2_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) build
 
 opendingux:
 	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL2_CONFIG="$(OPENDINGUX_SDL2_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
