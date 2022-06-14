@@ -9,6 +9,7 @@ SDL_CONFIG=sdl2-config
 CC=g++ -o zicServer
 ZIC_TARGET=0
 ZIC_SDL2=true
+ZIC_SDL_MIXER=SDL2_mixer
 
 # Open Dingux
 OPENDINGUX_ROOT=/opt/gcw0-toolchain
@@ -29,13 +30,13 @@ miyoo2:
 	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-2" SDL_CONFIG="$(MIYOO_SDL_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) build
 
 miyoo1.2:
-	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-1.2" SDL_CONFIG="$(MIYOO_SDL12_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) ZIC_SDL2=false build
+	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-1.2" SDL_CONFIG="$(MIYOO_SDL12_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) ZIC_SDL2=false ZIC_SDL_MIXER=SDL_mixer build
 
 opendingux:
 	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL_CONFIG="$(OPENDINGUX_SDL_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
 
 build:
-	$(CC) -Wall zicServer.cpp -I$(ZIC_LIB) -DZIC_SDL2=$(ZIC_SDL2) `$(SDL_CONFIG) --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET) -lSDL2_mixer
+	$(CC) -Wall zicServer.cpp -I$(ZIC_LIB) -DZIC_SDL2=$(ZIC_SDL2) `$(SDL_CONFIG) --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET) -l$(ZIC_SDL_MIXER)
 
 run:
 	./zicServer
