@@ -167,11 +167,12 @@ int main(int argc, char* args[])
     }
     SDL_Surface* screenSurface = SDL_GetWindowSurface(window);
 #else
-    SDL_Surface* screenSurface = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
-    if (screenSurface == 0) {
+    SDL_Surface* screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    if (screen == 0) {
         fprintf(stderr, "Failed to set video mode: %s\n", SDL_GetError());
         return 1;
     }
+    SDL_Surface* screenSurface = SDL_CreateRGBSurface(SDL_HWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
 #endif
 
     init_default_string_color(screenSurface);
@@ -181,7 +182,8 @@ int main(int argc, char* args[])
 #if ZIC_SDL2
     SDL_UpdateWindowSurface(window);
 #else
-    SDL_Flip(screenSurface);
+    SDL_BlitSurface(screenSurface, NULL, screen, NULL);
+    SDL_Flip(screen);
 #endif
 
     while (handleEvent()) {
@@ -191,7 +193,8 @@ int main(int argc, char* args[])
 #if ZIC_SDL2
             SDL_UpdateWindowSurface(window);
 #else
-            SDL_Flip(screenSurface);
+            SDL_BlitSurface(screenSurface, NULL, screen, NULL);
+            SDL_Flip(screen);
 #endif
         }
         // SDL_Delay(10);
