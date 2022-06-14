@@ -1,49 +1,21 @@
+#ifndef ZIC_SDL2
+#define ZIC_SDL2 true
+#endif
+
+#if ZIC_SDL2
 #include <SDL2/SDL.h>
+#define __LINUX_PULSE__
+#else
+#include <SDL/SDL.h>
+#endif
+
 #include <stdio.h>
 
 #include "../app/app.h"
 #include "../app/app_def.h"
 #include "../app/app_display.h"
 #include "font.h"
-
-#define __LINUX_PULSE__
-
-// might use SDL_getenv("ZIC_SKIP_AUDIO") or config file instead
-#if ZIC_TARGET == 1
-// OPENDINGUX
-#define KEY_UP SDL_SCANCODE_UP
-#define KEY_DOWN SDL_SCANCODE_DOWN
-#define KEY_LEFT SDL_SCANCODE_LEFT
-#define KEY_RIGHT SDL_SCANCODE_RIGHT
-#define KEY_A 224
-#define KEY_B 226
-#define KEY_MENU 40
-#elseif ZIC_TARGET == 2
-// MIYOO
-#define KEY_UP SDL_SCANCODE_UP
-#define KEY_DOWN SDL_SCANCODE_DOWN
-#define KEY_LEFT SDL_SCANCODE_LEFT
-#define KEY_RIGHT SDL_SCANCODE_RIGHT
-#define KEY_A 224
-#define KEY_B 226
-#define KEY_MENU 40
-// #define KEY_UP 103
-// #define KEY_DOWN 108
-// #define KEY_LEFT 105
-// #define KEY_RIGHT 106
-// #define KEY_A 57
-// #define KEY_B 29
-// #define KEY_MENU 1
-#else
-// LAPTOP
-#define KEY_UP SDL_SCANCODE_UP
-#define KEY_DOWN SDL_SCANCODE_DOWN
-#define KEY_LEFT SDL_SCANCODE_LEFT
-#define KEY_RIGHT SDL_SCANCODE_RIGHT
-#define KEY_A SDL_SCANCODE_S
-#define KEY_B SDL_SCANCODE_A
-#define KEY_MENU SDL_SCANCODE_ESCAPE
-#endif
+#include "zicKeyMap.h"
 
 #ifndef SAMPLE_RATE
 #define SAMPLE_RATE 44100
@@ -56,6 +28,10 @@
 #define SCREEN_HEIGHT 240
 
 #define TEXT_SIZE 2
+
+#if !ZIC_SDL2
+#define SDL_Log printf
+#endif
 
 App app;
 
@@ -159,11 +135,17 @@ void audioCallBack(void* userdata, Uint8* stream, int len)
     }
 }
 
+#if ZIC_SDL2
 SDL_AudioDeviceID initAudio()
+#else
+bool initAudio()
+#endif
 {
     SDL_AudioSpec spec, aspec;
 
+#if ZIC_SDL2
     SDL_zero(spec);
+#endif
     spec.freq = SAMPLE_RATE;
     spec.format = AUDIO_S16;
     spec.channels = CHANNELS;
@@ -172,43 +154,54 @@ SDL_AudioDeviceID initAudio()
     spec.callback = audioCallBack;
     spec.userdata = NULL;
 
+#if ZIC_SDL2
     SDL_AudioDeviceID audioDevice = SDL_OpenAudioDevice(NULL, 0, &spec, &aspec, SDL_AUDIO_ALLOW_ANY_CHANGE);
     if (audioDevice <= 0) {
+#else
+    if (SDL_OpenAudio(&spec, &aspec) <= 0) {
+#endif
         fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
         return false;
     }
 
     SDL_Log("aspec freq %d channel %d sample %d format %d", aspec.freq, aspec.channels, aspec.samples, aspec.format);
 
+#if ZIC_SDL2
     // Start playing, "unpause"
     SDL_PauseAudioDevice(audioDevice, 0);
-
     return audioDevice;
+#else
+    // Start playing, "unpause"
+    SDL_PauseAudio(0);
+    return true;
+#endif
 }
 
-void render(SDL_Window* window, SDL_Surface* screenSurface, App_Display* display)
+void render(SDL_Surface* screenSurface, App_Display* display)
 {
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
     SDL_Log("\n%s\n", display->text);
     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
-    SDL_UpdateWindowSurface(window);
 }
 
 int main(int argc, char* args[])
 {
-    SDL_Window* window = NULL;
-    SDL_Surface* screenSurface = NULL;
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
         return 1;
     }
 
+#if ZIC_SDL2
     SDL_AudioDeviceID audioDevice = initAudio();
+#else
+    bool audioDevice = initAudio();
+#endif
     if (SDL_getenv("ZIC_SKIP_AUDIO") == NULL && !audioDevice) {
         return 1;
     }
 
-    window = SDL_CreateWindow(
+#if ZIC_SDL2
+    SDL_Window* window = SDL_CreateWindow(
         "Zic",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -218,24 +211,44 @@ int main(int argc, char* args[])
         fprintf(stderr, "could not create window: %s\n", SDL_GetError());
         return 1;
     }
-    screenSurface = SDL_GetWindowSurface(window);
+    SDL_Surface* screenSurface = SDL_GetWindowSurface(window);
+#else
+    SDL_Surface* screenSurface = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16, SDL_SWSURFACE);
+    if (screenSurface == 0) {
+        fprintf(stderr, "Failed to set video mode: %s\n", SDL_GetError());
+        return 1;
+    }
+#endif
+
     init_default_string_color(screenSurface);
 
-    SDL_UpdateWindowSurface(window);
-
     app.start();
-    render(window, screenSurface, app.render());
+    render(screenSurface, app.render());
+#if ZIC_SDL2
+    SDL_UpdateWindowSurface(window);
+#else
+    SDL_Flip(screenSurface);
+#endif
 
     while (handleEvent()) {
         if (ui.keysChanged) {
             ui.keysChanged = false;
-            render(window, screenSurface, app.handleUi(ui.keys));
+            render(screenSurface, app.handleUi(ui.keys));
+#if ZIC_SDL2
+            SDL_UpdateWindowSurface(window);
+#else
+            SDL_Flip(screenSurface);
+#endif
         }
         // SDL_Delay(10);
     }
 
+#if ZIC_SDL2
     SDL_CloseAudioDevice(audioDevice);
     SDL_DestroyWindow(window);
+#else
+    SDL_CloseAudio();
+#endif
     SDL_Quit();
     return 0;
 }

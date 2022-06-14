@@ -1,7 +1,11 @@
 #ifndef UI_FONT_H_
 #define UI_FONT_H_
 
+#if ZIC_SDL2
 #include <SDL2/SDL.h>
+#else
+#include <SDL/SDL.h>
+#endif
 
 #include "../app/app_display.h"
 #include "fontData.h"

@@ -5,32 +5,37 @@
 ZIC_LIB=../../zic
 
 # default
-SDL2_CONFIG=
+SDL_CONFIG=sdl2-config
 CC=g++ -o zicServer
 ZIC_TARGET=0
+ZIC_SDL2=true
 
 # Open Dingux
 OPENDINGUX_ROOT=/opt/gcw0-toolchain
 OPENDINGUX_CC=$(OPENDINGUX_ROOT)/usr/bin/mipsel-gcw0-linux-uclibc-g++ -o zicServer.elf -std=c++11
-OPENDINGUX_SDL2_CONFIG=$(OPENDINGUX_ROOT)/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/
+OPENDINGUX_SDL_CONFIG=$(OPENDINGUX_ROOT)/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/sdl2-config
 OPENDINGUX_TARGET=1
 
 # Miyoo
 MIYOO_ROOT=/opt/miyoomini-toolchain
 MIYOO_CC=$(MIYOO_ROOT)/usr/bin/arm-linux-gnueabihf-g++ -o zicServerMiyoo
-MIYOO_SDL2_CONFIG=$(MIYOO_ROOT)/usr/arm-linux-gnueabihf/sysroot/usr/bin/
+MIYOO_SDL_CONFIG=$(MIYOO_ROOT)/usr/arm-linux-gnueabihf/sysroot/usr/bin/sdl2-config
+MIYOO_SDL12_CONFIG=$(MIYOO_ROOT)/usr/arm-linux-gnueabihf/sysroot/usr/bin/sdl-config
 MIYOO_TARGET=2
 
 linux: build run
 
-miyoo:
-	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)" SDL2_CONFIG="$(MIYOO_SDL2_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) build
+miyoo2:
+	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-2" SDL_CONFIG="$(MIYOO_SDL_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) build
+
+miyoo1.2:
+	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-1.2" SDL_CONFIG="$(MIYOO_SDL12_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) ZIC_SDL2=false build
 
 opendingux:
-	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL2_CONFIG="$(OPENDINGUX_SDL2_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
+	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL_CONFIG="$(OPENDINGUX_SDL_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
 
 build:
-	$(CC) -Wall zicServer.cpp -I$(ZIC_LIB) `$(SDL2_CONFIG)sdl2-config --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET)
+	$(CC) -Wall zicServer.cpp -I$(ZIC_LIB) -DZIC_SDL2=$(ZIC_SDL2) `$(SDL_CONFIG) --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET)
 
 run:
 	./zicServer

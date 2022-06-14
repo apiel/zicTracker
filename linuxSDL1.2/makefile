@@ -16,7 +16,7 @@ miyoo:
 	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)" SDL_CONFIG="$(MIYOO_SDL_CONFIG)" build
 
 build:
-	$(CC) -Wall -D__LINUX_PULSE__ zicServer.cpp -I$(ZIC_LIB) `$(SDL_CONFIG)sdl-config --cflags --libs`
+	$(CC) -Wall zicServer.cpp -I$(ZIC_LIB) `$(SDL_CONFIG)sdl-config --cflags --libs`
 
 run:
 	./zicServer
