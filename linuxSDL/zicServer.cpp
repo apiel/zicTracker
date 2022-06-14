@@ -9,7 +9,15 @@
 #include <SDL/SDL.h>
 #endif
 
+#include <SDL2/SDL_mixer.h>
+
 #include <stdio.h>
+
+#define SAMPLE_RATE 48000
+// #define CHANNELS 1
+#define CHANNELS 2 // to be fixed
+#define APP_AUDIO_FORMAT AUDIO_S16LSB
+#define APP_AUDIO_CHUNK 4096
 
 #include "../app/app.h"
 #include "../app/app_def.h"
@@ -18,11 +26,7 @@
 #include "zicKeyMap.h"
 
 #ifndef SAMPLE_RATE
-#define SAMPLE_RATE 44100
 #endif
-
-#define CHANNELS 1
-//  #define CHANNELS 2 // to be fixed
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -128,9 +132,9 @@ void audioCallBack(void* userdata, Uint8* stream, int len)
 
 #if CHANNELS == 2
         i++;
-        buffer[i] = sampleDataU.ch[0];
+        stream[i] = sampleDataU.ch[0];
         i++;
-        buffer[i] = sampleDataU.ch[1];
+        stream[i] = sampleDataU.ch[1];
 #endif
     }
 }
@@ -147,10 +151,9 @@ bool initAudio()
     SDL_zero(spec);
 #endif
     spec.freq = SAMPLE_RATE;
-    spec.format = AUDIO_S16;
+    spec.format = APP_AUDIO_FORMAT;
     spec.channels = CHANNELS;
-    // spec.samples = 128;
-    spec.samples = 2048;
+    spec.samples = APP_AUDIO_CHUNK;
     spec.callback = audioCallBack;
     spec.userdata = NULL;
 
@@ -191,14 +194,22 @@ int main(int argc, char* args[])
         return 1;
     }
 
-#if ZIC_SDL2
-    SDL_AudioDeviceID audioDevice = initAudio();
-#else
-    bool audioDevice = initAudio();
-#endif
-    if (SDL_getenv("ZIC_SKIP_AUDIO") == NULL && !audioDevice) {
-        return 1;
+    if (Mix_OpenAudio(SAMPLE_RATE, APP_AUDIO_FORMAT, CHANNELS, APP_AUDIO_CHUNK) < 0) {
+    // if (Mix_OpenAudio(48000, AUDIO_S16LSB, 2, 4096) < 0) {
+        printf("----------------------------> open audio mixer error: %s\n", Mix_GetError());
+    } else {
+        printf("----------------------------> open audio mixer success\n");
     }
+    Mix_HookMusic(audioCallBack, NULL);
+
+    // #if ZIC_SDL2
+    //     SDL_AudioDeviceID audioDevice = initAudio();
+    // #else
+    //     bool audioDevice = initAudio();
+    // #endif
+    //     if (SDL_getenv("ZIC_SKIP_AUDIO") == NULL && !audioDevice) {
+    //         return 1;
+    //     }
 
 #if ZIC_SDL2
     SDL_Window* window = SDL_CreateWindow(
@@ -244,7 +255,7 @@ int main(int argc, char* args[])
     }
 
 #if ZIC_SDL2
-    SDL_CloseAudioDevice(audioDevice);
+    // SDL_CloseAudioDevice(audioDevice);
     SDL_DestroyWindow(window);
 #else
     SDL_CloseAudio();

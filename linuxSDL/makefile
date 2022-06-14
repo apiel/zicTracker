@@ -35,7 +35,7 @@ opendingux:
 	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL_CONFIG="$(OPENDINGUX_SDL_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
 
 build:
-	$(CC) -Wall zicServer.cpp -I$(ZIC_LIB) -DZIC_SDL2=$(ZIC_SDL2) `$(SDL_CONFIG) --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET)
+	$(CC) -Wall zicServer.cpp -I$(ZIC_LIB) -DZIC_SDL2=$(ZIC_SDL2) `$(SDL_CONFIG) --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET) -lSDL2_mixer
 
 run:
 	./zicServer
