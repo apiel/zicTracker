@@ -52,3 +52,11 @@ opk:
 
 # echo 'opkrun /media/data/apps/zicServer.opk' | telnet 10.1.1.2
 # echo 'opkrun /media/data/apps/zicServer.opk' | nc 10.1.1.2 23
+
+
+# TODO
+# create script to send file to file using serial
+# base64 zicServerMiyoo-1.2 > zicServerMiyoo-1.2.64
+# copy content of .64 using text editor on miyoo, tested with vi
+# but could just do echo > zicServerMiyoo-1.2.64
+# base64 -d zicServerMiyoo-1.2.64 > zicServerMiyoo-1.2
