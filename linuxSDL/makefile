@@ -30,7 +30,7 @@ miyoo2:
 	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-2" SDL_CONFIG="$(MIYOO_SDL_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) build
 
 miyoo1.2:
-	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-1.2" SDL_CONFIG="$(MIYOO_SDL12_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) ZIC_SDL2=false ZIC_SDL_MIXER=SDL_mixer build
+	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-1.2" SDL_CONFIG="$(MIYOO_SDL12_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) ZIC_SDL2=false ZIC_SDL_MIXER=SDL_mixer build serial_send
 
 opendingux:
 	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL_CONFIG="$(OPENDINGUX_SDL_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
@@ -53,10 +53,6 @@ opk:
 # echo 'opkrun /media/data/apps/zicServer.opk' | telnet 10.1.1.2
 # echo 'opkrun /media/data/apps/zicServer.opk' | nc 10.1.1.2 23
 
-
-# TODO
-# create script to send file to file using serial
-# base64 zicServerMiyoo-1.2 > zicServerMiyoo-1.2.64
-# copy content of .64 using text editor on miyoo, tested with vi
-# but could just do echo > zicServerMiyoo-1.2.64
-# base64 -d zicServerMiyoo-1.2.64 > zicServerMiyoo-1.2
+serial_send:
+	cd serial
+	node main.js
