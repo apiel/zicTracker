@@ -26,7 +26,7 @@ port.open(function (err) {
   port.write(`rm zicServerMiyoo-1.2.64\n`);
   port.write(`touch zicServerMiyoo-1.2.64\n`);
 
-  const chunks = content.split(/(.{100})/);
+  const chunks = content.split(/(.{200})/);
   chunks.forEach((chunk, i) => {
     port.write(`echo "${chunk}" >> zicServerMiyoo-1.2.64\n`);
     // console.log(`${i}/${chunks.length}`);
