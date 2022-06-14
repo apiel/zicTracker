@@ -7,9 +7,9 @@ const port = new SerialPort({
   autoOpen: false,
 });
 
-port.on("data", function (data) {
-  console.log("Data:", data.toString());
-});
+// port.on("data", function (data) {
+//   console.log("Data:", data.toString());
+// });
 
 port.open(function (err) {
   if (err) {
@@ -23,9 +23,13 @@ port.open(function (err) {
 
   port.write(`echo "" > zicServerMiyoo-1.2.64\n`);
 
-  content.split(/(.{100})/).forEach((chunk) => {
+  const chunks = content.split(/(.{100})/);
+  chunks.forEach((chunk, i) => {
     port.write(`echo "${chunk}" >> zicServerMiyoo-1.2.64\n`);
+    // console.log(`${i}/${chunks.length}`);
+    process.stdout.write('.');
   });
 
   port.write(`base64 -d zicServerMiyoo-1.2.64 > zicServerMiyoo-1.2\n`);
+  port.close();
 });
