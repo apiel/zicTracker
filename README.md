@@ -1,16 +1,37 @@
+## Pattern
+
+TODO
+
+A pattern, 32 - 64? step note for any of the 16 instrument
+
+## Tracks
+
+TODO
+
+Tracks can be synched together to make polymophic instument, so one track is a copy of the other, just notes differ.
+Keyboard can also be link to multiple track at once, to play some harmonic.
+
+## Instrument
+
+TODO
+
+Sample and waveform are both using wav file from the SD card. They are treated exactly the same way, just behaving slghtly different. Sample will play only once, where the waveform will loop over.
+
+Both have:
+- start and len
+- 2 env, assignable -> amplitude, pitch, filter, ifx
+- 1 assignable lfo -> amplitude, pitch, filter, ifx, morph? (or should there only be 1-4 lfo in total?)
+- 1 filter
+- 1 ifx
+
+Waveform:
+- will most likely be much shorted but doesnt have to, also can do morphing over
+
+
+## Toolchain
 ### Miyoo mini
 
-download toolchain https://github.com/shauninman/miyoomini-toolchain-buildroot/releases
-or build it from docker file
-or maybe even apt-get install gcc-arm-linux-gnueabihf
-
-git clone https://github.com/libsdl-org/SDL.git
-
-Nope,
-
 Need to use buildroot https://github.com/shauninman/miyoomini-toolchain-buildroot/
-
-And enable SDL2 in the packages
 
 ```sh
 make shell
