@@ -7,6 +7,7 @@
 #include "./app_view_menu.h"
 #include "./app_view_track.h"
 #include "./app_view_trackLoop.h"
+#include "./app_view_trackPattern.h"
 #include <zic_seq_tempo.h>
 
 class App {
@@ -20,17 +21,19 @@ public:
     App_View_Menu menuView;
     App_View_Track trackView;
     App_View_TrackLoop trackLoopView;
+    App_View_TrackPattern trackPatternView;
 
     App()
         : trackView(&tracks)
         , trackLoopView(&tracks)
+        , trackPatternView(&tracks)
     {
     }
 
     void start()
     {
-        tracks.looper->setLoopMode(true);
-        tracks.looper->on(60);
+        // tracks.looper->setLoopMode(true);
+        // tracks.looper->on(60);
     }
 
     int16_t sample()
@@ -50,6 +53,10 @@ public:
         switch (view) {
         case VIEW_TRACK_LOOP:
             trackLoopView.render(&display);
+            break;
+
+        case VIEW_TRACK_PATTERN:
+            trackPatternView.render(&display);
             break;
 
         default:
@@ -82,6 +89,9 @@ public:
                 break;
             case VIEW_TRACK_LOOP:
                 rendered = trackLoopView.update(&keys, &display);
+                break;
+            case VIEW_TRACK_PATTERN:
+                rendered = trackPatternView.update(&keys, &display);
                 break;
             }
             if (!rendered) {
