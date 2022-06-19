@@ -1,8 +1,8 @@
 #ifndef APP_VIEW_MENU_H_
 #define APP_VIEW_MENU_H_
 
-#include "./app_view.h"
 #include "./app_display.h"
+#include "./app_view.h"
 
 #define APP_MENU_SIZE 7
 
@@ -10,35 +10,70 @@ typedef struct {
     const char* name;
     char key;
     uint8_t view;
-    bool isBase; // = false;
+    char group;
+    bool selected;
 } Menu;
 
 class App_View_Menu : App_View {
 protected:
+    void inc(int8_t val)
+    {
+        currentMenu = (currentMenu + val);
+        if (currentMenu == 255) {
+            currentMenu = APP_MENU_SIZE - 1;
+        }
+        currentMenu = currentMenu % APP_MENU_SIZE;
+    }
+
+    void menuInc(int8_t val)
+    {
+        menu[currentMenu].selected = false;
+        char group = menu[currentMenu].group;
+        inc(val);
+        if (group != menu[currentMenu].group) {
+            inc(-val);
+        }
+        menu[currentMenu].selected = true;
+    }
+
+    void groupInc(int8_t val)
+    {
+        do {
+            inc(val);
+        } while (!menu[currentMenu].selected);
+    }
+
     void menuPlus()
     {
-        currentMenu = (currentMenu + 1) % APP_MENU_SIZE;
+        menuInc(+1);
     }
 
     void menuMinus()
     {
-        currentMenu--;
-        if (currentMenu == 255) {
-            currentMenu = APP_MENU_SIZE - 1;
-        }
+        menuInc(-1);
+    }
+
+    void groupPlus()
+    {
+        groupInc(+1);
+    }
+
+    void groupMinus()
+    {
+        groupInc(-1);
     }
 
 public:
     UiKeys keys;
 
     Menu menu[APP_MENU_SIZE] = {
-        { "Track", 'T', VIEW_TRACK, true },
-        { "Track Loop", 'L', VIEW_TRACK_LOOP, false },
-        { "Track pattern", 'P', VIEW_TRACK_PATTERN, false },
-        { "Pattern", 'P', VIEW_PATTERN, true },
-        { "Pattern edit", 'E', VIEW_PATTERN_EDIT, false },
-        { "Instrument", 'I', VIEW_INSTRUMENT, true },
-        { "Instrument edit", 'E', VIEW_INSTRUMENT_EDIT, false },
+        { "Track", 'T', VIEW_TRACK, 'T', true },
+        { "Track Loop", 'L', VIEW_TRACK_LOOP, 'T', false },
+        { "Track pattern", 'P', VIEW_TRACK_PATTERN, 'T', false },
+        { "Pattern", 'P', VIEW_PATTERN, 'P', true },
+        { "Pattern edit", 'E', VIEW_PATTERN_EDIT, 'P', false },
+        { "Instrument", 'I', VIEW_INSTRUMENT, 'I', true },
+        { "Instrument edit", 'E', VIEW_INSTRUMENT_EDIT, 'I', false },
     };
     uint8_t currentMenu = 0;
 
@@ -51,7 +86,7 @@ public:
     {
         strcpy(display->text, "");
         for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
-            if (i != 0 && menu[i].isBase) {
+            if (i != 0 && menu[i].group != menu[i - 1].group) {
                 strcat(display->text, "\n");
             }
             if (i == currentMenu) {
@@ -70,13 +105,9 @@ public:
             } else if (keys->Left) {
                 menuMinus();
             } else if (keys->Up) {
-                do {
-                    menuMinus();
-                } while (!menu[currentMenu].isBase);
+                groupMinus();
             } else if (keys->Down) {
-                do {
-                    menuPlus();
-                } while (!menu[currentMenu].isBase);
+                groupPlus();
             }
             render(display);
             return VIEW_CHANGED;
