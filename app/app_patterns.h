@@ -15,32 +15,29 @@
 class App_Patterns {
 protected:
     uint8_t project = 0;
-    char name[3];
     char data[PATTERN_DATA_LEN];
-    void (*loadFn)(uint8_t project, char* name, char* content);
-    void (*saveFn)(uint8_t project, char* name, char* content);
-
-    void setName(uint8_t bank, uint8_t pos)
-    {
-        snprintf(name, 3, "%c%d", 'A' + bank, pos);
-    }
+    void (*loadFn)(uint8_t project, uint8_t pos, char* content);
+    void (*saveFn)(uint8_t project, uint8_t pos, char* content);
 
 public:
-    Zic_Seq_Pattern patterns[BANK_COUNT][PATTERN_PER_BANK];
+    Zic_Seq_Pattern patterns[PATTERN_COUNT];
 
     App_Patterns(
-        void (*_loadFn)(uint8_t project, char* name, char* content),
-        void (*_saveFn)(uint8_t project, char* name, char* content))
+        void (*_loadFn)(uint8_t project, uint8_t pos, char* content),
+        void (*_saveFn)(uint8_t project, uint8_t pos, char* content))
         : loadFn(_loadFn)
         , saveFn(_saveFn)
     {
+        // NOTE instead to load all pattern in memory, could also load on demand
+        for (uint8_t p = 0; p < PATTERN_COUNT; p++) {
+            load(p);
+        }
     }
 
-    void load(uint8_t bank, uint8_t pos)
+    void load(uint8_t pos)
     {
-        setName(bank, pos);
-        loadFn(project, name, data);
-        Zic_Seq_Step* step = patterns[bank][pos].steps;
+        loadFn(project, pos, data);
+        Zic_Seq_Step* step = patterns[pos].steps;
         uint8_t prevInstrument = 255;
         for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN, step++) {
             char* stepData = data + d;
@@ -54,10 +51,9 @@ public:
         }
     }
 
-    void save(uint8_t bank, uint8_t pos)
+    void save(uint8_t pos)
     {
-        setName(bank, pos);
-        Zic_Seq_Pattern* pattern = &patterns[bank][pos];
+        Zic_Seq_Pattern* pattern = &patterns[pos];
         uint8_t prevInstrument = 255;
         for (uint8_t s = 0; s < pattern->stepCount; s++) {
             Zic_Seq_Step* step = &pattern->steps[s];
@@ -65,21 +61,19 @@ public:
                 prevInstrument == step->instrument ? SAME_INSTRUMENT_SYMBOL : step->instrument + 'A',
                 getNoteStr(step->note), getNoteOctave(step->note), step->slide);
         }
-        saveFn(project, name, data);
+        saveFn(project, pos, data);
     }
 
     void debug(void* log(const char* fmt, ...))
     {
-        for (uint8_t b = 0; b < BANK_COUNT; b++) {
-            for (uint8_t p = 0; p < PATTERN_PER_BANK; p++) {
-                log("%c%d:", 'A' + b, p);
-                for (uint8_t s = 0; s < patterns[b][p].stepCount; s++) {
-                    Zic_Seq_Step* step = &patterns[b][p].steps[s];
-                    log(" [%d,%s%d%s]", step->instrument,
-                        getNoteStr(step->note), getNoteOctave(step->note), step->slide ? ",slide" : "");
-                }
-                log("\n");
+        for (uint8_t p = 0; p < PATTERN_COUNT; p++) {
+            log("%d:", p);
+            for (uint8_t s = 0; s < patterns[p].stepCount; s++) {
+                Zic_Seq_Step* step = &patterns[p].steps[s];
+                log(" [%d,%s%d%s]", step->instrument,
+                    getNoteStr(step->note), getNoteOctave(step->note), step->slide ? ",slide" : "");
             }
+            log("\n");
         }
     }
 };

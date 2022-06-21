@@ -5,16 +5,14 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
-// There will be 6x6 pattern in 6 bank, so a total of 256 for a single project
-//              1 - 36      A,B,C,D,E,F                   no project limit but must be loaded from SD
-
-class App_View_TrackPattern : public App_View_Table<7, 6, 6> {
+#define TRACK_PATTERN_COL 5
+class App_View_TrackPattern : public App_View_Table<7, TRACK_PATTERN_COL, 5> {
 protected:
     App_Tracks* tracks;
 
 public:
     App_View_TrackPattern(App_Tracks* _tracks)
-        : App_View_Table(7)
+        : App_View_Table(PATTERN_COUNT / TRACK_PATTERN_COL)
         , tracks(_tracks)
     {
     }
@@ -22,14 +20,9 @@ public:
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
         if (cursor == pos) {
-            display->setCursor(2, 1);
+            display->setCursor(3, 1);
         }
-
-        if (row == 0) {
-            sprintf(display->text + strlen(display->text), "%c%c ", col == 2 ? '*': ' ', 'A' + col);
-        } else {
-            sprintf(display->text + strlen(display->text), " %02d", pos - 5);
-        }
+        sprintf(display->text + strlen(display->text), " %03d", pos + 1);
     }
 
     void colSeparator(App_Display* display) override

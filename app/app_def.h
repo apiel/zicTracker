@@ -3,8 +3,7 @@
 
 #include <stdint.h>
 
-#define PATTERN_PER_BANK 36
-#define BANK_COUNT 6
+#define PATTERN_COUNT 200
 
 enum{
     VIEW_NONE,
