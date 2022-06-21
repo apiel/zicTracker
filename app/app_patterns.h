@@ -10,9 +10,11 @@
 
 #define STEP_DATA_LEN 8
 #define PATTERN_DATA_LEN 8 * MAX_STEPS_IN_PATTERN // 8*64=512
+#define SAME_INSTRUMENT_SYMBOL '_'
 
 class App_Patterns {
 protected:
+    uint8_t project = 0;
     char name[3];
     char data[PATTERN_DATA_LEN];
     void (*loadFn)(uint8_t project, char* name, char* content);
@@ -34,29 +36,33 @@ public:
     {
     }
 
-    void load(uint8_t project, uint8_t bank, uint8_t pos)
+    void load(uint8_t bank, uint8_t pos)
     {
         setName(bank, pos);
         loadFn(project, name, data);
         Zic_Seq_Step* step = patterns[bank][pos].steps;
+        uint8_t prevInstrument = 255;
         for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN, step++) {
-            // TODO end?
             char* stepData = data + d;
-            step->instrument = 'A' - stepData[0];
+            if (stepData[0] != SAME_INSTRUMENT_SYMBOL && (stepData[0] < 'A' || stepData[0] > 'Z')) {
+                break;
+            }
+            step->instrument = stepData[0] == SAME_INSTRUMENT_SYMBOL ? prevInstrument : 'A' - stepData[0];
+            prevInstrument = step->instrument;
             step->note = charNotetoInt(stepData[2], stepData[3], stepData[4]);
             step->slide = stepData[7] == '1';
         }
     }
 
-    void save(uint8_t project, uint8_t bank, uint8_t pos)
+    void save(uint8_t bank, uint8_t pos)
     {
         setName(bank, pos);
         Zic_Seq_Pattern* pattern = &patterns[bank][pos];
         uint8_t prevInstrument = 255;
         for (uint8_t s = 0; s < pattern->stepCount; s++) {
             Zic_Seq_Step* step = &pattern->steps[s];
-            snprintf(data + strlen(data), STEP_DATA_LEN, "%c,%s%d,%d;", // 8 char "A,C 4,1;"
-                prevInstrument == step->instrument ? '_' : step->instrument + 'A',
+            snprintf(data + strlen(data), STEP_DATA_LEN, "%c %s%d %d\n", // 8 char "A,C 4,1;"
+                prevInstrument == step->instrument ? SAME_INSTRUMENT_SYMBOL : step->instrument + 'A',
                 getNoteStr(step->note), getNoteOctave(step->note), step->slide);
         }
         saveFn(project, name, data);
