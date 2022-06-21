@@ -36,10 +36,11 @@ public:
 
     void load(uint8_t pos)
     {
-        loadFn(project, pos, data);
+        loadFn(project, pos + 1, data);
         Zic_Seq_Step* step = patterns[pos].steps;
         uint8_t prevInstrument = 255;
-        for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN, step++) {
+        uint8_t count = 0;
+        for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN, step++, count++) {
             char* stepData = data + d;
             if (stepData[0] != SAME_INSTRUMENT_SYMBOL && (stepData[0] < 'A' || stepData[0] > 'Z')) {
                 break;
@@ -49,6 +50,7 @@ public:
             step->note = charNotetoInt(stepData[2], stepData[3], stepData[4]);
             step->slide = stepData[7] == '1';
         }
+        patterns[pos].stepCount = count;
     }
 
     void save(uint8_t pos)
@@ -61,20 +63,26 @@ public:
                 prevInstrument == step->instrument ? SAME_INSTRUMENT_SYMBOL : step->instrument + 'A',
                 getNoteStr(step->note), getNoteOctave(step->note), step->slide);
         }
-        saveFn(project, pos, data);
+        saveFn(project, pos + 1, data);
     }
 
-    void debug(void* log(const char* fmt, ...))
+    void debug(void (*log)(const char* fmt, ...))
     {
-        for (uint8_t p = 0; p < PATTERN_COUNT; p++) {
-            log("%d:", p);
-            for (uint8_t s = 0; s < patterns[p].stepCount; s++) {
-                Zic_Seq_Step* step = &patterns[p].steps[s];
-                log(" [%d,%s%d%s]", step->instrument,
-                    getNoteStr(step->note), getNoteOctave(step->note), step->slide ? ",slide" : "");
-            }
-            log("\n");
+        for (uint8_t pos = 0; pos < PATTERN_COUNT; pos++) {
+            debug(log, pos + 1);
         }
+    }
+
+    void debug(void (*log)(const char* fmt, ...), uint8_t pos)
+    {
+        log("Pattern %d (%d steps):", pos, patterns[pos].stepCount);
+        pos--;
+        for (uint8_t s = 0; s < patterns[pos].stepCount; s++) {
+            Zic_Seq_Step* step = &patterns[pos].steps[s];
+            log(" [%d,%s%d%s]", step->instrument,
+                getNoteStr(step->note), getNoteOctave(step->note), step->slide ? ",slide" : "");
+        }
+        log("\n");
     }
 };
 

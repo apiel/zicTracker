@@ -23,6 +23,7 @@
 #include "../app/app.h"
 #include "../app/app_def.h"
 #include "../app/app_display.h"
+#include "../app/app_patterns.h"
 #include "font.h"
 #include "zicKeyMap.h"
 
@@ -32,6 +33,32 @@
 #define TEXT_SIZE 2
 
 App app;
+
+#define MAX_FILENAME 100
+char filepath[MAX_FILENAME];
+void setPatternFilename(uint8_t project, uint8_t pos)
+{
+    snprintf(filepath, MAX_FILENAME, "projects/%d/patterns/%d.pat", project, pos);
+}
+
+void loadPattern(uint8_t project, uint8_t pos, char* content)
+{
+    content[0] = '\0';
+    setPatternFilename(project, pos);
+    SDL_RWops* file = SDL_RWFromFile(filepath, "r");
+    if (file) {
+        SDL_RWread(file, content, PATTERN_DATA_LEN, 1);
+        SDL_Log("file content: %s", content);
+        SDL_RWclose(file);
+    }
+}
+
+void savePattern(uint8_t project, uint8_t pos, char* content)
+{
+    setPatternFilename(project, pos);
+}
+
+App_Patterns patterns(&loadPattern, &savePattern);
 
 typedef struct {
     bool keysChanged = false;
@@ -142,6 +169,9 @@ void render(SDL_Surface* screenSurface, App_Display* display)
 
 int main(int argc, char* args[])
 {
+// patterns.debug(SDL_Log);
+patterns.debug(SDL_Log, 199);
+    
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "Could not initialize SDL: %s\n", SDL_GetError());
         return 1;

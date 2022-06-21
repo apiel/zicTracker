@@ -3,7 +3,9 @@
 
 #include <stdint.h>
 
+#ifndef PATTERN_COUNT
 #define PATTERN_COUNT 200
+#endif
 
 enum{
     VIEW_NONE,
