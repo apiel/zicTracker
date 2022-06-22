@@ -65,9 +65,15 @@ public:
         uint8_t prevInstrument = 255;
         for (uint8_t s = 0; s < pattern->stepCount; s++) {
             Zic_Seq_Step* step = &pattern->steps[s];
-            snprintf(data + strlen(data), STEP_DATA_LEN, "%c %s%d %d\n", // 8 char "A,C 4,1;"
-                prevInstrument == step->instrument ? SAME_INSTRUMENT_SYMBOL : step->instrument + 'A',
-                getNoteStr(step->note), getNoteOctave(step->note), step->slide);
+            char instrument = prevInstrument == step->instrument ? SAME_INSTRUMENT_SYMBOL : step->instrument + 'A';
+            prevInstrument = step->instrument;
+            if (step->note) {
+                snprintf(data + strlen(data), STEP_DATA_LEN, "%c %s%d %d\n", // 8 char "A C-4 1\n"
+                    instrument, getNoteStr(step->note), getNoteOctave(step->note), step->slide);
+            } else {
+                // 8 char "A --- 0\n"
+                snprintf(data + strlen(data), STEP_DATA_LEN, "%c --- %d\n", instrument, step->slide);
+            }
         }
         saveFn(project, pos + 1, data);
     }
