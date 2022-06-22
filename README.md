@@ -8,7 +8,7 @@ A pattern, 32 - 64? step note for any of the 16 instrument
 
 TODO
 
-Tracks can be synched together to make polymophic instument, so one track is a copy of the other, just notes differ.
+Tracks can be synched together to make polyphonic instument, so one track is a copy of the other, just notes differ.
 Keyboard can also be link to multiple track at once, to play some harmonic.
 
 ## Instrument
@@ -19,14 +19,25 @@ Sample and waveform are both using wav file from the SD card. They are treated e
 
 Both have:
 - start and len
-- 2 env, assignable -> amplitude, pitch, filter, ifx
-- 1 assignable lfo -> amplitude, pitch, filter, ifx, morph? (or should there only be 1-4 lfo in total?)
+- ~2 env, assignable -> amplitude, pitch, filter, ifx~
+- ~1 assignable lfo -> amplitude, pitch, filter, ifx, morph? (or should there only be 1-4 lfo in total?)~
 - 1 filter
 - 1 ifx
 
 Waveform:
 - will most likely be much shorted but doesnt have to, also can do morphing over
 
+## Notes/todo
+
+- track table view should have header
+- 1 volumn per track
+- 1 filter per track
+- multiple track can be assigned to master keyboard
+- 1 filter per instrument
+- 1 envelop per instrument
+- assignable modulation to (1 or more? -> polyphony) track or instrument for selectable param:
+    - 10? envelop 
+    - 5? LFO
 
 ## Toolchain
 ### Miyoo mini

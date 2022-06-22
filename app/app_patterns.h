@@ -12,18 +12,23 @@
 #define PATTERN_DATA_LEN 8 * MAX_STEPS_IN_PATTERN // 8*64=512
 #define SAME_INSTRUMENT_SYMBOL '_'
 
+enum {
+    PAT_LOAD_NONE,
+    PAT_LOAD_SUCCESS,
+};
+
 class App_Patterns {
 protected:
     uint8_t project = 0;
     char data[PATTERN_DATA_LEN];
-    void (*loadFn)(uint8_t project, uint8_t pos, char* content);
+    uint8_t (*loadFn)(uint8_t project, uint8_t pos, char* content);
     void (*saveFn)(uint8_t project, uint8_t pos, char* content);
 
 public:
     Zic_Seq_Pattern patterns[PATTERN_COUNT];
 
     App_Patterns(
-        void (*_loadFn)(uint8_t project, uint8_t pos, char* content),
+        uint8_t (*_loadFn)(uint8_t project, uint8_t pos, char* content),
         void (*_saveFn)(uint8_t project, uint8_t pos, char* content))
         : loadFn(_loadFn)
         , saveFn(_saveFn)
@@ -36,21 +41,22 @@ public:
 
     void load(uint8_t pos)
     {
-        loadFn(project, pos + 1, data);
-        Zic_Seq_Step* step = patterns[pos].steps;
-        uint8_t prevInstrument = 255;
-        uint8_t count = 0;
-        for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN, step++, count++) {
-            char* stepData = data + d;
-            if (stepData[0] != SAME_INSTRUMENT_SYMBOL && (stepData[0] < 'A' || stepData[0] > 'Z')) {
-                break;
+        if (loadFn(project, pos + 1, data)) {
+            Zic_Seq_Step* step = patterns[pos].steps;
+            uint8_t prevInstrument = 255;
+            uint8_t count = 0;
+            for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN, step++, count++) {
+                char* stepData = data + d;
+                if (stepData[0] != SAME_INSTRUMENT_SYMBOL && (stepData[0] < 'A' || stepData[0] > 'Z')) {
+                    break;
+                }
+                step->instrument = stepData[0] == SAME_INSTRUMENT_SYMBOL ? prevInstrument : 'A' - stepData[0];
+                prevInstrument = step->instrument;
+                step->note = stepData[2] == '-' ? 0 : charNotetoInt(stepData[2], stepData[3], stepData[4]);
+                step->slide = stepData[6] == '1';
             }
-            step->instrument = stepData[0] == SAME_INSTRUMENT_SYMBOL ? prevInstrument : 'A' - stepData[0];
-            prevInstrument = step->instrument;
-            step->note = charNotetoInt(stepData[2], stepData[3], stepData[4]);
-            step->slide = stepData[7] == '1';
+            patterns[pos].stepCount = count;
         }
-        patterns[pos].stepCount = count;
     }
 
     void save(uint8_t pos)
@@ -75,12 +81,16 @@ public:
 
     void debug(void (*log)(const char* fmt, ...), uint8_t pos)
     {
-        log("Pattern %d (%d steps):", pos, patterns[pos].stepCount);
         pos--;
+        log("Pattern %d (%d steps):", pos + 1, patterns[pos].stepCount);
         for (uint8_t s = 0; s < patterns[pos].stepCount; s++) {
             Zic_Seq_Step* step = &patterns[pos].steps[s];
-            log(" [%d,%s%d%s]", step->instrument,
-                getNoteStr(step->note), getNoteOctave(step->note), step->slide ? ",slide" : "");
+            if (step->note) {
+                log(" [%d,%s%d%s]", step->instrument,
+                    getNoteStr(step->note), getNoteOctave(step->note), step->slide ? ",slide" : "");
+            } else {
+                log(" [%d,---%s]", step->instrument, step->slide ? ",slide" : "");
+            }
         }
         log("\n");
     }
