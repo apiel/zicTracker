@@ -5,11 +5,14 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
+#include <zic_seq_pattern.h>
+
 #define VIEW_TRACK_COL 2
 
 class App_View_Track : public App_View_Table<4, VIEW_TRACK_COL, 2> {
 protected:
     App_Tracks* tracks;
+    Zic_Seq_Pattern* nextPat = NULL;
 
 public:
     App_View_Track(App_Tracks* _tracks)
@@ -41,7 +44,8 @@ public:
         } else {
             // if tracks->tracks[row]->looper.pattern !=  tracks->tracks[row]->looper.nextPattern
             // we could blink between both ids
-            sprintf(display->text + strlen(display->text), "%03d ", tracks->tracks[row]->looper.nextPattern->id + 1);
+            sprintf(display->text + strlen(display->text), "%03d ",
+                (nextPat != NULL ? nextPat->id : tracks->tracks[row]->looper.nextPattern->id) + 1);
         }
     }
 
@@ -64,11 +68,17 @@ public:
                 } else if (keys->Down) {
                     direction = -10;
                 }
-                uint16_t id = tracks->looper->nextPattern->id ? tracks->looper->nextPattern->id : PATTERN_COUNT;
-                tracks->looper->setNextPattern(&tracks->patterns->patterns[(id + direction) % PATTERN_COUNT]);
+                if (nextPat == NULL) {
+                    nextPat = tracks->tracks[id]->looper.nextPattern;
+                }
+                uint16_t id = nextPat->id ? nextPat->id : PATTERN_COUNT;
+                nextPat = &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT];
             }
             App_View_Table::render(display);
             return VIEW_CHANGED;
+        } else if (nextPat) {
+                tracks->looper->setNextPattern(nextPat);
+                nextPat = NULL;
         }
         uint8_t res = App_View_Table::update(keys, display);
         if (id != tracks->trackId) {
