@@ -56,6 +56,7 @@ public:
                 step->slide = stepData[6] == '1';
             }
             patterns[pos].stepCount = count;
+            patterns[pos].id = pos;
         }
     }
 

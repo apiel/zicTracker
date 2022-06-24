@@ -40,7 +40,7 @@ public:
             }
         } else {
             // nextToPlay is wrong!
-            sprintf(display->text + strlen(display->text), "%03d ", tracks->tracks[row]->looper.nextToPlay);
+            sprintf(display->text + strlen(display->text), "%03d ", tracks->tracks[row]->looper.pattern->id + 1);
         }
     }
 
