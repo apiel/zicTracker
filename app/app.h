@@ -3,6 +3,7 @@
 
 #include "./app_def.h"
 #include "./app_display.h"
+#include "./app_patterns.h"
 #include "./app_tracks.h"
 #include "./app_view_menu.h"
 #include "./app_view_track.h"
@@ -23,8 +24,9 @@ public:
     App_View_TrackLoop trackLoopView;
     App_View_TrackPattern trackPatternView;
 
-    App()
-        : trackView(&tracks)
+    App(App_Patterns* patterns)
+        : tracks(patterns)
+        , trackView(&tracks)
         , trackLoopView(&tracks)
         , trackPatternView(&tracks)
     {

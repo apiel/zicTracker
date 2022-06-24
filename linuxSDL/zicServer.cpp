@@ -32,8 +32,6 @@
 
 #define TEXT_SIZE 2
 
-App app;
-
 #define MAX_FILENAME 100
 char filepath[MAX_FILENAME];
 void setPatternFilename(uint8_t project, uint8_t pos)
@@ -61,6 +59,7 @@ void savePattern(uint8_t project, uint8_t pos, char* content)
 }
 
 App_Patterns patterns(&loadPattern, &savePattern);
+App app(&patterns);
 
 typedef struct {
     bool keysChanged = false;
@@ -171,9 +170,9 @@ void render(SDL_Surface* screenSurface, App_Display* display)
 
 int main(int argc, char* args[])
 {
-// patterns.debug(SDL_Log);
-patterns.debug(SDL_Log, 198);
-patterns.debug(SDL_Log, 199);
+// // patterns.debug(SDL_Log);
+// patterns.debug(SDL_Log, 198);
+// patterns.debug(SDL_Log, 199);
     
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "Could not initialize SDL: %s\n", SDL_GetError());
