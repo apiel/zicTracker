@@ -52,7 +52,8 @@ public:
             if (cursor % VIEW_TRACK_COL == 0) {
                 tracks->looper->toggleLoopMode();
             } else if (cursor % VIEW_TRACK_COL == 1) {
-                // printf("pattern count %d\n", PATTERN_COUNT);
+                // if we would apply the pattern only once the keys->A is released,
+                // we could remove completely the pattern selection view
                 int8_t direction = 0;
                 if (keys->Right) {
                     direction = 1;
@@ -64,11 +65,6 @@ public:
                     direction = -10;
                 }
                 uint16_t id = tracks->looper->nextPattern->id ? tracks->looper->nextPattern->id : PATTERN_COUNT;
-                printf("pat id (%d + %d) %% %d = %d\n",
-                    id,
-                    direction,
-                    PATTERN_COUNT,
-                    (id + direction) % PATTERN_COUNT);
                 tracks->looper->setNextPattern(
                     &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT]);
             }
