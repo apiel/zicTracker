@@ -71,7 +71,6 @@ public:
     Menu menu[APP_MENU_SIZE] = {
         { "Track", 'T', VIEW_TRACK, 'T', true },
         { "Track Loop", 'L', VIEW_TRACK_LOOP, 'T', false },
-        { "Track pattern", 'P', VIEW_TRACK_PATTERN, 'T', false },
         { "Pattern", 'P', VIEW_PATTERN, 'P', true },
         { "Pattern edit", 'E', VIEW_PATTERN_EDIT, 'P', false },
         { "Instrument", 'I', VIEW_INSTRUMENT, 'I', true },

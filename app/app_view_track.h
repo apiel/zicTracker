@@ -56,8 +56,6 @@ public:
             if (cursor % VIEW_TRACK_COL == 0) {
                 tracks->looper->toggleLoopMode();
             } else if (cursor % VIEW_TRACK_COL == 1) {
-                // if we would apply the pattern only once the keys->A is released,
-                // we could remove completely the pattern selection view
                 int8_t direction = 0;
                 if (keys->Right) {
                     direction = 1;
