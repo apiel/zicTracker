@@ -2,7 +2,6 @@
 #define APP_AUDIO_TRACK_H_
 
 #include "./app_patterns.h"
-#include "patterns.h"
 
 #include <wavetables/wavetable_Bank.h>
 #include <zic_seq_loop.h>
