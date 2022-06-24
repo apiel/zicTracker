@@ -39,22 +39,45 @@ public:
                 strcat(display->text, "OFF");
             }
         } else {
-            // nextToPlay is wrong!
-            sprintf(display->text + strlen(display->text), "%03d ", tracks->tracks[row]->looper.pattern->id + 1);
+            // if tracks->tracks[row]->looper.pattern !=  tracks->tracks[row]->looper.nextPattern
+            // we could blink between both ids
+            sprintf(display->text + strlen(display->text), "%03d ", tracks->tracks[row]->looper.nextPattern->id + 1);
         }
     }
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
-        uint8_t res = App_View_Table::update(keys, display);
-        uint8_t id = cursor / VIEW_TRACK_COL;
-        if (id != tracks->trackId) {
-            tracks->select(id);
-        }
+        int8_t id = cursor / VIEW_TRACK_COL;
         if (keys->A) {
             if (cursor % VIEW_TRACK_COL == 0) {
                 tracks->looper->toggleLoopMode();
+            } else if (cursor % VIEW_TRACK_COL == 1) {
+                // printf("pattern count %d\n", PATTERN_COUNT);
+                int8_t direction = 0;
+                if (keys->Right) {
+                    direction = 1;
+                } else if (keys->Left) {
+                    direction = -1;
+                } else if (keys->Up) {
+                    direction = 10;
+                } else if (keys->Down) {
+                    direction = -10;
+                }
+                uint16_t id = tracks->looper->nextPattern->id ? tracks->looper->nextPattern->id : PATTERN_COUNT;
+                printf("pat id (%d + %d) %% %d = %d\n",
+                    id,
+                    direction,
+                    PATTERN_COUNT,
+                    (id + direction) % PATTERN_COUNT);
+                tracks->looper->setNextPattern(
+                    &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT]);
             }
+            App_View_Table::render(display);
+            return VIEW_CHANGED;
+        }
+        uint8_t res = App_View_Table::update(keys, display);
+        if (id != tracks->trackId) {
+            tracks->select(id);
         }
         return res;
     }

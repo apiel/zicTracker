@@ -18,6 +18,8 @@ class App_View_Menu : App_View {
 protected:
     void inc(int8_t val)
     {
+        // or could be:
+        // currentMenu = ((currentMenu ? currentMenu : APP_MENU_SIZE) + val) % APP_MENU_SIZE;
         currentMenu = (currentMenu + val);
         if (currentMenu == 255) {
             currentMenu = APP_MENU_SIZE - 1;

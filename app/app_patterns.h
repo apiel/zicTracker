@@ -56,8 +56,8 @@ public:
                 step->slide = stepData[6] == '1';
             }
             patterns[pos].stepCount = count;
-            patterns[pos].id = pos;
         }
+        patterns[pos].id = pos;
     }
 
     void save(uint8_t pos)

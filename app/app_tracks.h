@@ -13,6 +13,7 @@
 
 class App_Tracks {
 public:
+    App_Patterns* patterns;
     uint8_t trackId = TRACK_1;
     App_Audio_Track track0, track1, track2, track3;
     App_Audio_Track* tracks[TRACK_COUNT] = { &track0, &track1, &track2, &track3 };
@@ -20,11 +21,12 @@ public:
     Zic_Wavetable_Synth* synth = NULL;
     Zic_Seq_Loop* looper = NULL;
 
-    App_Tracks(App_Patterns* patterns)
-        : track0(patterns, TRACK_1)
-        , track1(patterns, TRACK_2)
-        , track2(patterns, TRACK_3)
-        , track3(patterns, TRACK_4)
+    App_Tracks(App_Patterns* _patterns)
+        : patterns(_patterns)
+        , track0(_patterns, TRACK_1)
+        , track1(_patterns, TRACK_2)
+        , track2(_patterns, TRACK_3)
+        , track3(_patterns, TRACK_4)
     {
         select(trackId);
     }
