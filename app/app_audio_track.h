@@ -1,36 +1,37 @@
 #ifndef APP_AUDIO_TRACK_H_
 #define APP_AUDIO_TRACK_H_
 
+#include "./app_patterns.h"
 #include "patterns.h"
 
-#include <zic_wavetable_synth.h>
-#include <zic_seq_loop.h>
 #include <wavetables/wavetable_Bank.h>
+#include <zic_seq_loop.h>
+#include <zic_wavetable_synth.h>
 
-class App_Audio_Track
-{
+class App_Audio_Track {
 public:
     uint8_t id = 0;
 
     Zic_Wavetable_Synth synth;
     Zic_Seq_Loop looper;
 
-    App_Audio_Track(uint8_t _id = 0) : synth(&wavetable_Bank), looper(&patternsYo[2])
+    App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
+        : synth(&wavetable_Bank)
+        , looper(&patterns->patterns[0])
     {
         id = _id;
+        // TODO load pattern from last state saved in project status file
     }
 
     void next()
     {
         looper.next();
-        Zic_Seq_Step *stepOff = looper.getNoteOff();
-        Zic_Seq_Step *stepOn = looper.getNoteOn();
-        if (stepOff)
-        {
+        Zic_Seq_Step* stepOff = looper.getNoteOff();
+        Zic_Seq_Step* stepOn = looper.getNoteOn();
+        if (stepOff) {
             synth.asr.off();
         }
-        if (stepOn)
-        {
+        if (stepOn) {
             synth.wave.setFrequency(NOTE_FREQ[stepOn->note]);
             synth.asr.on();
         }
