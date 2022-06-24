@@ -71,6 +71,7 @@ public:
     Menu menu[APP_MENU_SIZE] = {
         { "Track", 'T', VIEW_TRACK, 'T', true },
         { "Track Loop", 'L', VIEW_TRACK_LOOP, 'T', false },
+        // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
         { "Pattern", 'P', VIEW_PATTERN, 'P', true }, // This might not be necessary can be directly in pattern editor to switch between pat
         { "Pattern edit", 'E', VIEW_PATTERN_EDIT, 'P', false },
         { "Instrument", 'I', VIEW_INSTRUMENT, 'I', true },
