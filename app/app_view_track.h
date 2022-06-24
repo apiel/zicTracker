@@ -65,8 +65,7 @@ public:
                     direction = -10;
                 }
                 uint16_t id = tracks->looper->nextPattern->id ? tracks->looper->nextPattern->id : PATTERN_COUNT;
-                tracks->looper->setNextPattern(
-                    &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT]);
+                tracks->looper->setNextPattern(&tracks->patterns->patterns[(id + direction) % PATTERN_COUNT]);
             }
             App_View_Table::render(display);
             return VIEW_CHANGED;
