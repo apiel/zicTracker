@@ -10,24 +10,44 @@
 #include <SDL/SDL.h>
 #endif
 
-void* zic_file_open(const char* filename, const char *mode)
-{
-    return SDL_RWFromFile(filename, mode);
-}
+class Zic_File {
+public:
+    void* file;
 
-bool zic_file_read(void* file, void* ptr, uint16_t size)
-{
-    return SDL_RWread((SDL_RWops *)file, ptr, size, 1) > 0;
-}
+    Zic_File()
+    {
+    }
 
-bool zic_file_seek(void* file, uint64_t offset)
-{
-    return SDL_RWseek((SDL_RWops *)file, offset, SEEK_SET) != -1;
-}
+    Zic_File(const char* filename, const char* mode)
+    {
+        open(filename, mode);
+    }
 
-bool zic_file_close(void* file)
-{
-    return SDL_RWclose((SDL_RWops *)file) == 0;
-}
+    ~Zic_File()
+    {
+        close();
+    }
+
+    void* open(const char* filename, const char* mode)
+    {
+        file = SDL_RWFromFile(filename, mode);
+        return file;
+    }
+
+    bool read(void* ptr, uint16_t size)
+    {
+        return SDL_RWread((SDL_RWops*)file, ptr, size, 1) > 0;
+    }
+
+    bool seek(uint64_t offset)
+    {
+        return SDL_RWseek((SDL_RWops*)file, offset, SEEK_SET) != -1;
+    }
+
+    bool close()
+    {
+        return SDL_RWclose((SDL_RWops*)file) == 0;
+    }
+};
 
 #endif
