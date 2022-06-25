@@ -20,6 +20,10 @@
 #define APP_AUDIO_FORMAT AUDIO_S16LSB
 #define APP_AUDIO_CHUNK 4096
 
+// THIS MUST BE ON TOP
+// this include must be before initilizing zic lib, to be sure to override zic_file.h!
+#include "zic_file_sdl.h"
+
 #include "../app/app.h"
 #include "../app/app_def.h"
 #include "../app/app_display.h"
