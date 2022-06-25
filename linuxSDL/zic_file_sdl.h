@@ -39,9 +39,14 @@ public:
         return SDL_RWread((SDL_RWops*)file, ptr, size, 1) > 0;
     }
 
-    bool seek(uint64_t offset)
+    bool seekFromStart(uint64_t offset)
     {
         return SDL_RWseek((SDL_RWops*)file, offset, SEEK_SET) != -1;
+    }
+
+    bool seekFromCurrent(uint64_t offset)
+    {
+        return SDL_RWseek((SDL_RWops*)file, offset, SEEK_CUR) != -1;
     }
 
     bool close()
