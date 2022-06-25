@@ -12,7 +12,7 @@
 
 class Zic_File {
 public:
-    void* file;
+    void* file = NULL;
 
     Zic_File()
     {
