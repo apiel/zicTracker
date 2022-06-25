@@ -49,6 +49,11 @@ public:
         return SDL_RWseek((SDL_RWops*)file, offset, SEEK_CUR) != -1;
     }
 
+    uint64_t tell()
+    {
+        return SDL_RWtell((SDL_RWops*)file);
+    }
+
     bool close()
     {
         return SDL_RWclose((SDL_RWops*)file) == 0;
