@@ -5,13 +5,13 @@
 
 #include <wavetables/wavetable_Bank.h>
 #include <zic_seq_loop.h>
-#include <zic_wavetable_synth.h>
+#include <zic_synth_wavetable.h>
 
 class App_Audio_Track {
 public:
     uint8_t id = 0;
 
-    Zic_Wavetable_Synth synth;
+    Zic_Synth_Wavetable synth;
     Zic_Seq_Loop looper;
 
     App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
