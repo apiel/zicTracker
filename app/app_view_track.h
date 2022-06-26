@@ -45,7 +45,7 @@ public:
             // if tracks->tracks[row]->looper.pattern !=  tracks->tracks[row]->looper.nextPattern
             // we could blink between both ids
             sprintf(display->text + strlen(display->text), "%03d ",
-                (nextPat != NULL ? nextPat->id : tracks->tracks[row]->looper.nextPattern->id) + 1);
+                (nextPat != NULL && cursor == pos ? nextPat->id : tracks->tracks[row]->looper.nextPattern->id) + 1);
         }
     }
 
