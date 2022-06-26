@@ -41,6 +41,10 @@ public:
 
     void load(uint8_t pos)
     {
+        // clear data
+        for (uint16_t i = 0; i < PATTERN_DATA_LEN; i++) {
+            data[i] = '\0';
+        }
         if (loadFn(project, pos + 1, data)) {
             Zic_Seq_Step* step = patterns[pos].steps;
             uint8_t prevInstrument = 255;
@@ -48,6 +52,7 @@ public:
             for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN, step++, count++) {
                 char* stepData = data + d;
                 if (stepData[0] != SAME_INSTRUMENT_SYMBOL && (stepData[0] < 'A' || stepData[0] > 'Z')) {
+                    // printf("exit loop %d at step %d\n", pos + 1, count);
                     break;
                 }
                 step->instrument = stepData[0] == SAME_INSTRUMENT_SYMBOL ? prevInstrument : 'A' - stepData[0];

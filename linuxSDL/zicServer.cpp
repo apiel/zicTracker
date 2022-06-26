@@ -45,12 +45,10 @@ void setPatternFilename(uint8_t project, uint8_t pos)
 
 uint8_t loadPattern(uint8_t project, uint8_t pos, char* content)
 {
-    content[0] = '\0';
     setPatternFilename(project, pos);
     SDL_RWops* file = SDL_RWFromFile(filepath, "r");
     if (file) {
         SDL_RWread(file, content, PATTERN_DATA_LEN, 1);
-        // SDL_Log("file content: %s", content);
         SDL_RWclose(file);
         return PAT_LOAD_SUCCESS;
     }
@@ -176,6 +174,7 @@ int main(int argc, char* args[])
 {
 // // patterns.debug(SDL_Log);
 // patterns.debug(SDL_Log, 1);
+// patterns.debug(SDL_Log, 5);
 // patterns.debug(SDL_Log, 199);
     
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {

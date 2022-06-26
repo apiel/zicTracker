@@ -49,6 +49,11 @@ public:
         return SDL_RWseek((SDL_RWops*)file, offset, SEEK_CUR) != -1;
     }
 
+    bool seekFromEnd(uint64_t offset)
+    {
+        return SDL_RWseek((SDL_RWops*)file, offset, SEEK_END) != -1;
+    }
+
     uint64_t tell()
     {
         return SDL_RWtell((SDL_RWops*)file);
