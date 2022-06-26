@@ -50,7 +50,7 @@ uint8_t loadPattern(uint8_t project, uint8_t pos, char* content)
     SDL_RWops* file = SDL_RWFromFile(filepath, "r");
     if (file) {
         SDL_RWread(file, content, PATTERN_DATA_LEN, 1);
-        SDL_Log("file content: %s", content);
+        // SDL_Log("file content: %s", content);
         SDL_RWclose(file);
         return PAT_LOAD_SUCCESS;
     }
@@ -175,7 +175,7 @@ void render(SDL_Surface* screenSurface, App_Display* display)
 int main(int argc, char* args[])
 {
 // // patterns.debug(SDL_Log);
-// patterns.debug(SDL_Log, 198);
+patterns.debug(SDL_Log, 1);
 // patterns.debug(SDL_Log, 199);
     
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {

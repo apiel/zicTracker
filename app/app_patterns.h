@@ -89,14 +89,14 @@ public:
     void debug(void (*log)(const char* fmt, ...), uint8_t pos)
     {
         pos--;
-        log("Pattern %d (%d steps):", pos + 1, patterns[pos].stepCount);
+        log("[%d] Pattern %d (%d steps):", patterns[pos].id, pos + 1, patterns[pos].stepCount);
         for (uint8_t s = 0; s < patterns[pos].stepCount; s++) {
             Zic_Seq_Step* step = &patterns[pos].steps[s];
             if (step->note) {
-                log(" [%d,%s%d%s]", step->instrument,
-                    getNoteStr(step->note), getNoteOctave(step->note), step->slide ? ",slide" : "");
+                log(" [%d,%s%d (%d)%s]", step->instrument,
+                    getNoteStr(step->note), getNoteOctave(step->note), step->note, step->slide ? ",slide" : "");
             } else {
-                log(" [%d,---%s]", step->instrument, step->slide ? ",slide" : "");
+                log(" [%d,--- (%d)%s]", step->instrument, step->note, step->slide ? ",slide" : "");
             }
         }
         log("\n");
