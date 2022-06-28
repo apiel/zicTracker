@@ -19,18 +19,18 @@ public:
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
-        uint8_t note = naturalNotes[pos];
+        uint8_t note = Zic::naturalNotes[pos];
         if (cursor == pos) {
             display->setCursor(2, 1);
         }
         sprintf(display->text + strlen(display->text), "%c%s%d",
-            tracks->looper->nextToPlay == note ? '>' : ' ', getNoteStr(note), getNoteOctave(note));
+            tracks->looper->nextToPlay == note ? '>' : ' ', Zic::getNoteStr(note), Zic::getNoteOctave(note));
     }
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
         if (keys->A) {
-            uint8_t note = naturalNotes[cursor];
+            uint8_t note = Zic::naturalNotes[cursor];
             tracks->looper->on(note);
             render(display);
             return VIEW_CHANGED;

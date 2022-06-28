@@ -57,7 +57,7 @@ public:
                 }
                 step->instrument = stepData[0] == SAME_INSTRUMENT_SYMBOL ? prevInstrument : 'A' - stepData[0];
                 prevInstrument = step->instrument;
-                step->note = stepData[2] == '-' ? 0 : charNotetoInt(stepData[2], stepData[3], stepData[4]);
+                step->note = stepData[2] == '-' ? 0 : Zic::charNotetoInt(stepData[2], stepData[3], stepData[4]);
                 step->slide = stepData[6] == '1';
             }
             patterns[pos].stepCount = count;
@@ -75,7 +75,7 @@ public:
             prevInstrument = step->instrument;
             if (step->note) {
                 snprintf(data + strlen(data), STEP_DATA_LEN, "%c %s%d %d\n", // 8 char "A C-4 1\n"
-                    instrument, getNoteStr(step->note), getNoteOctave(step->note), step->slide);
+                    instrument, Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note), step->slide);
             } else {
                 // 8 char "A --- 0\n"
                 snprintf(data + strlen(data), STEP_DATA_LEN, "%c --- %d\n", instrument, step->slide);
@@ -99,7 +99,7 @@ public:
             Zic_Seq_Step* step = &patterns[pos].steps[s];
             if (step->note) {
                 log(" [%d,%s%d (%d)%s]", step->instrument,
-                    getNoteStr(step->note), getNoteOctave(step->note), step->note, step->slide ? ",slide" : "");
+                    Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note), step->note, step->slide ? ",slide" : "");
             } else {
                 log(" [%d,--- (%d)%s]", step->instrument, step->note, step->slide ? ",slide" : "");
             }
