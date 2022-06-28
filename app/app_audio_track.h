@@ -32,7 +32,7 @@ public:
         if (stepOn) {
             // printf("Note %d\n", stepOn->note);
             synth.wave.restart();
-            synth.wave.setFrequency(Zic::NOTE_FREQ[stepOn->note]);
+            synth.wave.setNote(stepOn->note);
             synth.asr.on();
         }
     }

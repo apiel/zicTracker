@@ -28,38 +28,38 @@ public:
         close();
     }
 
-    void* open(const char* filename, const char* mode)
+    virtual void* open(const char* filename, const char* mode)
     {
         file = SDL_RWFromFile(filename, mode);
         return file;
     }
 
-    bool read(void* ptr, uint16_t size)
+    virtual bool read(void* ptr, uint16_t size)
     {
         return SDL_RWread((SDL_RWops*)file, ptr, size, 1) > 0;
     }
 
-    bool seekFromStart(uint64_t offset)
+    virtual bool seekFromStart(uint64_t offset)
     {
         return SDL_RWseek((SDL_RWops*)file, offset, SEEK_SET) != -1;
     }
 
-    bool seekFromCurrent(uint64_t offset)
+    virtual bool seekFromCurrent(uint64_t offset)
     {
         return SDL_RWseek((SDL_RWops*)file, offset, SEEK_CUR) != -1;
     }
 
-    bool seekFromEnd(uint64_t offset)
+    virtual bool seekFromEnd(uint64_t offset)
     {
         return SDL_RWseek((SDL_RWops*)file, offset, SEEK_END) != -1;
     }
 
-    uint64_t tell()
+    virtual uint64_t tell()
     {
         return SDL_RWtell((SDL_RWops*)file);
     }
 
-    bool close()
+    virtual bool close()
     {
         return SDL_RWclose((SDL_RWops*)file) == 0;
     }
