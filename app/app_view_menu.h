@@ -71,9 +71,9 @@ public:
     Menu menu[APP_MENU_SIZE] = {
         { "Track", 'T', VIEW_TRACK, 'T', true },
         { "Track Loop", 'L', VIEW_TRACK_LOOP, 'T', false },
+        { "Track Instruments", 'I', VIEW_INSTRUMENT, 'T', false },
         // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
         { "Pattern", 'P', VIEW_PATTERN, 'P', true },
-        { "Instrument", 'I', VIEW_INSTRUMENT, 'I', true },
         { "Wavetable sampler", 'W', VIEW_WAVETABLE_SAMPLER, 'S', true }, // generate some wavetable by combining multiple wavetable and detune, effect?, lfo?
     };
     uint8_t currentMenu = 0;
@@ -95,7 +95,7 @@ public:
             }
             sprintf(display->text + strlen(display->text), " %c", menu[i].key);
         }
-        sprintf(display->text + strlen(display->text), "\n\n%s", menu[currentMenu].name);
+        sprintf(display->text + strlen(display->text), "\n\n %s", menu[currentMenu].name);
     }
 
     uint8_t update(UiKeys* keys, App_Display* display)
