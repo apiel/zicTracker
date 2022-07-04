@@ -25,7 +25,7 @@ public:
             "Track  ",
             "Instr. ",
             "Type   ",
-            "File   ",
+            "Wav    ",
             "Level  ",
             "Env    ",
             "Filter ",
@@ -36,11 +36,17 @@ public:
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
-        // if (tracks->trackId == row) {
-        //     display->setCursor(3);
-        // }
-        if (cursor == pos) {
-            display->setCursor(3);
+        uint8_t posTable[VIEW_INSTR_LABELS * VIEW_INSTR_COL] = {
+            3, 0,
+            3, 0,
+            9, 0,
+            12, 0,
+            4, 0,
+            3, 3,
+            3, 3
+        };
+        if (cursor == pos && posTable[pos]) {
+            display->setCursor(posTable[pos]);
         }
 
         switch (row) {
@@ -64,7 +70,7 @@ public:
 
         case 3:
             if (col == 0) {
-                strcat(display->text, "sine");
+                strcat(display->text, "sine        ");
             }
             break;
 
