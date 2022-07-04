@@ -7,13 +7,12 @@
 #define PATTERN_COUNT 200
 #endif
 
-enum{
+enum {
     VIEW_NONE,
     VIEW_CHANGED,
 };
 
-enum
-{
+enum {
     VIEW_TRACK,
     VIEW_TRACK_LOOP,
     VIEW_PATTERN,
@@ -22,8 +21,7 @@ enum
     VIEW_COUNT
 };
 
-enum
-{
+enum {
     TRACK_1,
     TRACK_2,
     TRACK_3,
@@ -31,8 +29,27 @@ enum
     TRACK_COUNT
 };
 
-enum
-{
+enum {
+    INSTRUMENT_1,
+    INSTRUMENT_2,
+    INSTRUMENT_3,
+    INSTRUMENT_4,
+    INSTRUMENT_5,
+    INSTRUMENT_6,
+    INSTRUMENT_7,
+    INSTRUMENT_8,
+    INSTRUMENT_9,
+    INSTRUMENT_10,
+    INSTRUMENT_11,
+    INSTRUMENT_12,
+    INSTRUMENT_13,
+    INSTRUMENT_14,
+    INSTRUMENT_15,
+    INSTRUMENT_16,
+    INSTRUMENT_COUNT
+};
+
+enum {
     UI_KEY_UP,
     UI_KEY_DOWN,
     UI_KEY_LEFT,

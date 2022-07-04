@@ -18,15 +18,22 @@ public:
     App_Audio_Track track0, track1, track2, track3;
     App_Audio_Track* tracks[TRACK_COUNT] = { &track0, &track1, &track2, &track3 };
     App_Audio_Track* track = NULL;
-    Zic_Synth_File* synth = NULL;
+
+    Zic_Synth_File synth0, synth1, synth2, synth3, synth4, synth5, synth6, synth7,
+        synth8, synth9, synth10, synth11, synth12, synth13, synth14, synth15;
+    Zic_Synth_File* synths[INSTRUMENT_COUNT] = {
+        &synth0, &synth1, &synth2, &synth3, &synth4, &synth5, &synth6, &synth7,
+        &synth8, &synth9, &synth10, &synth11, &synth12, &synth13, &synth14, &synth15
+    };
+
     Zic_Seq_Loop* looper = NULL;
 
     App_Tracks(App_Patterns* _patterns)
         : patterns(_patterns)
-        , track0(_patterns, TRACK_1)
-        , track1(_patterns, TRACK_2)
-        , track2(_patterns, TRACK_3)
-        , track3(_patterns, TRACK_4)
+        , track0(&synths[0], _patterns, TRACK_1)
+        , track1(&synths[0], _patterns, TRACK_2)
+        , track2(&synths[0], _patterns, TRACK_3)
+        , track3(&synths[0], _patterns, TRACK_4)
     {
         select(trackId);
     }
@@ -35,7 +42,6 @@ public:
     {
         trackId = id % TRACK_COUNT;
         track = tracks[trackId];
-        synth = &track->synth;
         looper = &track->looper;
     }
 
@@ -46,11 +52,16 @@ public:
         }
     }
 
+    // but this might be wrong? cause if 2 track use the same instument?
     int16_t sample()
     {
-        // return track0.synth.next();
-        // return track0.synth.next() + track1.synth.next(); // + track2.synth.next() + track3.synth.next();
-        return track0.synth.next() + track1.synth.next() + track2.synth.next() + track3.synth.next();
+        int16_t sample = 0;
+        for (uint8_t t = 0; t < TRACK_COUNT; t++) {
+            if (tracks[t]->synth) {
+                sample += tracks[t]->synth->next();
+            }
+        }
+        return sample;
     }
 };
 
