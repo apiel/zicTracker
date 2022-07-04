@@ -9,7 +9,7 @@
 
 #include <wavetables/wavetable_Bank.h>
 #include <zic_seq_loop.h>
-#include <zic_synth_sample.h>
+#include <zic_synth_file.h>
 
 class App_Tracks {
 public:
@@ -18,7 +18,7 @@ public:
     App_Audio_Track track0, track1, track2, track3;
     App_Audio_Track* tracks[TRACK_COUNT] = { &track0, &track1, &track2, &track3 };
     App_Audio_Track* track = NULL;
-    Zic_Synth_Sample* synth = NULL;
+    Zic_Synth_File* synth = NULL;
     Zic_Seq_Loop* looper = NULL;
 
     App_Tracks(App_Patterns* _patterns)
