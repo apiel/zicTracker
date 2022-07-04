@@ -55,7 +55,8 @@ public:
                     // printf("exit loop %d at step %d\n", pos + 1, count);
                     break;
                 }
-                step->instrument = stepData[0] == SAME_INSTRUMENT_SYMBOL ? prevInstrument : 'A' - stepData[0];
+                step->instrument = stepData[0] == SAME_INSTRUMENT_SYMBOL ? prevInstrument : (stepData[0] - 'A');
+                printf("Instrument %c val %d\n", stepData[0], step->instrument);
                 prevInstrument = step->instrument;
                 step->note = stepData[2] == '-' ? 0 : Zic::charNotetoInt(stepData[2], stepData[3], stepData[4]);
                 step->slide = stepData[6] == '1';
