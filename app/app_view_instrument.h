@@ -6,9 +6,9 @@
 #include "./app_view_table.h"
 
 #define VIEW_INSTR_COL 2
-#define VIEW_INSTR_LABELS 6
+#define VIEW_INSTR_LABELS 7
 
-class App_View_Instrument : public App_View_Table<VIEW_INSTR_LABELS /* 7 */, VIEW_INSTR_COL, VIEW_INSTR_COL> {
+class App_View_Instrument : public App_View_Table<7, VIEW_INSTR_COL, VIEW_INSTR_COL> {
 protected:
     App_Tracks* tracks;
 
@@ -26,6 +26,7 @@ public:
             "Instr. ",
             "Type   ",
             "File   ",
+            "Level  ",
             "Env    ",
             "Filter ",
         };
@@ -42,14 +43,55 @@ public:
             display->setCursor(3);
         }
 
-        if (col == 0) {
-            if (tracks->tracks[row]->looper.loopOn) {
-                strcat(display->text, ">ON");
-            } else {
-                strcat(display->text, "OFF");
+        switch (row) {
+        case 0:
+            if (col == 0) {
+                strcat(display->text, "1  ");
             }
-        } else {
-            sprintf(display->text + strlen(display->text), "%03d ", 1);
+            break;
+
+        case 1:
+            if (col == 0) {
+                strcat(display->text, "A  ");
+            }
+            break;
+
+        case 2:
+            if (col == 0) {
+                strcat(display->text, "Wavetable");
+            }
+            break;
+
+        case 3:
+            if (col == 0) {
+                strcat(display->text, "sine");
+            }
+            break;
+
+        case 4:
+            if (col == 0) {
+                strcat(display->text, "100%");
+            }
+            break;
+
+        case 5:
+            if (col == 0) {
+                strcat(display->text, "50 ");
+            } else if (col == 1) {
+                strcat(display->text, "150");
+            }
+            break;
+
+        case 6:
+            if (col == 0) {
+                strcat(display->text, "127");
+            } else if (col == 1) {
+                strcat(display->text, "0  ");
+            }
+            break;
+
+        default:
+            break;
         }
     }
 
