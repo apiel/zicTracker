@@ -15,17 +15,11 @@ Keyboard can also be link to multiple track at once, to play some harmonic.
 
 TODO
 
-Sample and waveform are both using wav file from the SD card. They are treated exactly the same way, just behaving slghtly different. Sample will play only once, where the waveform will loop over.
+Sample and waveform are both using wav file from the SD card.
 
-Both have:
-- start and len
-- ~2 env, assignable -> amplitude, pitch, filter, ifx~
-- ~1 assignable lfo -> amplitude, pitch, filter, ifx, morph? (or should there only be 1-4 lfo in total?)~
-- 1 filter
-- 1 ifx
-
-Waveform:
-- will most likely be much shorted but doesnt have to, also can do morphing over
+- Wavetable
+- Sample (only one pitch for the moment)
+- Multi-samples (would allow to have multiples sound in one sample, each sound correspond to a note, either the same sound with different pitch or a sound kit e.g. drumkit)
 
 ## Notes/todo
 

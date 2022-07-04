@@ -34,9 +34,9 @@ public:
         return file;
     }
 
-    virtual bool read(void* ptr, uint16_t size)
+    virtual uint64_t read(void* ptr, uint16_t size)
     {
-        return SDL_RWread((SDL_RWops*)file, ptr, size, 1) > 0;
+        return (uint64_t)SDL_RWread((SDL_RWops*)file, ptr, size, 1);
     }
 
     virtual bool seekFromStart(uint64_t offset)
