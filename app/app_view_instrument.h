@@ -5,45 +5,32 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
-#define VIEW_TRACK_COL 2
+#define VIEW_INSTR_COL 2
+#define VIEW_INSTR_LABELS 6
 
-class App_View_Instrument : public App_View_Table<5, VIEW_TRACK_COL, VIEW_TRACK_COL> {
+class App_View_Instrument : public App_View_Table<VIEW_INSTR_LABELS /* 7 */, VIEW_INSTR_COL, VIEW_INSTR_COL> {
 protected:
     App_Tracks* tracks;
 
 public:
     App_View_Instrument(App_Tracks* _tracks)
-        : App_View_Table(4)
+        : App_View_Table(VIEW_INSTR_LABELS)
         , tracks(_tracks)
     {
     }
 
     void startRow(App_Display* display, uint16_t row) override
     {
-        switch (row) {
-        case 0:
-            strcat(display->text, "Track  ");
-            break;
+        const char label[VIEW_INSTR_LABELS][8] = {
+            "Track  ",
+            "Instr. ",
+            "Type   ",
+            "File   ",
+            "Env    ",
+            "Filter ",
+        };
 
-        case 1:
-            strcat(display->text, "Instr. ");
-            break;
-
-        case 2:
-            strcat(display->text, "File   ");
-            break;
-
-        case 3:
-            strcat(display->text, "Env    ");
-            break;
-
-        case 4:
-            strcat(display->text, "Filter ");
-            break;
-
-        default:
-            break;
-        }
+        strcat(display->text, label[row % VIEW_INSTR_LABELS]);
     }
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
