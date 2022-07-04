@@ -11,16 +11,17 @@ class App_Audio_Track {
 public:
     uint8_t id = 0;
 
-    Zic_Synth_File** synths;
+    Zic_Synth_File synth0, synth1, synth2, synth3;
+    Zic_Synth_File* synths[INSTRUMENT_COUNT] = { &synth0, &synth1, &synth2, &synth3 };
     Zic_Synth_File* synth = NULL;
     Zic_Seq_Loop looper;
 
-    App_Audio_Track(Zic_Synth_File** _synths, App_Patterns* patterns, uint8_t _id = 0)
+    App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
         : looper(&patterns->patterns[0])
     {
-        synths = _synths;
         id = _id;
         // TODO load pattern from last state saved in project status file
+        synth1.wave.open("samples/kick.wav");
     }
 
     void next()
@@ -36,7 +37,7 @@ public:
         }
         if (stepOn) {
             synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
-            // printf("Note %d\n", stepOn->note);
+            printf("Note %d instrument %d\n", stepOn->note, stepOn->instrument % INSTRUMENT_COUNT);
             synth->wave.restart();
             synth->wave.setNote(stepOn->note);
             synth->asr.on();
