@@ -72,10 +72,9 @@ public:
         { "Track", 'T', VIEW_TRACK, 'T', true },
         { "Track Loop", 'L', VIEW_TRACK_LOOP, 'T', false },
         // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
-        { "Pattern", 'P', VIEW_PATTERN, 'P', true }, // This might not be necessary can be directly in pattern editor to switch between pat
-        { "Pattern edit", 'E', VIEW_PATTERN_EDIT, 'P', false },
+        { "Pattern", 'P', VIEW_PATTERN, 'P', true },
         { "Instrument", 'I', VIEW_INSTRUMENT, 'I', true },
-        { "Instrument edit", 'E', VIEW_INSTRUMENT_EDIT, 'I', false },
+        { "Wavetable sampler", 'W', VIEW_WAVETABLE_SAMPLER, 'S', true }, // generate some wavetable by combining multiple wavetable and detune, effect?, lfo?
     };
     uint8_t currentMenu = 0;
 
