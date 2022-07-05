@@ -14,7 +14,7 @@ public:
     char* cursorPos = NULL;
     uint8_t cursorLen = 0;
 
-    void setCursor(uint8_t len, uint8_t start = 0)
+    void setCursor(uint8_t len, int8_t start = 0)
     {
         cursorPos = text + strlen(text) + start;
         cursorLen = len;

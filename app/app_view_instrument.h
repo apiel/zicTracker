@@ -12,6 +12,16 @@ class App_View_Instrument : public App_View_Table<7, VIEW_INSTR_COL, VIEW_INSTR_
 protected:
     App_Tracks* tracks;
 
+    uint8_t cursorSizeTable[VIEW_INSTR_LABELS * VIEW_INSTR_COL] = {
+        3, 0,
+        3, 0,
+        9, 0,
+        12, 0,
+        4, 0,
+        3, 3,
+        3, 3
+    };
+
 public:
     App_View_Instrument(App_Tracks* _tracks)
         : App_View_Table(VIEW_INSTR_LABELS)
@@ -36,17 +46,13 @@ public:
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
-        uint8_t posTable[VIEW_INSTR_LABELS * VIEW_INSTR_COL] = {
-            3, 0,
-            3, 0,
-            9, 0,
-            12, 0,
-            4, 0,
-            3, 3,
-            3, 3
-        };
-        if (cursor == pos && posTable[pos]) {
-            display->setCursor(posTable[pos]);
+        if (cursor == pos) {
+            if (cursorSizeTable[pos]) {
+                display->setCursor(cursorSizeTable[pos]);
+            } else {
+                // If current cursor is 0 we get the cursor from the previous field
+                display->setCursor(cursorSizeTable[pos - 1], -(cursorSizeTable[pos - 1] + 1));
+            }
         }
 
         switch (row) {
