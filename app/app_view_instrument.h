@@ -114,6 +114,47 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
+        int8_t row = cursor / VIEW_TRACK_COL;
+        if (keys->A) {
+            if (cursor % VIEW_TRACK_COL == 0) {
+                switch (row) {
+                case 0:
+                    if (keys->Right || keys->Up) {
+                        tracks->select(tracks->trackId + 1);
+                    } else if (keys->Left || keys->Down) {
+                        tracks->select(tracks->trackId - 1);
+                    }
+                    break;
+
+                case 1:
+                    if (keys->Right || keys->Up) {
+                        if (instrument + 1 < INSTRUMENT_COUNT) {
+                            instrument++;
+                        }
+                    } else if (keys->Left || keys->Down) {
+                        instrument = instrument ? instrument - 1 % INSTRUMENT_COUNT : 0;
+                    }
+                    break;
+
+                default:
+                    break;
+                }
+            } else if (cursor % VIEW_TRACK_COL == 1) {
+                // int8_t direction = 0;
+                // if (keys->Right) {
+                //     direction = 1;
+                // } else if (keys->Left) {
+                //     direction = -1;
+                // } else if (keys->Up) {
+                //     direction = 10;
+                // } else if (keys->Down) {
+                //     direction = -10;
+                // }
+            }
+            App_View_Table::render(display);
+            return VIEW_CHANGED;
+        }
+
         uint8_t res = App_View_Table::update(keys, display);
 
         return res;

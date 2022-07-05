@@ -45,7 +45,6 @@ public:
         }
     }
 
-    // but this might be wrong? cause if 2 track use the same instument?
     int16_t sample()
     {
         int16_t sample = 0;
