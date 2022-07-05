@@ -48,6 +48,7 @@ public:
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
+        Zic_Synth_File* synth = tracks->track->synths[instrument];
         display->useColoredLabel();
         if (cursor == pos) {
             if (cursorSizeTable[pos]) {
@@ -73,7 +74,11 @@ public:
 
         case 2:
             if (col == 0) {
-                strcat(display->text, "Wavetable   ");
+                if (synth->wave.isWavetable) {
+                    strcat(display->text, "Wavetable   ");
+                } else {
+                    strcat(display->text, "Sample      ");
+                }
             }
             break;
 
@@ -92,10 +97,10 @@ public:
         case 5:
             if (col == 0) {
                 // strcat(display->text, "50 ");
-                sprintf(display->text + strlen(display->text), "%-5d", tracks->track->synths[instrument]->asr.getAttack());
+                sprintf(display->text + strlen(display->text), "%-5d", synth->asr.getAttack());
             } else if (col == 1) {
                 // strcat(display->text, "150");
-                sprintf(display->text + strlen(display->text), "%-5d", tracks->track->synths[instrument]->asr.getRelease());
+                sprintf(display->text + strlen(display->text), "%-5d", synth->asr.getRelease());
             }
             break;
 
