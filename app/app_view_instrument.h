@@ -13,14 +13,16 @@ protected:
     App_Tracks* tracks;
 
     uint8_t cursorSizeTable[VIEW_INSTR_LABELS * VIEW_INSTR_COL] = {
-        3, 0,
-        3, 0,
-        9, 0,
+        2, 0,
+        2, 0,
         12, 0,
-        4, 0,
-        3, 3,
-        3, 3
+        12, 0,
+        5, 0,
+        5, 5,
+        5, 5
     };
+
+    uint8_t instrument = 0;
 
 public:
     App_View_Instrument(App_Tracks* _tracks)
@@ -59,19 +61,19 @@ public:
         switch (row) {
         case 0:
             if (col == 0) {
-                strcat(display->text, "1  ");
+                sprintf(display->text + strlen(display->text), "%-3d", tracks->trackId + 1);
             }
             break;
 
         case 1:
             if (col == 0) {
-                strcat(display->text, "A  ");
+                sprintf(display->text + strlen(display->text), "%-3c", instrument + 'A');
             }
             break;
 
         case 2:
             if (col == 0) {
-                strcat(display->text, "Wavetable");
+                strcat(display->text, "Wavetable   ");
             }
             break;
 
@@ -83,23 +85,25 @@ public:
 
         case 4:
             if (col == 0) {
-                strcat(display->text, "100%");
+                strcat(display->text, "100 %");
             }
             break;
 
         case 5:
             if (col == 0) {
-                strcat(display->text, "50 ");
+                // strcat(display->text, "50 ");
+                sprintf(display->text + strlen(display->text), "%-5d", tracks->track->synths[instrument]->asr.getAttack());
             } else if (col == 1) {
-                strcat(display->text, "150");
+                // strcat(display->text, "150");
+                sprintf(display->text + strlen(display->text), "%-5d", tracks->track->synths[instrument]->asr.getRelease());
             }
             break;
 
         case 6:
             if (col == 0) {
-                strcat(display->text, "127");
+                strcat(display->text, "127  ");
             } else if (col == 1) {
-                strcat(display->text, "0  ");
+                strcat(display->text, "0    ");
             }
             break;
 
