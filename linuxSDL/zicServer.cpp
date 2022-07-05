@@ -28,6 +28,7 @@
 #include "../app/app_def.h"
 #include "../app/app_display.h"
 #include "../app/app_patterns.h"
+#include "color.h"
 #include "font.h"
 #include "zicKeyMap.h"
 
@@ -165,18 +166,18 @@ void audioCallBack(void* userdata, Uint8* stream, int len)
 
 void render(SDL_Surface* screenSurface, App_Display* display)
 {
-    SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0x00, 0x00, 0x00));
+    SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, UI_COLOR_BG));
     SDL_Log("\n%s\n", display->text);
     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
 }
 
 int main(int argc, char* args[])
 {
-// // patterns.debug(SDL_Log);
-// patterns.debug(SDL_Log, 1);
-// patterns.debug(SDL_Log, 5);
-// patterns.debug(SDL_Log, 199);
-    
+    // // patterns.debug(SDL_Log);
+    // patterns.debug(SDL_Log, 1);
+    // patterns.debug(SDL_Log, 5);
+    // patterns.debug(SDL_Log, 199);
+
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "Could not initialize SDL: %s\n", SDL_GetError());
         return 1;

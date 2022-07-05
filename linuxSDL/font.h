@@ -9,6 +9,7 @@
 
 #include "../app/app_display.h"
 #include "fontData.h"
+#include "color.h"
 
 #define FONT_H 8
 #define FONT_W 8
@@ -38,7 +39,7 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, U
 
 void init_default_string_color(SDL_Surface* surface)
 {
-    fontColor = SDL_MapRGB(surface->format, 0xFF, 0xFF, 0xFF);
+    fontColor = SDL_MapRGB(surface->format, UI_COLOR_FONT);
 }
 
 void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y, Uint8 size = 1)
@@ -51,19 +52,19 @@ void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y,
             y += (FONT_H + LINE_SPACING) * size;
         } else {
             if (display->isColoredLabel() && x == orig_x + (display->coloredLabel * FONT_W)) {
-                fontColor = SDL_MapRGB(surface->format, 150, 150, 150);
+                fontColor = SDL_MapRGB(surface->format, UI_COLOR_LABEL);
             }
             if (*text == '>') {
-                fontColor = SDL_MapRGB(surface->format, 73, 219, 158);
+                fontColor = SDL_MapRGB(surface->format, UI_COLOR_PLAY);
             } else if (*text == '*') {
-                fontColor = SDL_MapRGB(surface->format, 182, 219, 72);
+                fontColor = SDL_MapRGB(surface->format, UI_COLOR_STAR);
             } else if (*text == ' ' || *text == '\n') {
                 init_default_string_color(surface);
             }
 
             if (display->cursorLen && text >= display->cursorPos && text < display->cursorPos + display->cursorLen) {
                 SDL_Rect r = { x * size - 2, y, FONT_W * size, FONT_H * size };
-                SDL_FillRect(surface, &r, SDL_MapRGB(surface->format, 39, 69, 94));
+                SDL_FillRect(surface, &r, SDL_MapRGB(surface->format, UI_COLOR_CURSOR));
             }
 
             draw_char(surface, *text, x, y, size);
