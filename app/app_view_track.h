@@ -28,6 +28,7 @@ public:
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
+        display->useColoredLabel(1);
         // if (tracks->trackId == row) {
         //     display->setCursor(3);
         // }

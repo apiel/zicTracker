@@ -46,6 +46,7 @@ public:
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
+        display->useColoredLabel();
         if (cursor == pos) {
             if (cursorSizeTable[pos]) {
                 display->setCursor(cursorSizeTable[pos]);

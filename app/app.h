@@ -49,7 +49,7 @@ public:
     App_Display* render()
     {
         // TODO find a better place way to reset cursor
-        display.cursorLen = 0;
+        display.reset();
 
         uint8_t view = menuView.getView();
         switch (view) {
@@ -71,7 +71,7 @@ public:
     App_Display* handleUi(uint8_t keysBin)
     {
         // TODO find a better place way to reset cursor
-        display.cursorLen = 0;
+        display.reset();
 
         keys.Up = (keysBin >> UI_KEY_UP) & 1;
         keys.Down = (keysBin >> UI_KEY_DOWN) & 1;
