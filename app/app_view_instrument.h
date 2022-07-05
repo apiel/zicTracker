@@ -61,13 +61,13 @@ public:
         switch (row) {
         case 0:
             if (col == 0) {
-                sprintf(display->text + strlen(display->text), "%-3d", tracks->trackId + 1);
+                sprintf(display->text + strlen(display->text), "%-2d", tracks->trackId + 1);
             }
             break;
 
         case 1:
             if (col == 0) {
-                sprintf(display->text + strlen(display->text), "%-3c", instrument + 'A');
+                sprintf(display->text + strlen(display->text), "%-2c", instrument + 'A');
             }
             break;
 
