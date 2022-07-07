@@ -177,29 +177,30 @@ void nextFile(char* file, const char* folder, const char* current, int8_t direct
     struct dirent* directory; // creating pointer of type dirent
     DIR* x = opendir(folder); // it will open directory
 
+    char* previous = (char *)"Empty folder";
+
     if (x == NULL) {
         SDL_Log("Error opening directory");
-        return;
-    }
-
-    char* previous = NULL;
-    while ((directory = readdir(x)) != NULL) {
-        if (strcmp(directory->d_name, ".") == 0 || strcmp(directory->d_name, "..") == 0) {
-            continue;
-        }
-        if (strcmp(current, directory->d_name) == 0) {
-            if (direction < 0) {
-                break;
+    } else {
+        while ((directory = readdir(x)) != NULL) {
+            if (strcmp(directory->d_name, ".") == 0 || strcmp(directory->d_name, "..") == 0) {
+                continue;
+            }
+            if (strcmp(current, directory->d_name) == 0) {
+                if (direction < 0) {
+                    break;
+                }
+                previous = directory->d_name;
+                if ((directory = readdir(x)) != NULL) {
+                    snprintf(file, 256, "%s", directory->d_name);
+                    return;
+                }
             }
             previous = directory->d_name;
-            if ((directory = readdir(x)) != NULL) {
-                snprintf(file, 256, "%s", directory->d_name);
-                return;
-            }
         }
-        previous = directory->d_name;
+        closedir(x);
     }
-    closedir(x);
+
     snprintf(file, 256, "%s", previous);
 }
 
