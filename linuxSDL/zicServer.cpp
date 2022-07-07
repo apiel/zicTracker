@@ -172,7 +172,7 @@ void render(SDL_Surface* screenSurface, App_Display* display)
     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
 }
 
-void getFiles(const char* folder, const char* extension)
+void nextFile(char* file, const char* folder, const char* current, int8_t direction = 1)
 {
     struct dirent* directory; // creating pointer of type dirent
     DIR* x = opendir(folder); // it will open directory
@@ -182,14 +182,25 @@ void getFiles(const char* folder, const char* extension)
         return;
     }
 
+    char* previous = NULL;
     while ((directory = readdir(x)) != NULL) {
-        char* ptr1 = strtok(directory->d_name, ".");
-        char* ptr2 = strtok(NULL, ".");
-        if (ptr2 != NULL && strcmp(ptr2, extension) == 0) {
-            SDL_Log("file: %s\n", ptr1);
+        if (strcmp(directory->d_name, ".") == 0 || strcmp(directory->d_name, "..") == 0) {
+            continue;
         }
+        if (strcmp(current, directory->d_name) == 0) {
+            if (direction < 0) {
+                break;
+            }
+            previous = directory->d_name;
+            if ((directory = readdir(x)) != NULL) {
+                snprintf(file, 256, "%s", directory->d_name);
+                return;
+            }
+        }
+        previous = directory->d_name;
     }
     closedir(x);
+    snprintf(file, 256, "%s", previous);
 }
 
 int main(int argc, char* args[])
@@ -211,7 +222,9 @@ int main(int argc, char* args[])
     }
     Mix_HookMusic(audioCallBack, NULL);
 
-    getFiles("samples", "wav");
+    char fileFound[256];
+    nextFile(fileFound, "samples", "kick.wav", -1);
+    SDL_Log("Next file: %s\n", fileFound);
 
 #if ZIC_SDL2
     SDL_Window* window = SDL_CreateWindow(
