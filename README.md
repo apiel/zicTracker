@@ -40,6 +40,8 @@ Sample and waveform are both using wav file from the SD card.
     - 10? envelop 
     - 5? LFO
 
+- make graph using https://en.wikipedia.org/wiki/Braille_ASCII but then need to update font...
+
 ## Toolchain
 ### Miyoo mini
 

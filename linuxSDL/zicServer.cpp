@@ -12,6 +12,7 @@
 #define SDL_Log printf
 #endif
 
+#include <dirent.h>
 #include <stdio.h>
 
 #define SAMPLE_RATE 48000
@@ -171,6 +172,26 @@ void render(SDL_Surface* screenSurface, App_Display* display)
     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
 }
 
+void getFiles(const char* folder, const char* extension)
+{
+    struct dirent* directory; // creating pointer of type dirent
+    DIR* x = opendir(folder); // it will open directory
+
+    if (x == NULL) {
+        SDL_Log("Error opening directory");
+        return;
+    }
+
+    while ((directory = readdir(x)) != NULL) {
+        char* ptr1 = strtok(directory->d_name, ".");
+        char* ptr2 = strtok(NULL, ".");
+        if (ptr2 != NULL && strcmp(ptr2, extension) == 0) {
+            SDL_Log("file: %s\n", ptr1);
+        }
+    }
+    closedir(x);
+}
+
 int main(int argc, char* args[])
 {
     // // patterns.debug(SDL_Log);
@@ -189,6 +210,8 @@ int main(int argc, char* args[])
         SDL_Log("Open audio mixer success\n");
     }
     Mix_HookMusic(audioCallBack, NULL);
+
+    getFiles("samples", "wav");
 
 #if ZIC_SDL2
     SDL_Window* window = SDL_CreateWindow(
