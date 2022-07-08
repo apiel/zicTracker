@@ -1,39 +1,49 @@
 #ifndef APP_FILE_H_
 #define APP_FILE_H_
 
-#include <stdio.h>
-#include <stdint.h>
 #include <dirent.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <string.h>
+
+struct dirent *myReaddir (DIR *x) {
+    struct dirent* directory;
+    directory = readdir(x);
+    if (directory != NULL && (strcmp(directory->d_name, ".") == 0 || strcmp(directory->d_name, "..") == 0)) {
+        return myReaddir(x);
+    }
+    return directory;
+}
 
 void nextFile(char* filename, const char* folder, const char* current, int8_t direction = 1)
 {
-    struct dirent* directory; // creating pointer of type dirent
-    DIR* x = opendir(folder); // it will open directory
+    struct dirent* directory;
+    DIR* x = opendir(folder);
 
-    char* previous = (char *)"Empty folder";
+    char* previous = NULL;
 
     if (x != NULL) {
-        while ((directory = readdir(x)) != NULL) {
-            if (strcmp(directory->d_name, ".") == 0 || strcmp(directory->d_name, "..") == 0) {
-                continue;
-            }
+        while ((directory = myReaddir(x)) != NULL) {
             if (strcmp(current, directory->d_name) == 0) {
+                strncpy(filename, directory->d_name, 256);
                 if (direction < 0) {
-                    break;
-                }
-                previous = directory->d_name;
-                if ((directory = readdir(x)) != NULL) {
-                    snprintf(filename, 256, "%s", directory->d_name);
+                    if (previous != NULL) {
+                        strncpy(filename, previous, 256);
+                    }
                     return;
                 }
+                if ((directory = myReaddir(x)) != NULL) {
+                    strncpy(filename, directory->d_name, 256);
+                    return;
+                }
+                return;
             }
             previous = directory->d_name;
         }
         closedir(x);
     }
 
-    snprintf(filename, 256, "%s", previous);
+    strncpy(filename, "Empty folder", 256);
 }
 
 #endif
