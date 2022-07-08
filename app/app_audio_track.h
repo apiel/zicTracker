@@ -21,7 +21,7 @@ public:
     {
         id = _id;
         // TODO load pattern from last state saved in project status file
-        synth1.wave.open("samples/kick.wav");
+        synth1.set("kick.wav", false)->open();
     }
 
     void next()

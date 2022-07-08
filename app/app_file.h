@@ -6,7 +6,7 @@
 #include <dirent.h>
 #include <string.h>
 
-void nextFile(char* file, const char* folder, const char* current, int8_t direction = 1)
+void nextFile(char* filename, const char* folder, const char* current, int8_t direction = 1)
 {
     struct dirent* directory; // creating pointer of type dirent
     DIR* x = opendir(folder); // it will open directory
@@ -24,7 +24,7 @@ void nextFile(char* file, const char* folder, const char* current, int8_t direct
                 }
                 previous = directory->d_name;
                 if ((directory = readdir(x)) != NULL) {
-                    snprintf(file, 256, "%s", directory->d_name);
+                    snprintf(filename, 256, "%s", directory->d_name);
                     return;
                 }
             }
@@ -33,7 +33,7 @@ void nextFile(char* file, const char* folder, const char* current, int8_t direct
         closedir(x);
     }
 
-    snprintf(file, 256, "%s", previous);
+    snprintf(filename, 256, "%s", previous);
 }
 
 #endif

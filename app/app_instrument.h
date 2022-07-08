@@ -5,15 +5,34 @@
 
 class App_Instrument : public Zic_Synth_File {
 public:
-    // App_Instrument()
-    // {
-    //     // open("samples/kick.wav");
-    //     open("wavetables/59.wav", true);
-    // }
-    
+    char filename[256] = "59.wav";
+    bool isWavetable = true;
+
+    App_Instrument()
+    {
+        // TODO load filename from last state
+        open();
+    }
+
+    App_Instrument* set(const char* name, bool _isWavetable)
+    {
+        strcpy(filename, name);
+        isWavetable = _isWavetable;
+        return this;
+    }
+
+    App_Instrument* open()
+    {
+        char filepath[270];
+        snprintf(filepath, 270, "%s/%s", getFolder(), filename);
+        wave.open(filepath, isWavetable);
+
+        return this;
+    }
+
     const char* getFolder()
     {
-        if (wave.isWavetable) {
+        if (isWavetable) {
             return "wavetables";
         }
         return "samples";
