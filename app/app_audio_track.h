@@ -2,18 +2,18 @@
 #define APP_AUDIO_TRACK_H_
 
 #include "./app_patterns.h"
+#include "./app_instrument.h"
 
 #include <wavetables/wavetable_Bank.h>
 #include <zic_seq_loop.h>
-#include <zic_synth_file.h>
 
 class App_Audio_Track {
 public:
     uint8_t id = 0;
 
-    Zic_Synth_File synth0, synth1, synth2, synth3;
-    Zic_Synth_File* synths[INSTRUMENT_COUNT] = { &synth0, &synth1, &synth2, &synth3 };
-    Zic_Synth_File* synth = NULL;
+    App_Instrument synth0, synth1, synth2, synth3;
+    App_Instrument* synths[INSTRUMENT_COUNT] = { &synth0, &synth1, &synth2, &synth3 };
+    App_Instrument* synth = NULL;
     Zic_Seq_Loop looper;
 
     App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
