@@ -1,8 +1,8 @@
 #ifndef APP_AUDIO_TRACK_H_
 #define APP_AUDIO_TRACK_H_
 
-#include "./app_patterns.h"
 #include "./app_instrument.h"
+#include "./app_patterns.h"
 
 #include <wavetables/wavetable_Bank.h>
 #include <zic_seq_loop.h>
@@ -17,7 +17,11 @@ public:
     Zic_Seq_Loop looper;
 
     App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
-        : looper(&patterns->patterns[0])
+        : synth0(0)
+        , synth1(1)
+        , synth2(2)
+        , synth3(3)
+        , looper(&patterns->patterns[0])
     {
         id = _id;
         // TODO load pattern from last state saved in project status file

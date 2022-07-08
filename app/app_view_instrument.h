@@ -48,7 +48,7 @@ public:
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
-        Zic_Synth_File* synth = tracks->track->synths[instrument];
+        App_Instrument* synth = tracks->track->synths[instrument];
         display->useColoredLabel();
         if (cursor == pos) {
             if (cursorSizeTable[pos]) {
@@ -74,7 +74,7 @@ public:
 
         case 2:
             if (col == 0) {
-                if (synth->wave.isWavetable) {
+                if (synth->isWavetable) {
                     strcat(display->text, "Wavetable   ");
                 } else {
                     strcat(display->text, "Sample      ");
@@ -84,7 +84,9 @@ public:
 
         case 3:
             if (col == 0) {
-                strcat(display->text, "sine        ");
+                char filename[12];
+                strncpy(filename, synth->filename, 12);
+                sprintf(display->text + strlen(display->text), "%-12s", filename);
             }
             break;
 
@@ -119,6 +121,8 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
+        App_Instrument* synth = tracks->track->synths[instrument];
+
         int8_t row = cursor / VIEW_TRACK_COL;
         if (keys->A) {
             if (cursor % VIEW_TRACK_COL == 0) {
@@ -138,6 +142,14 @@ public:
                         }
                     } else if (keys->Left || keys->Down) {
                         instrument = instrument ? instrument - 1 % INSTRUMENT_COUNT : 0;
+                    }
+                    break;
+
+                case 3:
+                    if (keys->Right || keys->Up) {
+                        synth->setNext(+1);
+                    } else if (keys->Left || keys->Down) {
+                        synth->setNext(-1);
                     }
                     break;
 
