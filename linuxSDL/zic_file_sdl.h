@@ -34,6 +34,11 @@ public:
         return file;
     }
 
+    virtual bool isOpen()
+    {
+        return file != NULL;
+    }
+
     virtual uint64_t read(void* ptr, uint16_t size)
     {
         return (uint64_t)SDL_RWread((SDL_RWops*)file, ptr, size, 1);
@@ -61,7 +66,14 @@ public:
 
     virtual bool close()
     {
-        return SDL_RWclose((SDL_RWops*)file) == 0;
+        if (file == NULL) {
+            return true;
+        }
+        if (SDL_RWclose((SDL_RWops*)file) == 0) {
+            file = NULL;
+            return true;
+        }
+        return false;
     }
 };
 

@@ -12,7 +12,6 @@
 #define SDL_Log printf
 #endif
 
-#include <dirent.h>
 #include <stdio.h>
 
 #define SAMPLE_RATE 48000
@@ -29,6 +28,7 @@
 #include "../app/app_def.h"
 #include "../app/app_display.h"
 #include "../app/app_patterns.h"
+#include "../app/app_file.h"
 #include "color.h"
 #include "font.h"
 #include "zicKeyMap.h"
@@ -38,31 +38,7 @@
 
 #define TEXT_SIZE 2
 
-#define MAX_FILENAME 100
-char filepath[MAX_FILENAME];
-void setPatternFilename(uint8_t project, uint8_t pos)
-{
-    snprintf(filepath, MAX_FILENAME, "projects/%d/patterns/%d.pat", project, pos);
-}
-
-uint8_t loadPattern(uint8_t project, uint8_t pos, char* content)
-{
-    setPatternFilename(project, pos);
-    SDL_RWops* file = SDL_RWFromFile(filepath, "r");
-    if (file) {
-        SDL_RWread(file, content, PATTERN_DATA_LEN, 1);
-        SDL_RWclose(file);
-        return PAT_LOAD_SUCCESS;
-    }
-    return PAT_LOAD_NONE;
-}
-
-void savePattern(uint8_t project, uint8_t pos, char* content)
-{
-    setPatternFilename(project, pos);
-}
-
-App_Patterns patterns(&loadPattern, &savePattern);
+App_Patterns patterns;
 App app(&patterns);
 
 typedef struct {
@@ -170,38 +146,6 @@ void render(SDL_Surface* screenSurface, App_Display* display)
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, UI_COLOR_BG));
     SDL_Log("\n%s\n", display->text);
     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
-}
-
-void nextFile(char* file, const char* folder, const char* current, int8_t direction = 1)
-{
-    struct dirent* directory; // creating pointer of type dirent
-    DIR* x = opendir(folder); // it will open directory
-
-    char* previous = (char *)"Empty folder";
-
-    if (x == NULL) {
-        SDL_Log("Error opening directory");
-    } else {
-        while ((directory = readdir(x)) != NULL) {
-            if (strcmp(directory->d_name, ".") == 0 || strcmp(directory->d_name, "..") == 0) {
-                continue;
-            }
-            if (strcmp(current, directory->d_name) == 0) {
-                if (direction < 0) {
-                    break;
-                }
-                previous = directory->d_name;
-                if ((directory = readdir(x)) != NULL) {
-                    snprintf(file, 256, "%s", directory->d_name);
-                    return;
-                }
-            }
-            previous = directory->d_name;
-        }
-        closedir(x);
-    }
-
-    snprintf(file, 256, "%s", previous);
 }
 
 int main(int argc, char* args[])

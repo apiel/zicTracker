@@ -7,31 +7,21 @@
 #include <zic_seq_pattern.h>
 
 #include "./app_def.h"
+#include "./app_file_pattern.h"
 
 #define STEP_DATA_LEN 8
 #define PATTERN_DATA_LEN 8 * MAX_STEPS_IN_PATTERN // 8*64=512
 #define SAME_INSTRUMENT_SYMBOL '_'
 
-enum {
-    PAT_LOAD_NONE,
-    PAT_LOAD_SUCCESS,
-};
-
 class App_Patterns {
 protected:
     uint8_t project = 0;
     char data[PATTERN_DATA_LEN];
-    uint8_t (*loadFn)(uint8_t project, uint8_t pos, char* content);
-    void (*saveFn)(uint8_t project, uint8_t pos, char* content);
 
 public:
     Zic_Seq_Pattern patterns[PATTERN_COUNT];
 
-    App_Patterns(
-        uint8_t (*_loadFn)(uint8_t project, uint8_t pos, char* content),
-        void (*_saveFn)(uint8_t project, uint8_t pos, char* content))
-        : loadFn(_loadFn)
-        , saveFn(_saveFn)
+    App_Patterns()
     {
         // NOTE instead to load all pattern in memory, could also load on demand
         for (uint8_t p = 0; p < PATTERN_COUNT; p++) {
@@ -45,7 +35,7 @@ public:
         for (uint16_t i = 0; i < PATTERN_DATA_LEN; i++) {
             data[i] = '\0';
         }
-        if (loadFn(project, pos + 1, data)) {
+        if (loadFilePattern(project, pos + 1, data, PATTERN_DATA_LEN)) {
             Zic_Seq_Step* step = patterns[pos].steps;
             uint8_t prevInstrument = 255;
             uint8_t count = 0;
@@ -82,7 +72,7 @@ public:
                 snprintf(data + strlen(data), STEP_DATA_LEN, "%c --- %d\n", instrument, step->slide);
             }
         }
-        saveFn(project, pos + 1, data);
+        saveFilePattern(project, pos + 1, data);
     }
 
     void debug(void (*log)(const char* fmt, ...))
