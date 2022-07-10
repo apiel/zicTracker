@@ -98,19 +98,18 @@ public:
 
         case 5:
             if (col == 0) {
-                // strcat(display->text, "50 ");
                 sprintf(display->text + strlen(display->text), "%-5d", synth->asr.getAttack());
             } else if (col == 1) {
-                // strcat(display->text, "150");
                 sprintf(display->text + strlen(display->text), "%-5d", synth->asr.getRelease());
             }
             break;
 
         case 6:
+            // could remove leading 0
             if (col == 0) {
-                strcat(display->text, "127  ");
+                sprintf(display->text + strlen(display->text), "%.3f", synth->filter.cutoff);
             } else if (col == 1) {
-                strcat(display->text, "0    ");
+                sprintf(display->text + strlen(display->text), "%.3f", synth->filter.resonance);
             }
             break;
 
@@ -125,94 +124,106 @@ public:
 
         int8_t row = cursor / VIEW_TRACK_COL;
         int8_t col = cursor % VIEW_TRACK_COL;
+        printf("-------------------------> row %d col %d\n", row, col);
         if (keys->A) {
-            if (cursor % VIEW_TRACK_COL == 0) {
-                switch (row) {
-                case 0:
-                    if (keys->Right || keys->Up) {
-                        tracks->select(tracks->trackId + 1);
-                    } else if (keys->Left || keys->Down) {
-                        tracks->select(tracks->trackId - 1);
-                    }
-                    break;
-
-                case 1:
-                    if (keys->Right || keys->Up) {
-                        if (instrument + 1 < INSTRUMENT_COUNT) {
-                            instrument++;
-                        }
-                    } else if (keys->Left || keys->Down) {
-                        instrument = instrument ? instrument - 1 % INSTRUMENT_COUNT : 0;
-                    }
-                    break;
-
-                case 2:
-                    if (keys->Right || keys->Up) {
-                        synth->isWavetable = true;
-                    } else if (keys->Left || keys->Down) {
-                        synth->isWavetable = false;
-                    }
-                    synth->setNext();
-                    break;
-
-                case 3:
-                    if (keys->Right || keys->Up) {
-                        synth->setNext(+1);
-                    } else if (keys->Left || keys->Down) {
-                        synth->setNext(-1);
-                    }
-                    break;
-
-                case 4:
-                    if (keys->Right) {
-                        synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
-                    } else if (keys->Up) {
-                        synth->wave.setAmplitude(synth->wave.getAmplitude() + 10);
-                    } else if (keys->Left) {
-                        synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
-                    } else if (keys->Down) {
-                        synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
-                    }
-                    break;
-
-                case 5:
-                    if (col == 0) {
-                        if (keys->Right) {
-                            synth->asr.setAttack(synth->asr.getAttack() + 1);
-                        } else if (keys->Up) {
-                            synth->asr.setAttack(synth->asr.getAttack() + 10);
-                        } else if (keys->Left) {
-                            synth->asr.setAttack(synth->asr.getAttack() - 1);
-                        } else if (keys->Down) {
-                            synth->asr.setAttack(synth->asr.getAttack() - 10);
-                        }
-                    } else {
-                        if (keys->Right) {
-                            synth->asr.setRelease(synth->asr.getRelease() + 1);
-                        } else if (keys->Up) {
-                            synth->asr.setRelease(synth->asr.getRelease() + 10);
-                        } else if (keys->Left) {
-                            synth->asr.setRelease(synth->asr.getRelease() - 1);
-                        } else if (keys->Down) {
-                            synth->asr.setRelease(synth->asr.getRelease() - 10);
-                        }
-                    }
-                    break;
-
-                default:
-                    break;
+            switch (row) {
+            case 0:
+                if (keys->Right || keys->Up) {
+                    tracks->select(tracks->trackId + 1);
+                } else if (keys->Left || keys->Down) {
+                    tracks->select(tracks->trackId - 1);
                 }
-            } else if (cursor % VIEW_TRACK_COL == 1) {
-                // int8_t direction = 0;
-                // if (keys->Right) {
-                //     direction = 1;
-                // } else if (keys->Left) {
-                //     direction = -1;
-                // } else if (keys->Up) {
-                //     direction = 10;
-                // } else if (keys->Down) {
-                //     direction = -10;
-                // }
+                break;
+
+            case 1:
+                if (keys->Right || keys->Up) {
+                    if (instrument + 1 < INSTRUMENT_COUNT) {
+                        instrument++;
+                    }
+                } else if (keys->Left || keys->Down) {
+                    instrument = instrument ? instrument - 1 % INSTRUMENT_COUNT : 0;
+                }
+                break;
+
+            case 2:
+                if (keys->Right || keys->Up) {
+                    synth->isWavetable = true;
+                } else if (keys->Left || keys->Down) {
+                    synth->isWavetable = false;
+                }
+                synth->setNext();
+                break;
+
+            case 3:
+                if (keys->Right || keys->Up) {
+                    synth->setNext(+1);
+                } else if (keys->Left || keys->Down) {
+                    synth->setNext(-1);
+                }
+                break;
+
+            case 4:
+                if (keys->Right) {
+                    synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
+                } else if (keys->Up) {
+                    synth->wave.setAmplitude(synth->wave.getAmplitude() + 10);
+                } else if (keys->Left) {
+                    synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
+                } else if (keys->Down) {
+                    synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
+                }
+                break;
+
+            case 5:
+                if (col == 0) {
+                    if (keys->Right) {
+                        synth->asr.setAttack(synth->asr.getAttack() + 1);
+                    } else if (keys->Up) {
+                        synth->asr.setAttack(synth->asr.getAttack() + 10);
+                    } else if (keys->Left) {
+                        synth->asr.setAttack(synth->asr.getAttack() - 1);
+                    } else if (keys->Down) {
+                        synth->asr.setAttack(synth->asr.getAttack() - 10);
+                    }
+                } else {
+                    if (keys->Right) {
+                        synth->asr.setRelease(synth->asr.getRelease() + 1);
+                    } else if (keys->Up) {
+                        synth->asr.setRelease(synth->asr.getRelease() + 10);
+                    } else if (keys->Left) {
+                        synth->asr.setRelease(synth->asr.getRelease() - 1);
+                    } else if (keys->Down) {
+                        synth->asr.setRelease(synth->asr.getRelease() - 10);
+                    }
+                }
+                break;
+
+            case 6:
+                if (col == 0) {
+                    if (keys->Right) {
+                        synth->filter.setCutoff(synth->filter.cutoff + 0.001);
+                    } else if (keys->Up) {
+                        synth->filter.setCutoff(synth->filter.cutoff + 0.010);
+                    } else if (keys->Left) {
+                        synth->filter.setCutoff(synth->filter.cutoff - 0.001);
+                    } else if (keys->Down) {
+                        synth->filter.setCutoff(synth->filter.cutoff - 0.010);
+                    }
+                } else {
+                    if (keys->Right) {
+                        synth->filter.setResonance(synth->filter.resonance + 0.001);
+                    } else if (keys->Up) {
+                        synth->filter.setResonance(synth->filter.resonance + 0.010);
+                    } else if (keys->Left) {
+                        synth->filter.setResonance(synth->filter.resonance - 0.001);
+                    } else if (keys->Down) {
+                        synth->filter.setResonance(synth->filter.resonance - 0.010);
+                    }
+                }
+                break;
+
+            default:
+                break;
             }
             App_View_Table::render(display);
             return VIEW_CHANGED;
