@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
-struct dirent *myReaddir (DIR *x) {
+struct dirent* myReaddir(DIR* x)
+{
     struct dirent* directory;
     directory = readdir(x);
     if (directory != NULL && (strcmp(directory->d_name, ".") == 0 || strcmp(directory->d_name, "..") == 0)) {
@@ -15,7 +16,7 @@ struct dirent *myReaddir (DIR *x) {
     return directory;
 }
 
-void nextFile(char* filename, const char* folder, const char* current, int8_t direction = 1)
+void nextFile(char* filename, const char* folder, const char* current, int8_t direction = 0)
 {
     struct dirent* directory;
     DIR* x = opendir(folder);
@@ -24,6 +25,10 @@ void nextFile(char* filename, const char* folder, const char* current, int8_t di
 
     if (x != NULL) {
         while ((directory = myReaddir(x)) != NULL) {
+            if (direction == 0) {
+                strncpy(filename, directory->d_name, 256);
+                return;
+            }
             if (strcmp(current, directory->d_name) == 0) {
                 strncpy(filename, directory->d_name, 256);
                 if (direction < 0) {

@@ -151,7 +151,7 @@ public:
                     } else if (keys->Left || keys->Down) {
                         synth->isWavetable = false;
                     }
-                    synth->setNext(0);
+                    synth->setNext();
                     break;
 
                 case 3:

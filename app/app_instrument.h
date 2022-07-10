@@ -25,7 +25,7 @@ public:
         return this;
     }
 
-    App_Instrument * setNext(int8_t direction = 1)
+    App_Instrument * setNext(int8_t direction = 0)
     {
         nextFile(filename, getFolder(), filename, direction);
         open();
