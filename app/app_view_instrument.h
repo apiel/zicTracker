@@ -124,6 +124,7 @@ public:
         App_Instrument* synth = tracks->track->synths[instrument];
 
         int8_t row = cursor / VIEW_TRACK_COL;
+        int8_t col = cursor % VIEW_TRACK_COL;
         if (keys->A) {
             if (cursor % VIEW_TRACK_COL == 0) {
                 switch (row) {
@@ -171,6 +172,30 @@ public:
                         synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
                     } else if (keys->Down) {
                         synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
+                    }
+                    break;
+
+                case 5:
+                    if (col == 0) {
+                        if (keys->Right) {
+                            synth->asr.setAttack(synth->asr.getAttack() + 1);
+                        } else if (keys->Up) {
+                            synth->asr.setAttack(synth->asr.getAttack() + 10);
+                        } else if (keys->Left) {
+                            synth->asr.setAttack(synth->asr.getAttack() - 1);
+                        } else if (keys->Down) {
+                            synth->asr.setAttack(synth->asr.getAttack() - 10);
+                        }
+                    } else {
+                        if (keys->Right) {
+                            synth->asr.setRelease(synth->asr.getRelease() + 1);
+                        } else if (keys->Up) {
+                            synth->asr.setRelease(synth->asr.getRelease() + 10);
+                        } else if (keys->Left) {
+                            synth->asr.setRelease(synth->asr.getRelease() - 1);
+                        } else if (keys->Down) {
+                            synth->asr.setRelease(synth->asr.getRelease() - 10);
+                        }
                     }
                     break;
 
