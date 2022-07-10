@@ -124,7 +124,6 @@ public:
 
         int8_t row = cursor / VIEW_TRACK_COL;
         int8_t col = cursor % VIEW_TRACK_COL;
-        printf("-------------------------> row %d col %d\n", row, col);
         if (keys->A) {
             switch (row) {
             case 0:
