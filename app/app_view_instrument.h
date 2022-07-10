@@ -92,7 +92,7 @@ public:
 
         case 4:
             if (col == 0) {
-                strcat(display->text, "100 %");
+                sprintf(display->text + strlen(display->text), "%-3d%%", synth->wave.getAmplitude());
             }
             break;
 
@@ -159,6 +159,18 @@ public:
                         synth->setNext(+1);
                     } else if (keys->Left || keys->Down) {
                         synth->setNext(-1);
+                    }
+                    break;
+
+                case 4:
+                    if (keys->Right) {
+                        synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
+                    } else if (keys->Up) {
+                        synth->wave.setAmplitude(synth->wave.getAmplitude() + 10);
+                    } else if (keys->Left) {
+                        synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
+                    } else if (keys->Down) {
+                        synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
                     }
                     break;
 
