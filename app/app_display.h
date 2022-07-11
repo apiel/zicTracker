@@ -21,6 +21,7 @@ public:
         cursorPos = NULL;
         cursorLen = 0;
         coloredLabel = 255;
+        coloredHeader = false;
     }
 
     void setCursor(uint8_t len, int8_t start = 0)
