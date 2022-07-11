@@ -6,6 +6,9 @@
 #include "./app_file.h"
 
 class App_Instrument : public Zic_Synth_File {
+protected:
+    int8_t mutedAmplitude = 0;
+
 public:
     uint8_t id = 0;
     char filename[256] = "59.wav";
@@ -25,7 +28,7 @@ public:
         return this;
     }
 
-    App_Instrument * setNext(int8_t direction = 0)
+    App_Instrument* setNext(int8_t direction = 0)
     {
         nextFile(filename, getFolder(), filename, direction);
         open();

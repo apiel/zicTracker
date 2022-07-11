@@ -17,7 +17,7 @@ protected:
         2, 0,
         12, 0,
         12, 0,
-        5, 0,
+        5, 5,
         5, 5,
         5, 5
     };
@@ -92,7 +92,13 @@ public:
 
         case 4:
             if (col == 0) {
-                sprintf(display->text + strlen(display->text), "%-3d%%", synth->wave.getAmplitude());
+                sprintf(display->text + strlen(display->text), "%-3d%% ", synth->wave.getAmplitude());
+            } else {
+                if (synth->wave.isMuted()) {
+                    strcat(display->text, "Muted");
+                } else {
+                    strcat(display->text, ">ON  ");
+                }
             }
             break;
 
@@ -162,14 +168,22 @@ public:
                 break;
 
             case 4:
-                if (keys->Right) {
-                    synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
-                } else if (keys->Up) {
-                    synth->wave.setAmplitude(synth->wave.getAmplitude() + 10);
-                } else if (keys->Left) {
-                    synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
-                } else if (keys->Down) {
-                    synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
+                if (col == 0) {
+                    if (keys->Right) {
+                        synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
+                    } else if (keys->Up) {
+                        synth->wave.setAmplitude(synth->wave.getAmplitude() + 10);
+                    } else if (keys->Left) {
+                        synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
+                    } else if (keys->Down) {
+                        synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
+                    }
+                } else {
+                    if (synth->wave.isMuted()) {
+                        synth->wave.setMute(false);
+                    } else {
+                        synth->wave.setMute();
+                    }
                 }
                 break;
 
