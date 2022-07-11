@@ -152,7 +152,8 @@ int main(int argc, char* args[])
 {
     SDL_Log(">>>>>>> Start Zic Tracker\n");
     // // patterns.debug(SDL_Log);
-    patterns.debug(SDL_Log, 1);
+    // patterns.debug(SDL_Log, 1);
+    patterns.debug(SDL_Log, 6);
     // patterns.debug(SDL_Log, 5);
     // patterns.debug(SDL_Log, 199);
 

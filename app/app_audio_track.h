@@ -33,6 +33,8 @@ public:
         looper.next();
         Zic_Seq_Step* stepOff = looper.getNoteOff();
         Zic_Seq_Step* stepOn = looper.getNoteOn();
+        // FIXME there is no clear note OFF
+        // maybe trigger note off earlier???
         if (stepOff) {
             if (synth) {
                 synth->asr.off();
@@ -42,11 +44,15 @@ public:
         if (stepOn) {
             synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
             // printf("Note %d instrument %d\n", stepOn->note, stepOn->instrument % INSTRUMENT_COUNT);
-                printf("do stepONNN %d\n", stepOn->note);
 
             synth->wave.restart();
             synth->wave.setNote(stepOn->note);
-            synth->asr.on();
+
+            if (looper.wasSlide()) {
+                synth->asr.slide();
+            } else {
+                synth->asr.on();
+            }
         }
     }
 };
