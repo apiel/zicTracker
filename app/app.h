@@ -7,7 +7,7 @@
 #include "./app_tracks.h"
 #include "./app_view_menu.h"
 #include "./app_view_track.h"
-#include "./app_view_trackLoop.h"
+#include "./app_view_trackMaster.h"
 #include "./app_view_instrument.h"
 #include <zic_seq_tempo.h>
 
@@ -21,13 +21,13 @@ public:
 
     App_View_Menu menuView;
     App_View_Track trackView;
-    App_View_TrackLoop trackLoopView;
+    App_View_TrackMaster trackMasterView;
     App_View_Instrument instrumentView;
 
     App(App_Patterns* patterns)
         : tracks(patterns)
         , trackView(&tracks)
-        , trackLoopView(&tracks)
+        , trackMasterView(&tracks)
         , instrumentView(&tracks)
     {
     }
@@ -53,8 +53,8 @@ public:
 
         uint8_t view = menuView.getView();
         switch (view) {
-        case VIEW_TRACK_LOOP:
-            trackLoopView.render(&display);
+        case VIEW_TRACK_MASTER:
+            trackMasterView.render(&display);
             break;
 
         case VIEW_INSTRUMENT:
@@ -89,8 +89,8 @@ public:
             case VIEW_TRACK:
                 rendered = trackView.update(&keys, &display);
                 break;
-            case VIEW_TRACK_LOOP:
-                rendered = trackLoopView.update(&keys, &display);
+            case VIEW_TRACK_MASTER:
+                rendered = trackMasterView.update(&keys, &display);
                 break;
             case VIEW_INSTRUMENT:
                 rendered = instrumentView.update(&keys, &display);

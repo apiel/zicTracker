@@ -1,5 +1,5 @@
-#ifndef APP_VIEW_TRACK_LOOP_H_
-#define APP_VIEW_TRACK_LOOP_H_
+#ifndef APP_VIEW_TRACK_MASTER_H_
+#define APP_VIEW_TRACK_MASTER_H_
 
 #include "./app_display.h"
 #include "./app_tracks.h"
@@ -11,13 +11,13 @@
 //
 // the keyboard should not be note but detune semitone value
 // of 3 rows.
-class App_View_TrackLoop : public App_View_Table<7, 6, 7> {
+class App_View_TrackMaster : public App_View_Table<7, 6, 7> {
     // class App_View_TrackLoop : public App_View_Table<5, 4, 7> {
 protected:
     App_Tracks* tracks;
 
 public:
-    App_View_TrackLoop(App_Tracks* _tracks)
+    App_View_TrackMaster(App_Tracks* _tracks)
         : App_View_Table(9)
         , tracks(_tracks)
     {
