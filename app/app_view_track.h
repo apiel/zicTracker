@@ -23,7 +23,7 @@ public:
 
     void startRow(App_Display* display, uint16_t row) override
     {
-        display->useColoredLabel(1);
+        display->useColoredLabel();
         switch (row) {
         case 0:
             strcat(display->text, "SEQ ");
