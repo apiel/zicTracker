@@ -5,6 +5,12 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
+// TODO rename to track master
+// where multiple tracks can be sent to it
+// and where we can apply action for several tracks at once
+//
+// the keyboard should not be note but detune semitone value
+// of 3 rows.
 class App_View_TrackLoop : public App_View_Table<7, 6, 7> {
     // class App_View_TrackLoop : public App_View_Table<5, 4, 7> {
 protected:

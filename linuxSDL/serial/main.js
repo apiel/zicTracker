@@ -21,20 +21,20 @@ port.open(function (err) {
   // Because there's no callback to write, write errors will be emitted on the port:
   port.write("cd /mnt/SDCARD/App/zic\n");
 
-  const content = readFileSync("../zicServerMiyoo-1.2").toString("base64");
+  const content = readFileSync("../zicTrackerMiyoo-1.2").toString("base64");
 
-  port.write(`rm zicServerMiyoo-1.2.64\n`);
-  port.write(`touch zicServerMiyoo-1.2.64\n`);
+  port.write(`rm zicTrackerMiyoo-1.2.64\n`);
+  port.write(`touch zicTrackerMiyoo-1.2.64\n`);
 
   const chunks = content.split(/(.{200})/);
   chunks.forEach((chunk, i) => {
-    port.write(`echo "${chunk}" >> zicServerMiyoo-1.2.64\n`);
+    port.write(`echo "${chunk}" >> zicTrackerMiyoo-1.2.64\n`);
     // console.log(`${i}/${chunks.length}`);
     // process.stdout.write('.');
   });
 
-  port.write(`rm zicServerMiyoo-1.2\n`);
-  port.write(`base64 -d zicServerMiyoo-1.2.64 > zicServerMiyoo-1.2\n`);
+  port.write(`rm zicTrackerMiyoo-1.2\n`);
+  port.write(`base64 -d zicTrackerMiyoo-1.2.64 > zicTrackerMiyoo-1.2\n`);
   port.write(`ls\n`);
   // port.close();
 });

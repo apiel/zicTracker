@@ -48,6 +48,14 @@ public:
             sprintf(display->text + strlen(display->text), "%03d ",
                 (nextPat != NULL && cursor == pos ? nextPat->id : tracks->tracks[row]->looper.nextPattern->id) + 1);
         }
+
+        // TODO
+        // add more column:
+        // - detune value
+        // - master link
+        // change behavior:
+        // - on/off should start/stop the loop without the need to click on keyboard 
+        // (however, pressing detune would still trigger the loop even if it off)
     }
 
     uint8_t update(UiKeys* keys, App_Display* display)
@@ -76,6 +84,7 @@ public:
             App_View_Table::render(display);
             return VIEW_CHANGED;
         } else if (nextPat) {
+                // apply next pattern only once A is release
                 tracks->looper->setNextPattern(nextPat);
                 nextPat = NULL;
         }

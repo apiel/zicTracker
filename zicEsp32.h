@@ -109,7 +109,7 @@ void render(App_Display* display)
     d.display();
 }
 
-void zicServerEsp32Init()
+void zicEsp32Init()
 {
     LOGLEVEL_AUDIOKIT = AudioKitInfo;
     Serial.begin(115200);
@@ -129,7 +129,7 @@ void zicServerEsp32Init()
     render(app.render());
 }
 
-void zicServerEsp32Loop()
+void zicEsp32Loop()
 {
     static union sampleTUNT {
         uint32_t sample;
