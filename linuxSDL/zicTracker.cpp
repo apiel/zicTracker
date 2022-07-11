@@ -194,8 +194,6 @@ int main(int argc, char* args[])
     SDL_Surface* screenSurface = SDL_CreateRGBSurface(SDL_HWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
 #endif
 
-    init_default_string_color(screenSurface);
-
     app.start();
     render(screenSurface, app.render());
 #if ZIC_SDL2

@@ -9,59 +9,77 @@
 
 #define VIEW_TRACK_COL 2
 
-class App_View_Track : public App_View_Table<4, VIEW_TRACK_COL, 2> {
+class App_View_Track : public App_View_Table<5, VIEW_TRACK_COL, 2> {
 protected:
     App_Tracks* tracks;
     Zic_Seq_Pattern* nextPat = NULL;
 
 public:
     App_View_Track(App_Tracks* _tracks)
-        : App_View_Table(4)
+        : App_View_Table(5)
         , tracks(_tracks)
     {
     }
 
     void startRow(App_Display* display, uint16_t row) override
     {
-        sprintf(display->text + strlen(display->text), "%cTrack%d ", tracks->trackId == row ? '*' : ' ', row + 1);
+        if (row == 0) {
+            strcat(display->text, "        ");
+        } else {
+            sprintf(display->text + strlen(display->text), "%cTrack%d ", tracks->trackId == row - 1 ? '*' : ' ', row);
+        }
     }
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
-        display->useColoredLabel(1);
-        // if (tracks->trackId == row) {
-        //     display->setCursor(3);
-        // }
-        if (cursor == pos) {
-            display->setCursor(3);
-        }
+        if (row == 0) {
+            display->useColoredHeader();
+            switch (col) {
+            case 0:
+                strcat(display->text, "SEQ");
+                break;
 
-        if (col == 0) {
-            if (tracks->tracks[row]->looper.loopOn) {
-                strcat(display->text, ">ON");
-            } else {
-                strcat(display->text, "OFF");
+            case 1:
+                strcat(display->text, "PAT");
+                break;
+
+            default:
+                break;
             }
         } else {
-            // if tracks->tracks[row]->looper.pattern !=  tracks->tracks[row]->looper.nextPattern
-            // we could blink between both ids
-            sprintf(display->text + strlen(display->text), "%03d ",
-                (nextPat != NULL && cursor == pos ? nextPat->id : tracks->tracks[row]->looper.nextPattern->id) + 1);
-        }
+            display->useColoredLabel(1);
+            if (cursor == pos) {
+                display->setCursor(3);
+            }
 
-        // TODO
-        // add more column:
-        // - detune value
-        // - master link
-        // change behavior:
-        // - on/off should start/stop the loop without the need to click on keyboard 
-        // (however, pressing detune would still trigger the loop even if it off)
+            uint8_t trackId = row - 1;
+            if (col == 0) {
+                if (tracks->tracks[trackId]->looper.loopOn) {
+                    strcat(display->text, ">ON");
+                } else {
+                    strcat(display->text, "OFF");
+                }
+            } else {
+                // if tracks->tracks[row]->looper.pattern !=  tracks->tracks[row]->looper.nextPattern
+                // we could blink between both ids
+                sprintf(display->text + strlen(display->text), "%03d ",
+                    (nextPat != NULL && cursor == pos ? nextPat->id : tracks->tracks[trackId]->looper.nextPattern->id) + 1);
+            }
+
+            // TODO
+            // add more column:
+            // - detune value
+            // - master link
+            // change behavior:
+            // - on/off should start/stop the loop without the need to click on keyboard
+            // (however, pressing detune would still trigger the loop even if it off)
+        }
     }
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
         int8_t row = cursor / VIEW_TRACK_COL;
-        int8_t trackId = row;
+        int8_t trackId = row - 1;
         if (keys->A) {
             if (cursor % VIEW_TRACK_COL == 0) {
                 tracks->looper->toggleLoopMode();
@@ -85,9 +103,9 @@ public:
             App_View_Table::render(display);
             return VIEW_CHANGED;
         } else if (nextPat) {
-                // apply next pattern only once A is release
-                tracks->looper->setNextPattern(nextPat);
-                nextPat = NULL;
+            // apply next pattern only once A is release
+            tracks->looper->setNextPattern(nextPat);
+            nextPat = NULL;
         }
         uint8_t res = App_View_Table::update(keys, display);
         if (trackId != tracks->trackId) {

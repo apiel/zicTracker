@@ -14,6 +14,7 @@ public:
     char* cursorPos = NULL;
     uint8_t cursorLen = 0;
     uint8_t coloredLabel = 255;
+    bool coloredHeader = false;
 
     void reset()
     {
@@ -36,6 +37,11 @@ public:
     bool isColoredLabel()
     {
         return coloredLabel != 255;
+    }
+
+    void useColoredHeader()
+    {
+        coloredHeader = true;
     }
 };
 

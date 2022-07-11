@@ -8,8 +8,8 @@
 #endif
 
 #include "../app/app_display.h"
-#include "fontData.h"
 #include "color.h"
+#include "fontData.h"
 
 #define FONT_H 8
 #define FONT_W 8
@@ -37,19 +37,22 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, U
     }
 }
 
-void init_default_string_color(SDL_Surface* surface)
-{
-    fontColor = SDL_MapRGB(surface->format, UI_COLOR_FONT);
-}
-
 void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y, Uint8 size = 1)
 {
     Uint16 orig_x = x;
+    bool isHeader = true;
     const char* text = display->text;
+    if (display->coloredHeader) {
+        fontColor = SDL_MapRGB(surface->format, UI_COLOR_HEADER);
+    } else {
+        fontColor = SDL_MapRGB(surface->format, UI_COLOR_FONT);
+    }
+
     while (*text) {
         if (*text == '\n') {
             x = orig_x;
             y += (FONT_H + LINE_SPACING) * size;
+            isHeader = false;
         } else {
             if (display->isColoredLabel() && x == orig_x + (display->coloredLabel * FONT_W)) {
                 fontColor = SDL_MapRGB(surface->format, UI_COLOR_LABEL);
@@ -59,7 +62,11 @@ void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y,
             } else if (*text == '*') {
                 fontColor = SDL_MapRGB(surface->format, UI_COLOR_STAR);
             } else if (*text == ' ' || *text == '\n') {
-                init_default_string_color(surface);
+                if (isHeader && display->coloredHeader) {
+                    fontColor = SDL_MapRGB(surface->format, UI_COLOR_HEADER);
+                } else {
+                    fontColor = SDL_MapRGB(surface->format, UI_COLOR_FONT);
+                }
             }
 
             if (display->cursorLen && text >= display->cursorPos && text < display->cursorPos + display->cursorLen) {
