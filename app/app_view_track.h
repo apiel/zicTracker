@@ -7,9 +7,9 @@
 
 #include <zic_seq_pattern.h>
 
-#define VIEW_TRACK_COL 2
+#define VIEW_TRACK_COL 4
 
-class App_View_Track : public App_View_Table<4, VIEW_TRACK_COL, 2> {
+class App_View_Track : public App_View_Table<4, VIEW_TRACK_COL, VIEW_TRACK_COL> {
 protected:
     App_Tracks* tracks;
     Zic_Seq_Pattern* nextPat = NULL;
@@ -23,53 +23,85 @@ public:
 
     void startRow(App_Display* display, uint16_t row) override
     {
-        sprintf(display->text + strlen(display->text), "%cTrack%d ", tracks->trackId == row ? '*' : ' ', row + 1);
+        display->useColoredLabel(1);
+        switch (row) {
+        case 0:
+            strcat(display->text, "SEQ ");
+            break;
+
+        case 1:
+            strcat(display->text, "PAT ");
+            break;
+
+        case 2:
+            strcat(display->text, "DET ");
+            break;
+
+        case 3:
+            // master linked
+            strcat(display->text, "-M- ");
+            break;
+
+        default:
+            break;
+        }
     }
 
     void initDisplay(App_Display* display) override
     {
         display->useColoredHeader();
-        strcpy(display->text, "        SEQ PAT\n");
+        sprintf(display->text, "   %cTR1%cTR2%cTR3%cTR4\n",
+            tracks->trackId == 0 ? '*' : ' ',
+            tracks->trackId == 1 ? '*' : ' ',
+            tracks->trackId == 2 ? '*' : ' ',
+            tracks->trackId == 3 ? '*' : ' '); //     SEQ PAT DET M
     }
 
     void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     {
-        display->useColoredLabel(1);
         if (cursor == pos) {
             display->setCursor(3);
         }
 
-        uint8_t trackId = row;
-        if (col == 0) {
+        uint8_t trackId = col;
+
+        switch (row) {
+        case 0:
             if (tracks->tracks[trackId]->looper.loopOn) {
                 strcat(display->text, ">ON");
             } else {
                 strcat(display->text, "OFF");
             }
-        } else {
+            break;
+        case 1:
             // if tracks->tracks[row]->looper.pattern !=  tracks->tracks[row]->looper.nextPattern
             // we could blink between both ids
-            sprintf(display->text + strlen(display->text), "%03d ",
+            sprintf(display->text + strlen(display->text), "%03d",
                 (nextPat != NULL && cursor == pos ? nextPat->id : tracks->tracks[trackId]->looper.nextPattern->id) + 1);
+            break;
+        case 2:
+            strcat(display->text, "C-4");
+            break;
+        case 3:
+            // master linked
+            strcat(display->text, "---");
+            break;
+        default:
+            break;
         }
-
-        // TODO
-        // add more column:
-        // - detune value
-        // - master link
-        // change behavior:
-        // - on/off should start/stop the loop without the need to click on keyboard
-        // (however, pressing detune would still trigger the loop even if it off)
     }
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
         int8_t row = cursor / VIEW_TRACK_COL;
-        int8_t trackId = row;
+        int8_t col = cursor % VIEW_TRACK_COL;
+        int8_t trackId = col;
         if (keys->A) {
-            if (cursor % VIEW_TRACK_COL == 0) {
+            switch (row) {
+            case 0:
                 tracks->looper->toggleLoopMode();
-            } else if (cursor % VIEW_TRACK_COL == 1) {
+                break;
+            case 1: {
                 int8_t direction = 0;
                 if (keys->Right) {
                     direction = 1;
@@ -85,6 +117,8 @@ public:
                 }
                 uint16_t id = nextPat->id ? nextPat->id : PATTERN_COUNT;
                 nextPat = &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT];
+                break;
+            }
             }
             App_View_Table::render(display);
             return VIEW_CHANGED;
