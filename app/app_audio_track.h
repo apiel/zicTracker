@@ -42,6 +42,8 @@ public:
         if (stepOn) {
             synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
             // printf("Note %d instrument %d\n", stepOn->note, stepOn->instrument % INSTRUMENT_COUNT);
+                printf("do stepONNN %d\n", stepOn->note);
+
             synth->wave.restart();
             synth->wave.setNote(stepOn->note);
             synth->asr.on();

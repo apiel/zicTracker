@@ -60,7 +60,8 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
-        int8_t id = cursor / VIEW_TRACK_COL;
+        int8_t row = cursor / VIEW_TRACK_COL;
+        int8_t trackId = row;
         if (keys->A) {
             if (cursor % VIEW_TRACK_COL == 0) {
                 tracks->looper->toggleLoopMode();
@@ -76,7 +77,7 @@ public:
                     direction = -10;
                 }
                 if (nextPat == NULL) {
-                    nextPat = tracks->tracks[id]->looper.nextPattern;
+                    nextPat = tracks->tracks[trackId]->looper.nextPattern;
                 }
                 uint16_t id = nextPat->id ? nextPat->id : PATTERN_COUNT;
                 nextPat = &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT];
@@ -89,8 +90,8 @@ public:
                 nextPat = NULL;
         }
         uint8_t res = App_View_Table::update(keys, display);
-        if (id != tracks->trackId) {
-            tracks->select(id);
+        if (trackId != tracks->trackId) {
+            tracks->select(trackId);
         }
         return res;
     }
