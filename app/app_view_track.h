@@ -65,10 +65,12 @@ public:
 
         uint8_t trackId = col;
 
+        // TODO ? blink between nextState and state
+        Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
         switch (row) {
         case 0:
             // TODO blink bettwen on off when it will stop at the end of the pattern
-            if (tracks->tracks[trackId]->looper.nextState.playing) {
+            if (state->playing) {
                 strcat(display->text, ">ON");
             } else {
                 strcat(display->text, "OFF");
@@ -78,10 +80,11 @@ public:
             // if tracks->tracks[row]->looper.pattern !=  tracks->tracks[row]->looper.nextPattern
             // we could blink between both ids
             sprintf(display->text + strlen(display->text), "%03d",
-                (nextPat != NULL && cursor == pos ? nextPat->id : tracks->tracks[trackId]->looper.nextState.pattern->id) + 1);
+                (nextPat != NULL && cursor == pos ? nextPat->id : state->pattern->id) + 1);
             break;
         case 2:
-            strcat(display->text, "C-4");
+            sprintf(display->text + strlen(display->text),
+                "%c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
             break;
         case 3:
             // master linked
@@ -97,10 +100,11 @@ public:
         int8_t row = cursor / VIEW_TRACK_COL;
         int8_t col = cursor % VIEW_TRACK_COL;
         int8_t trackId = col;
+        Zic_Seq_Loop_State* nextState = &tracks->looper->nextState;
         if (keys->A) {
             switch (row) {
             case 0:
-                tracks->looper->nextState.togglePlay();
+                nextState->togglePlay();
                 break;
             case 1: {
                 int8_t direction = 0;
@@ -114,18 +118,29 @@ public:
                     direction = -10;
                 }
                 if (nextPat == NULL) {
-                    nextPat = tracks->tracks[trackId]->looper.nextState.pattern;
+                    nextPat = nextState->pattern;
                 }
                 uint16_t id = nextPat->id ? nextPat->id : PATTERN_COUNT;
                 nextPat = &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT];
                 break;
             }
+            case 2:
+                if (keys->Right) {
+                    nextState->set(nextState->detune + 1);
+                } else if (keys->Up) {
+                    nextState->set(nextState->detune + 12);
+                } else if (keys->Left) {
+                    nextState->set(nextState->detune - 1);
+                } else if (keys->Down) {
+                    nextState->set(nextState->detune - 12);
+                }
+                break;
             }
             App_View_Table::render(display);
             return VIEW_CHANGED;
         } else if (nextPat) {
             // apply next pattern only once A is release
-            tracks->looper->nextState.setPattern(nextPat);
+            nextState->setPattern(nextPat);
             nextPat = NULL;
         }
         uint8_t res = App_View_Table::update(keys, display);
