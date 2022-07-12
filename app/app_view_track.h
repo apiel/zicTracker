@@ -12,7 +12,8 @@
 class App_View_Track : public App_View_Table<4, VIEW_TRACK_COL, VIEW_TRACK_COL> {
 protected:
     App_Tracks* tracks;
-    Zic_Seq_Pattern* nextPat = NULL;
+    Zic_Seq_Loop_State newState;
+    bool updatingState = false;
 
 public:
     App_View_Track(App_Tracks* _tracks)
@@ -65,11 +66,13 @@ public:
 
         uint8_t trackId = col;
 
-        // TODO ? blink between nextState and state
+        // TODO ? blink between nextState and state for PAT, SEQ, DET
         Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
+        if (updatingState && cursor == pos) {
+            state = &newState;
+        }
         switch (row) {
         case 0:
-            // TODO blink bettwen on off when it will stop at the end of the pattern
             if (state->playing) {
                 strcat(display->text, ">ON");
             } else {
@@ -77,10 +80,7 @@ public:
             }
             break;
         case 1:
-            // if tracks->tracks[row]->looper.pattern !=  tracks->tracks[row]->looper.nextPattern
-            // we could blink between both ids
-            sprintf(display->text + strlen(display->text), "%03d",
-                (nextPat != NULL && cursor == pos ? nextPat->id : state->pattern->id) + 1);
+            sprintf(display->text + strlen(display->text), "%03d", state->pattern->id + 1);
             break;
         case 2:
             sprintf(display->text + strlen(display->text),
@@ -102,9 +102,13 @@ public:
         int8_t trackId = col;
         Zic_Seq_Loop_State* nextState = &tracks->looper->nextState;
         if (keys->A) {
+            if (!updatingState) {
+                newState.set(nextState);
+                updatingState = true;
+            }
             switch (row) {
             case 0:
-                nextState->togglePlay();
+                newState.togglePlay();
                 break;
             case 1: {
                 int8_t direction = 0;
@@ -117,31 +121,28 @@ public:
                 } else if (keys->Down) {
                     direction = -10;
                 }
-                if (nextPat == NULL) {
-                    nextPat = nextState->pattern;
-                }
-                uint16_t id = nextPat->id ? nextPat->id : PATTERN_COUNT;
-                nextPat = &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT];
+                uint16_t id = newState.pattern->id ? newState.pattern->id : PATTERN_COUNT;
+                newState.pattern = &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT];
                 break;
             }
             case 2:
                 if (keys->Right) {
-                    nextState->set(nextState->detune + 1);
+                    newState.set(newState.detune + 1);
                 } else if (keys->Up) {
-                    nextState->set(nextState->detune + 12);
+                    newState.set(newState.detune + 12);
                 } else if (keys->Left) {
-                    nextState->set(nextState->detune - 1);
+                    newState.set(newState.detune - 1);
                 } else if (keys->Down) {
-                    nextState->set(nextState->detune - 12);
+                    newState.set(newState.detune - 12);
                 }
                 break;
             }
             App_View_Table::render(display);
             return VIEW_CHANGED;
-        } else if (nextPat) {
-            // apply next pattern only once A is release
-            nextState->setPattern(nextPat);
-            nextPat = NULL;
+        } else if (updatingState) {
+            // apply newState to nextState only once A is release
+            nextState->set(&newState);
+            updatingState = false;
         }
         uint8_t res = App_View_Table::update(keys, display);
         if (trackId != tracks->trackId) {
