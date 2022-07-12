@@ -70,7 +70,7 @@ public:
 
     Menu menu[APP_MENU_SIZE] = {
         { "Tracks", 'T', VIEW_TRACK, 'T', true },
-        { "Master", 'M', VIEW_TRACK_MASTER, 'T', false },
+        { "Master track", 'M', VIEW_TRACK_MASTER, 'T', false },
         { "Instruments", 'I', VIEW_INSTRUMENT, 'I', true },
         { "Instruments kit", 'K', VIEW_INSTRUMENT, 'I', false }, // this is how to save a kit
         // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project

@@ -1,4 +1,6 @@
 
+TODO fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
+
 ## Project
 
 - name
