@@ -30,14 +30,14 @@ public:
             display->setCursor(2, 1);
         }
         sprintf(display->text + strlen(display->text), "%c%s%d",
-            tracks->looper->nextToPlay == note ? '>' : ' ', Zic::getNoteStr(note), Zic::getNoteOctave(note));
+            tracks->looper->nextState.detune == note ? '>' : ' ', Zic::getNoteStr(note), Zic::getNoteOctave(note));
     }
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
         if (keys->A) {
             uint8_t note = Zic::naturalNotes[cursor];
-            tracks->looper->on(note);
+            tracks->looper->nextState.set(note);
             render(display);
             return VIEW_CHANGED;
         }

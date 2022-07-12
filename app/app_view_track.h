@@ -67,7 +67,8 @@ public:
 
         switch (row) {
         case 0:
-            if (tracks->tracks[trackId]->looper.loopOn) {
+            // TODO blink bettwen on off when it will stop at the end of the pattern
+            if (tracks->tracks[trackId]->looper.nextState.playing) {
                 strcat(display->text, ">ON");
             } else {
                 strcat(display->text, "OFF");
@@ -77,7 +78,7 @@ public:
             // if tracks->tracks[row]->looper.pattern !=  tracks->tracks[row]->looper.nextPattern
             // we could blink between both ids
             sprintf(display->text + strlen(display->text), "%03d",
-                (nextPat != NULL && cursor == pos ? nextPat->id : tracks->tracks[trackId]->looper.nextPattern->id) + 1);
+                (nextPat != NULL && cursor == pos ? nextPat->id : tracks->tracks[trackId]->looper.nextState.pattern->id) + 1);
             break;
         case 2:
             strcat(display->text, "C-4");
@@ -99,7 +100,7 @@ public:
         if (keys->A) {
             switch (row) {
             case 0:
-                tracks->looper->toggleLoopMode();
+                tracks->looper->nextState.togglePlay();
                 break;
             case 1: {
                 int8_t direction = 0;
@@ -113,7 +114,7 @@ public:
                     direction = -10;
                 }
                 if (nextPat == NULL) {
-                    nextPat = tracks->tracks[trackId]->looper.nextPattern;
+                    nextPat = tracks->tracks[trackId]->looper.nextState.pattern;
                 }
                 uint16_t id = nextPat->id ? nextPat->id : PATTERN_COUNT;
                 nextPat = &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT];
@@ -124,7 +125,7 @@ public:
             return VIEW_CHANGED;
         } else if (nextPat) {
             // apply next pattern only once A is release
-            tracks->looper->setNextPattern(nextPat);
+            tracks->looper->nextState.setPattern(nextPat);
             nextPat = NULL;
         }
         uint8_t res = App_View_Table::update(keys, display);
