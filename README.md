@@ -1,3 +1,4 @@
+TODO table should be compose of class row and class field
 
 TODO fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
 

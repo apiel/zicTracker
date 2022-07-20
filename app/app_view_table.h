@@ -1,8 +1,79 @@
 #ifndef APP_VIEW_TABLE_H_
 #define APP_VIEW_TABLE_H_
 
-#include "./app_view.h"
 #include "./app_display.h"
+#include "./app_view.h"
+
+class App_View_TableField {
+public:
+    virtual void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol) = 0;
+
+    uint8_t update(UiKeys* keys, App_Display* display)
+    {
+        return VIEW_NONE;
+    }
+};
+
+template <uint8_t ROW_COUNT, uint8_t COL_COUNT>
+class App_View_Table2 : App_View {
+public:
+    App_View_TableField* selectedField = NULL;
+    uint8_t selectedRow = 0;
+    uint8_t selectedCol = 0;
+
+    // this should be a pointer?
+    App_View_TableField** fields;
+
+    App_View_Table2(App_View_TableField** _fields)
+        : fields(_fields)
+    {
+    }
+
+    virtual void initDisplay(App_Display* display)
+    {
+        strcpy(display->text, "");
+    }
+
+    virtual void endRow(App_Display* display, uint16_t row)
+    {
+        strcat(display->text, "\n");
+    }
+
+    void render(App_Display* display)
+    {
+        initDisplay(display);
+        for (uint8_t row = 0; row < ROW_COUNT; row++) {
+            // here would come if visible row
+            for (uint8_t col = 0; col < COL_COUNT; col++) {
+                // here would come if visible col
+                fields[row][col].render(display, row, col, selectedRow, selectedCol);
+            }
+            endRow(display, row);
+        }
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display)
+    {
+        if (keys->A) {
+            if (selectedField) {
+                return selectedField->update(keys, display);
+            }
+        } else {
+            if (keys->Up) {
+                selectedRow = (selectedRow + ROW_COUNT - 1) % ROW_COUNT;
+            } else if (keys->Down) {
+                selectedRow = (selectedRow + 1) % ROW_COUNT;
+            } else if (keys->Left) {
+                selectedCol = (selectedCol + COL_COUNT - 1) % COL_COUNT;
+            } else if (keys->Right) {
+                selectedCol = (selectedCol + 1) % COL_COUNT;
+            }
+            render(display);
+            return VIEW_CHANGED;
+        }
+        return VIEW_NONE;
+    }
+};
 
 template <uint8_t VISIBLE_ROW, uint8_t VISIBLE_COL, uint8_t TOTAL_COL>
 class App_View_Table : App_View {
