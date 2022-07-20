@@ -12,7 +12,7 @@ class App_View_InstrumentTrack : public App_View_TableField {
 public:
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        strcpy(display->text, "Track");
+        strcat(display->text, "Track");
     }
 };
 
@@ -34,11 +34,9 @@ protected:
 
     App_View_InstrumentTrack trackField;
     App_View_TableField* fields[1 * 3] = {
-        (App_View_TableField*)&trackField,
-        (App_View_TableField*)&trackField,
-        (App_View_TableField*)&trackField,
-        // NULL,
-        // NULL,
+        &trackField,
+        NULL,
+        NULL,
     };
 
 public:

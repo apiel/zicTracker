@@ -13,7 +13,7 @@ class App_View_TrackSEQ : public App_View_TableField {
 public:
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        strcpy(display->text, "SEQ");
+        strcat(display->text, "SEQ");
     }
 };
 
@@ -25,12 +25,13 @@ protected:
 
     App_View_TrackSEQ seqField;
     App_View_TableField* fields[2 * 3] = {
-        (App_View_TableField*)&seqField,
-        (App_View_TableField*)&seqField,
-        (App_View_TableField*)&seqField,
-        (App_View_TableField*)&seqField,
-        (App_View_TableField*)&seqField,
-        (App_View_TableField*)&seqField,
+        &seqField,
+        &seqField,
+        &seqField,
+
+        &seqField,
+        &seqField,
+        &seqField,
     };
 
 public:
