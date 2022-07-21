@@ -24,7 +24,7 @@ public:
     {
     }
 
-    virtual void renderValue(App_Display* display, App_Instrument* synth) = 0;
+    virtual void renderValue(App_Display* display, uint8_t col, App_Instrument* synth) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
@@ -41,7 +41,7 @@ public:
             }
 
             App_Instrument* synth = tracks->track->synths[instrument];
-            renderValue(display, synth);
+            renderValue(display, col, synth);
         }
     }
 };
@@ -53,7 +53,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
     {
         sprintf(display->text + strlen(display->text), "%-2d", tracks->trackId + 1);
     }
@@ -76,7 +76,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
     {
         sprintf(display->text + strlen(display->text), "%-2c", instrument + 'A');
     }
@@ -102,7 +102,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
     {
         if (synth->isWavetable) {
             strcat(display->text, "Wavetable   ");
@@ -124,12 +124,81 @@ public:
     }
 };
 
+class App_View_InstrumentWav : public App_View_InstrumentRow {
+public:
+    App_View_InstrumentWav(App_Tracks* _tracks)
+        : App_View_InstrumentRow(_tracks, "Wav    ", 12)
+    {
+    }
+
+    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    {
+        char filename[12];
+        strncpy(filename, synth->filename, 12);
+        sprintf(display->text + strlen(display->text), "%-12s", filename);
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display) override
+    {
+        // FIXME
+        // if (keys->Right || keys->Up) {
+        //     synth->setNext(+1);
+        // } else if (keys->Left || keys->Down) {
+        //     synth->setNext(-1);
+        // }
+        return VIEW_CHANGED;
+    }
+};
+
+class App_View_InstrumentLevel : public App_View_InstrumentRow {
+public:
+    App_View_InstrumentLevel(App_Tracks* _tracks)
+        : App_View_InstrumentRow(_tracks, "Level  ")
+    {
+    }
+
+    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    {
+        if (col == 1) {
+            sprintf(display->text + strlen(display->text), "%-3d%%  ", synth->wave.getAmplitude());
+        } else {
+            if (synth->wave.isMuted()) {
+                strcat(display->text, "Muted");
+            } else {
+                strcat(display->text, ">ON  ");
+            }
+        }
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display) override
+    {
+        // FIXME
+        //         if (col == 0) {
+        //             if (keys->Right) {
+        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
+        //             } else if (keys->Up) {
+        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() + 10);
+        //             } else if (keys->Left) {
+        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
+        //             } else if (keys->Down) {
+        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
+        //             }
+        //         } else {
+        //             if (synth->wave.isMuted()) {
+        //                 synth->wave.setMute(false);
+        //             } else {
+        //                 synth->wave.setMute();
+        //             }
+        //         }
+        return VIEW_CHANGED;
+    }
+};
+
 class App_View_Instrument : public App_View_Table {
 protected:
     App_Tracks* tracks;
 
     uint8_t cursorSizeTable[VIEW_INSTR_LABELS * VIEW_INSTR_COL] = {
-        12, 0,
         5, 5,
         5, 5,
         5, 5
@@ -140,11 +209,15 @@ protected:
     App_View_InstrumentTrack trackField;
     App_View_InstrumentInstr instrField;
     App_View_InstrumentType typeField;
+    App_View_InstrumentWav wavField;
+    App_View_InstrumentLevel levelField;
     App_View_TableField* fields[VIEW_INSTR_ROW * VIEW_INSTR_COL] = {
         // clang-format off
         &trackField, &trackField, NULL,
         &instrField, &instrField, NULL,
         &typeField, &typeField, NULL,
+        &wavField, &wavField, NULL,
+        &levelField, &levelField, &levelField,
         // clang-format on
     };
 
@@ -155,6 +228,8 @@ public:
         , trackField(_tracks)
         , instrField(_tracks)
         , typeField(_tracks)
+        , wavField(_tracks)
+        , levelField(_tracks)
     {
         initSelection();
     }
@@ -168,43 +243,12 @@ public:
     // void startRow(App_Display* display, uint16_t row) override
     // {
     //     const char label[VIEW_INSTR_LABELS][8] = {
-    //         ,
-    //         "Wav    ",
-    //         "Level  ",
     //         "Env    ",
     //         "Filter ",
     //     };
-
-    //     strcat(display->text, label[row % VIEW_INSTR_LABELS]);
     // }
 
     // void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
-    // {
-    //     case 2:
-    //         if (col == 0) {
-
-    //         }
-    //         break;
-
-    //     case 3:
-    //         if (col == 0) {
-    //             char filename[12];
-    //             strncpy(filename, synth->filename, 12);
-    //             sprintf(display->text + strlen(display->text), "%-12s", filename);
-    //         }
-    //         break;
-
-    //     case 4:
-    //         if (col == 0) {
-    //             sprintf(display->text + strlen(display->text), "%-3d%% ", synth->wave.getAmplitude());
-    //         } else {
-    //             if (synth->wave.isMuted()) {
-    //                 strcat(display->text, "Muted");
-    //             } else {
-    //                 strcat(display->text, ">ON  ");
-    //             }
-    //         }
-    //         break;
 
     //     case 5:
     //         if (col == 0) {
@@ -239,38 +283,8 @@ public:
         // if (keys->A) {
         //     switch (row) {
 
-        //     case 1:
-        //         break;
-
-        //     case 2:
-        //         break;
-
-        //     case 3:
-        //         if (keys->Right || keys->Up) {
-        //             synth->setNext(+1);
-        //         } else if (keys->Left || keys->Down) {
-        //             synth->setNext(-1);
-        //         }
-        //         break;
-
         //     case 4:
-        //         if (col == 0) {
-        //             if (keys->Right) {
-        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
-        //             } else if (keys->Up) {
-        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() + 10);
-        //             } else if (keys->Left) {
-        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
-        //             } else if (keys->Down) {
-        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
-        //             }
-        //         } else {
-        //             if (synth->wave.isMuted()) {
-        //                 synth->wave.setMute(false);
-        //             } else {
-        //                 synth->wave.setMute();
-        //             }
-        //         }
+
         //         break;
 
         //     case 5:
