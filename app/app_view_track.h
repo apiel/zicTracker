@@ -7,15 +7,72 @@
 
 #include <zic_seq_pattern.h>
 
-#define VIEW_TRACK_COL 4
+#define VIEW_TRACK_ROW 5
+#define VIEW_TRACK_COL 5
 
-class App_View_TrackSEQ : public App_View_TableField {
+class App_View_TrackLabel : public App_View_TableField {
+protected:
+    const char* labels[VIEW_TRACK_ROW] = {
+        "   ",
+        "SEQ",
+        "PAT",
+        "DET",
+        "-M-"
+    };
+
 public:
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        strcat(display->text, "SEQ");
+        strcat(display->text, labels[row]);
     }
 };
+
+class App_View_TrackHeader : public App_View_TableField {
+protected:
+    App_Tracks* tracks;
+
+public:
+    App_View_TrackHeader(App_Tracks* _tracks)
+        : tracks(_tracks)
+    {
+    }
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == col - 1 ? '*' : ' ', col);
+    }
+};
+
+// class App_View_TrackSequenceLabel : public App_View_TableField {
+// public:
+//     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+//     {
+//         strcat(display->text, "SEQ ");
+//     }
+// };
+
+// class App_View_TrackPatternLabel : public App_View_TableField {
+// public:
+//     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+//     {
+//         strcat(display->text, "PAT ");
+//     }
+// };
+
+// class App_View_TrackDetuneLabel : public App_View_TableField {
+// public:
+//     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+//     {
+//         strcat(display->text, "DET ");
+//     }
+// };
+
+// class App_View_TrackMasterLabel : public App_View_TableField {
+// public:
+//     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+//     {
+//         strcat(display->text, "-M- ");
+//     }
+// };
 
 class App_View_Track : public App_View_Table {
 protected:
@@ -23,22 +80,56 @@ protected:
     Zic_Seq_Loop_State newState;
     bool updatingState = false;
 
-    App_View_TrackSEQ seqField;
-    App_View_TableField* fields[2 * 3] = {
-        &seqField,
-        &seqField,
-        &seqField,
+    App_View_TrackLabel fieldLabel;
+    App_View_TrackHeader fieldHeader;
+    // App_View_TrackPatternLabel patternFieldLabel;
+    // App_View_TrackDetuneLabel detuneFieldLabel;
+    // App_View_TrackMasterLabel masterFieldLabel;
 
-        &seqField,
-        &seqField,
-        &seqField,
+    App_View_TableField* fields[VIEW_TRACK_ROW * VIEW_TRACK_COL] = {
+        &fieldLabel,
+        &fieldHeader,
+        &fieldHeader,
+        &fieldHeader,
+        &fieldHeader,
+
+        &fieldLabel,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+
+        &fieldLabel,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+
+        &fieldLabel,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+
+        &fieldLabel,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
     };
 
 public:
     App_View_Track(App_Tracks* _tracks)
-        : App_View_Table(fields, (uint8_t)2, (uint8_t)3)
+        : App_View_Table(fields, VIEW_TRACK_ROW, VIEW_TRACK_COL)
         , tracks(_tracks)
+        , fieldHeader(_tracks)
     {
+    }
+
+    void initDisplay(App_Display* display)
+    {
+        display->useColoredHeader();
+        App_View_Table::initDisplay(display);
     }
 
     // void startRow(App_Display* display, uint16_t row)
