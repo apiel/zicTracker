@@ -42,37 +42,73 @@ public:
     }
 };
 
-// class App_View_TrackSequenceLabel : public App_View_TableField {
-// public:
-//     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-//     {
-//         strcat(display->text, "SEQ ");
-//     }
-// };
+class App_View_TrackSequence : public App_View_TableField {
+protected:
+    App_Tracks* tracks;
 
-// class App_View_TrackPatternLabel : public App_View_TableField {
-// public:
-//     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-//     {
-//         strcat(display->text, "PAT ");
-//     }
-// };
+public:
+    App_View_TrackSequence(App_Tracks* _tracks)
+        : tracks(_tracks)
+    {
+    }
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        uint8_t trackId = col - 1;
+        Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
+        if (state->playing) {
+            strcat(display->text, " >ON");
+        } else {
+            strcat(display->text, " OFF");
+        }
+    }
+};
 
-// class App_View_TrackDetuneLabel : public App_View_TableField {
-// public:
-//     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-//     {
-//         strcat(display->text, "DET ");
-//     }
-// };
+class App_View_TrackPattern : public App_View_TableField {
+protected:
+    App_Tracks* tracks;
 
-// class App_View_TrackMasterLabel : public App_View_TableField {
-// public:
-//     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-//     {
-//         strcat(display->text, "-M- ");
-//     }
-// };
+public:
+    App_View_TrackPattern(App_Tracks* _tracks)
+        : tracks(_tracks)
+    {
+    }
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        uint8_t trackId = col - 1;
+        Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
+        //     if (updatingState && cursor == pos) {
+        //         state = &newState;
+        //     }
+        sprintf(display->text + strlen(display->text), " %03d", state->pattern->id + 1);
+    }
+};
+
+class App_View_TrackDetune : public App_View_TableField {
+protected:
+    App_Tracks* tracks;
+
+public:
+    App_View_TrackDetune(App_Tracks* _tracks)
+        : tracks(_tracks)
+    {
+    }
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        uint8_t trackId = col - 1;
+        Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
+        sprintf(display->text + strlen(display->text),
+            " %c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
+    }
+};
+
+class App_View_TrackMasterField : public App_View_TableField {
+public:
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        // TBD. to be linked
+        strcat(display->text, " ---");
+    }
+};
 
 class App_View_Track : public App_View_Table {
 protected:
@@ -82,9 +118,10 @@ protected:
 
     App_View_TrackLabel fieldLabel;
     App_View_TrackHeader fieldHeader;
-    // App_View_TrackPatternLabel patternFieldLabel;
-    // App_View_TrackDetuneLabel detuneFieldLabel;
-    // App_View_TrackMasterLabel masterFieldLabel;
+    App_View_TrackSequence sequenceField;
+    App_View_TrackPattern patternField;
+    App_View_TrackDetune detuneField;
+    App_View_TrackMasterField masterField;
 
     App_View_TableField* fields[VIEW_TRACK_ROW * VIEW_TRACK_COL] = {
         &fieldLabel,
@@ -94,28 +131,28 @@ protected:
         &fieldHeader,
 
         &fieldLabel,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        &sequenceField,
+        &sequenceField,
+        &sequenceField,
+        &sequenceField,
 
         &fieldLabel,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        &patternField,
+        &patternField,
+        &patternField,
+        &patternField,
 
         &fieldLabel,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        &detuneField,
+        &detuneField,
+        &detuneField,
+        &detuneField,
 
         &fieldLabel,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        &masterField,
+        &masterField,
+        &masterField,
+        &masterField,
     };
 
 public:
@@ -123,6 +160,9 @@ public:
         : App_View_Table(fields, VIEW_TRACK_ROW, VIEW_TRACK_COL)
         , tracks(_tracks)
         , fieldHeader(_tracks)
+        , sequenceField(_tracks)
+        , patternField(_tracks)
+        , detuneField(_tracks)
     {
     }
 
@@ -131,42 +171,6 @@ public:
         display->useColoredHeader();
         App_View_Table::initDisplay(display);
     }
-
-    // void startRow(App_Display* display, uint16_t row)
-    // {
-    //     display->useColoredLabel();
-    //     switch (row) {
-    //     case 0:
-    //         strcat(display->text, "SEQ ");
-    //         break;
-
-    //     case 1:
-    //         strcat(display->text, "PAT ");
-    //         break;
-
-    //     case 2:
-    //         strcat(display->text, "DET ");
-    //         break;
-
-    //     case 3:
-    //         // master linked
-    //         strcat(display->text, "-M- ");
-    //         break;
-
-    //     default:
-    //         break;
-    //     }
-    // }
-
-    // void initDisplay(App_Display* display)
-    // {
-    //     display->useColoredHeader();
-    //     sprintf(display->text, "   %cTR1%cTR2%cTR3%cTR4\n",
-    //         tracks->trackId == 0 ? '*' : ' ',
-    //         tracks->trackId == 1 ? '*' : ' ',
-    //         tracks->trackId == 2 ? '*' : ' ',
-    //         tracks->trackId == 3 ? '*' : ' '); //     SEQ PAT DET M
-    // }
 
     // void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     // {
@@ -182,23 +186,12 @@ public:
     //         state = &newState;
     //     }
     //     switch (row) {
-    //     case 0:
-    //         if (state->playing) {
-    //             strcat(display->text, ">ON");
-    //         } else {
-    //             strcat(display->text, "OFF");
-    //         }
-    //         break;
     //     case 1:
     //         sprintf(display->text + strlen(display->text), "%03d", state->pattern->id + 1);
     //         break;
     //     case 2:
     //         sprintf(display->text + strlen(display->text),
     //             "%c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
-    //         break;
-    //     case 3:
-    //         // master linked
-    //         strcat(display->text, "---");
     //         break;
     //     default:
     //         break;
