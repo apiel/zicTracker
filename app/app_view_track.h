@@ -10,51 +10,66 @@
 #define VIEW_TRACK_ROW 5
 #define VIEW_TRACK_COL 5
 
-class App_View_TrackLabel : public App_View_TableField {
-protected:
-    const char* labels[VIEW_TRACK_ROW] = {
-        "   ",
-        "SEQ",
-        "PAT",
-        "DET",
-        "-M-"
-    };
-
-public:
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-    {
-        strcat(display->text, labels[row]);
-    }
-};
-
-class App_View_TrackHeader : public App_View_TableField {
+class App_View_TrackRow : public App_View_TableField {
 protected:
     App_Tracks* tracks;
 
+public:
+    App_View_TrackRow(App_Tracks* _tracks)
+        : tracks(_tracks)
+    {
+    }
+
+    virtual void renderLabel(App_Display* display) = 0;
+    virtual void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state) = 0;
+
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        if (col == 0) {
+            renderLabel(display);
+        } else {
+            uint8_t trackId = col - 1;
+            Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
+            //     if (updatingState && cursor == pos) {
+            //         state = &newState;
+            //     }
+            renderValue(display, trackId, state);
+        }
+    }
+};
+
+class App_View_TrackHeader : public App_View_TrackRow {
 public:
     App_View_TrackHeader(App_Tracks* _tracks)
-        : tracks(_tracks)
+        : App_View_TrackRow(_tracks)
     {
     }
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+
+    void renderLabel(App_Display* display)
     {
-        sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == col - 1 ? '*' : ' ', col);
+        strcat(display->text, "   ");
+    }
+
+    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
+    {
+        sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == trackId ? '*' : ' ', trackId + 1);
     }
 };
 
-class App_View_TrackSequence : public App_View_TableField {
-protected:
-    App_Tracks* tracks;
-
+class App_View_TrackSequence : public App_View_TrackRow {
 public:
     App_View_TrackSequence(App_Tracks* _tracks)
-        : tracks(_tracks)
+        : App_View_TrackRow(_tracks)
     {
     }
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+
+    void renderLabel(App_Display* display)
     {
-        uint8_t trackId = col - 1;
-        Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
+        strcat(display->text, "SEQ");
+    }
+
+    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
+    {
         if (state->playing) {
             strcat(display->text, " >ON");
         } else {
@@ -63,47 +78,55 @@ public:
     }
 };
 
-class App_View_TrackPattern : public App_View_TableField {
-protected:
-    App_Tracks* tracks;
-
+class App_View_TrackPattern : public App_View_TrackRow {
 public:
     App_View_TrackPattern(App_Tracks* _tracks)
-        : tracks(_tracks)
+        : App_View_TrackRow(_tracks)
     {
     }
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+
+    void renderLabel(App_Display* display)
     {
-        uint8_t trackId = col - 1;
-        Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
-        //     if (updatingState && cursor == pos) {
-        //         state = &newState;
-        //     }
+        strcat(display->text, "PAT");
+    }
+
+    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
+    {
         sprintf(display->text + strlen(display->text), " %03d", state->pattern->id + 1);
     }
 };
 
-class App_View_TrackDetune : public App_View_TableField {
-protected:
-    App_Tracks* tracks;
-
+class App_View_TrackDetune : public App_View_TrackRow {
 public:
     App_View_TrackDetune(App_Tracks* _tracks)
-        : tracks(_tracks)
+        : App_View_TrackRow(_tracks)
     {
     }
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+
+    void renderLabel(App_Display* display)
     {
-        uint8_t trackId = col - 1;
-        Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
-        sprintf(display->text + strlen(display->text),
-            " %c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
+        strcat(display->text, "DET");
+    }
+
+    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
+    {
+        sprintf(display->text + strlen(display->text), " %c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
     }
 };
 
-class App_View_TrackMasterField : public App_View_TableField {
+class App_View_TrackMasterField : public App_View_TrackRow {
 public:
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    App_View_TrackMasterField(App_Tracks* _tracks)
+        : App_View_TrackRow(_tracks)
+    {
+    }
+
+    void renderLabel(App_Display* display)
+    {
+        strcat(display->text, "-M-");
+    }
+
+    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
     {
         // TBD. to be linked
         strcat(display->text, " ---");
@@ -116,7 +139,6 @@ protected:
     Zic_Seq_Loop_State newState;
     bool updatingState = false;
 
-    App_View_TrackLabel fieldLabel;
     App_View_TrackHeader fieldHeader;
     App_View_TrackSequence sequenceField;
     App_View_TrackPattern patternField;
@@ -124,31 +146,31 @@ protected:
     App_View_TrackMasterField masterField;
 
     App_View_TableField* fields[VIEW_TRACK_ROW * VIEW_TRACK_COL] = {
-        &fieldLabel,
+        &fieldHeader,
         &fieldHeader,
         &fieldHeader,
         &fieldHeader,
         &fieldHeader,
 
-        &fieldLabel,
+        &sequenceField,
         &sequenceField,
         &sequenceField,
         &sequenceField,
         &sequenceField,
 
-        &fieldLabel,
+        &patternField,
         &patternField,
         &patternField,
         &patternField,
         &patternField,
 
-        &fieldLabel,
+        &detuneField,
         &detuneField,
         &detuneField,
         &detuneField,
         &detuneField,
 
-        &fieldLabel,
+        &masterField,
         &masterField,
         &masterField,
         &masterField,
@@ -163,6 +185,7 @@ public:
         , sequenceField(_tracks)
         , patternField(_tracks)
         , detuneField(_tracks)
+        , masterField(_tracks)
     {
     }
 
