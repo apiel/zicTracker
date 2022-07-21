@@ -194,100 +194,25 @@ public:
     }
 };
 
-class App_View_Instrument : public App_View_Table {
-protected:
-    App_Tracks* tracks;
-
-    uint8_t cursorSizeTable[VIEW_INSTR_LABELS * VIEW_INSTR_COL] = {
-        5, 5,
-        5, 5,
-        5, 5
-    };
-
-    uint8_t instrument = 0;
-
-    App_View_InstrumentTrack trackField;
-    App_View_InstrumentInstr instrField;
-    App_View_InstrumentType typeField;
-    App_View_InstrumentWav wavField;
-    App_View_InstrumentLevel levelField;
-    App_View_TableField* fields[VIEW_INSTR_ROW * VIEW_INSTR_COL] = {
-        // clang-format off
-        &trackField, &trackField, NULL,
-        &instrField, &instrField, NULL,
-        &typeField, &typeField, NULL,
-        &wavField, &wavField, NULL,
-        &levelField, &levelField, &levelField,
-        // clang-format on
-    };
-
+class App_View_InstrumentEnv : public App_View_InstrumentRow {
 public:
-    App_View_Instrument(App_Tracks* _tracks)
-        : App_View_Table(fields, VIEW_INSTR_ROW, VIEW_INSTR_COL)
-        , tracks(_tracks)
-        , trackField(_tracks)
-        , instrField(_tracks)
-        , typeField(_tracks)
-        , wavField(_tracks)
-        , levelField(_tracks)
+    App_View_InstrumentEnv(App_Tracks* _tracks)
+        : App_View_InstrumentRow(_tracks, "Env    ")
     {
-        initSelection();
     }
 
-    void initDisplay(App_Display* display)
+    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
     {
-        display->useColoredLabel();
-        App_View_Table::initDisplay(display);
+        if (col == 1) {
+            sprintf(display->text + strlen(display->text), "%-5d ", synth->asr.getAttack());
+        } else {
+            sprintf(display->text + strlen(display->text), "%-5d", synth->asr.getRelease());
+        }
     }
 
-    // void startRow(App_Display* display, uint16_t row) override
-    // {
-    //     const char label[VIEW_INSTR_LABELS][8] = {
-    //         "Env    ",
-    //         "Filter ",
-    //     };
-    // }
-
-    // void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
-
-    //     case 5:
-    //         if (col == 0) {
-    //             sprintf(display->text + strlen(display->text), "%-5d", synth->asr.getAttack());
-    //         } else if (col == 1) {
-    //             sprintf(display->text + strlen(display->text), "%-5d", synth->asr.getRelease());
-    //         }
-    //         break;
-
-    //     case 6:
-    //         // could remove leading 0
-    //         if (col == 0) {
-    //             sprintf(display->text + strlen(display->text), "%.3f", synth->filter.cutoff);
-    //         } else if (col == 1) {
-    //             sprintf(display->text + strlen(display->text), "%.3f", synth->filter.resonance);
-    //         }
-    //         break;
-
-    //     default:
-    //         break;
-    //     }
-    // }
-
-    uint8_t update(UiKeys* keys, App_Display* display)
+    uint8_t update(UiKeys* keys, App_Display* display) override
     {
-        return App_View_Table::update(keys, display);
-        // App_Instrument* synth = tracks->track->synths[instrument];
-
-        // int8_t row = cursor / VIEW_INSTR_COL;
-        // int8_t col = cursor % VIEW_INSTR_COL;
-        // printf("row: %d, col: %d\n", row, col);
-        // if (keys->A) {
-        //     switch (row) {
-
-        //     case 4:
-
-        //         break;
-
-        //     case 5:
+        // FIXME
         //         if (col == 0) {
         //             if (keys->Right) {
         //                 synth->asr.setAttack(synth->asr.getAttack() + 1);
@@ -309,9 +234,30 @@ public:
         //                 synth->asr.setRelease(synth->asr.getRelease() - 10);
         //             }
         //         }
-        //         break;
+        return VIEW_CHANGED;
+    }
+};
 
-        //     case 6:
+class App_View_InstrumentFilter : public App_View_InstrumentRow {
+public:
+    App_View_InstrumentFilter(App_Tracks* _tracks)
+        : App_View_InstrumentRow(_tracks, "Filter ")
+    {
+    }
+
+    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    {
+        // could remove leading 0
+        if (col == 1) {
+            sprintf(display->text + strlen(display->text), "%.3f ", synth->filter.cutoff);
+        } else {
+            sprintf(display->text + strlen(display->text), "%.3f", synth->filter.resonance);
+        }
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display) override
+    {
+        // FIXME
         //         if (col == 0) {
         //             if (keys->Right) {
         //                 synth->filter.setCutoff(synth->filter.cutoff + 0.001);
@@ -333,18 +279,54 @@ public:
         //                 synth->filter.setResonance(synth->filter.resonance - 0.010);
         //             }
         //         }
-        //         break;
+        return VIEW_CHANGED;
+    }
+};
 
-        //     default:
-        //         break;
-        //     }
-        //     App_View_Table::render(display);
-        //     return VIEW_CHANGED;
-        // }
+class App_View_Instrument : public App_View_Table {
+protected:
+    App_Tracks* tracks;
 
-        // uint8_t res = App_View_Table::update(keys, display);
+    uint8_t instrument = 0;
 
-        // return res;
+    App_View_InstrumentTrack trackField;
+    App_View_InstrumentInstr instrField;
+    App_View_InstrumentType typeField;
+    App_View_InstrumentWav wavField;
+    App_View_InstrumentLevel levelField;
+    App_View_InstrumentEnv envField;
+    App_View_InstrumentFilter filterField;
+    App_View_TableField* fields[VIEW_INSTR_ROW * VIEW_INSTR_COL] = {
+        // clang-format off
+        &trackField, &trackField, NULL,
+        &instrField, &instrField, NULL,
+        &typeField, &typeField, NULL,
+        &wavField, &wavField, NULL,
+        &levelField, &levelField, &levelField,
+        &envField, &envField, &envField,
+        &filterField, &filterField, &filterField,
+        // clang-format on
+    };
+
+public:
+    App_View_Instrument(App_Tracks* _tracks)
+        : App_View_Table(fields, VIEW_INSTR_ROW, VIEW_INSTR_COL)
+        , tracks(_tracks)
+        , trackField(_tracks)
+        , instrField(_tracks)
+        , typeField(_tracks)
+        , wavField(_tracks)
+        , levelField(_tracks)
+        , envField(_tracks)
+        , filterField(_tracks)
+    {
+        initSelection();
+    }
+
+    void initDisplay(App_Display* display)
+    {
+        display->useColoredLabel();
+        App_View_Table::initDisplay(display);
     }
 };
 
