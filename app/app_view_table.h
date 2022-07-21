@@ -120,28 +120,32 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
+        uint8_t res = VIEW_CHANGED;
         if (keys->A) {
             if (!updating) {
                 getSelectedField()->updateStart();
                 updating = true;
             }
-            return getSelectedField()->update(keys, display);
+            res = getSelectedField()->update(keys, display);
+        } else {
+            if (updating) {
+                getSelectedField()->updateEnd();
+                updating = false;
+            }
+            if (keys->Up) {
+                selectNextRow(-1);
+            } else if (keys->Down) {
+                selectNextRow(+1);
+            } else if (keys->Left) {
+                selectNextCol(-1);
+            } else if (keys->Right) {
+                selectNextCol(+1);
+            }
         }
-        if (updating) {
-            getSelectedField()->updateEnd();
-            updating = false;
+        if (res == VIEW_CHANGED) {
+            render(display);
         }
-        if (keys->Up) {
-            selectNextRow(-1);
-        } else if (keys->Down) {
-            selectNextRow(+1);
-        } else if (keys->Left) {
-            selectNextCol(-1);
-        } else if (keys->Right) {
-            selectNextCol(+1);
-        }
-        render(display);
-        return VIEW_CHANGED;
+        return res;
     }
 };
 

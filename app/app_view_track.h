@@ -39,10 +39,9 @@ public:
                 display->setCursor(3, 1);
             }
             uint8_t trackId = col - 1;
-            Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
-            if (updating && col == selectedCol && row == selectedRow) {
-                state = &newState;
-            }
+            // printf("%d col %d row %d updating %d %d %d\n", trackId, col, row, updating, col == selectedCol, row == selectedRow);
+            Zic_Seq_Loop_State* state = updating && col == selectedCol && row == selectedRow ? &newState : &tracks->tracks[trackId]->looper.nextState;
+
             renderValue(display, trackId, state);
         }
     }
