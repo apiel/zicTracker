@@ -23,11 +23,19 @@ public:
     virtual void renderLabel(App_Display* display) = 0;
     virtual void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state) = 0;
 
+    bool isSelectable(uint8_t row, uint8_t col) override
+    {
+        return col != 0 && row != 0;
+    }
+
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (col == 0) {
             renderLabel(display);
         } else {
+            if (selectedRow == row && selectedCol == col) {
+                display->setCursor(3, 1);
+            }
             uint8_t trackId = col - 1;
             Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
             //     if (updatingState && cursor == pos) {
@@ -187,6 +195,7 @@ public:
         , detuneField(_tracks)
         , masterField(_tracks)
     {
+        initSelection();
     }
 
     void initDisplay(App_Display* display)
@@ -195,35 +204,9 @@ public:
         App_View_Table::initDisplay(display);
     }
 
-    // void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
-    // {
-    //     if (cursor == pos) {
-    //         display->setCursor(3);
-    //     }
-
-    //     uint8_t trackId = col;
-
-    //     // TODO ? blink between nextState and state for PAT, SEQ, DET
-    //     Zic_Seq_Loop_State* state = &tracks->tracks[trackId]->looper.nextState;
-    //     if (updatingState && cursor == pos) {
-    //         state = &newState;
-    //     }
-    //     switch (row) {
-    //     case 1:
-    //         sprintf(display->text + strlen(display->text), "%03d", state->pattern->id + 1);
-    //         break;
-    //     case 2:
-    //         sprintf(display->text + strlen(display->text),
-    //             "%c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
-    //         break;
-    //     default:
-    //         break;
-    //     }
-    // }
-
     uint8_t update(UiKeys* keys, App_Display* display)
     {
-        return 0;
+        return App_View_Table::update(keys, display);
         // int8_t row = cursor / VIEW_TRACK_COL;
         // int8_t col = cursor % VIEW_TRACK_COL;
         // int8_t trackId = col;
