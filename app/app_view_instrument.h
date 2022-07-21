@@ -5,14 +5,136 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
-#define VIEW_INSTR_COL 2
+#define VIEW_INSTR_ROW 7
+#define VIEW_INSTR_COL 3
 #define VIEW_INSTR_LABELS 7
 
-class App_View_InstrumentTrack : public App_View_TableField {
+class App_View_InstrumentRow : public App_View_TableField {
+protected:
+    App_Tracks* tracks;
+    uint8_t cursorLen;
+    uint8_t instrument = 0;
+
 public:
+    App_View_InstrumentRow(App_Tracks* _tracks, uint8_t _cursorLen = 5)
+        : tracks(_tracks)
+        , cursorLen(_cursorLen)
+    {
+    }
+
+    virtual void renderLabel(App_Display* display) = 0;
+    virtual void renderValue(App_Display* display, App_Instrument* synth) = 0;
+
+    bool isSelectable(uint8_t row, uint8_t col) override
+    {
+        return col != 0;
+    }
+
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        strcat(display->text, "Track");
+        if (col == 0) {
+            renderLabel(display);
+        } else {
+            if (selectedRow == row && selectedCol == col) {
+                display->setCursor(cursorLen);
+            }
+
+            App_Instrument* synth = tracks->track->synths[instrument];
+            renderValue(display, synth);
+        }
+    }
+};
+
+class App_View_InstrumentTrack : public App_View_InstrumentRow {
+public:
+    App_View_InstrumentTrack(App_Tracks* _tracks)
+        : App_View_InstrumentRow(_tracks, 2)
+    {
+    }
+
+    void renderLabel(App_Display* display)
+    {
+        strcat(display->text, "Track  ");
+    }
+
+    void renderValue(App_Display* display, App_Instrument* synth)
+    {
+        sprintf(display->text + strlen(display->text), "%-2d", tracks->trackId + 1);
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display) override
+    {
+        if (keys->Right || keys->Up) {
+            tracks->select(tracks->trackId + 1);
+        } else if (keys->Left || keys->Down) {
+            tracks->select(tracks->trackId - 1);
+        }
+        return VIEW_CHANGED;
+    }
+};
+
+class App_View_InstrumentInstr : public App_View_InstrumentRow {
+public:
+    App_View_InstrumentInstr(App_Tracks* _tracks)
+        : App_View_InstrumentRow(_tracks, 2)
+    {
+    }
+
+    void renderLabel(App_Display* display)
+    {
+        strcat(display->text, "Instr. ");
+    }
+
+    void renderValue(App_Display* display, App_Instrument* synth)
+    {
+        sprintf(display->text + strlen(display->text), "%-2c", instrument + 'A');
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display) override
+    {
+        // TODO need to male instrument pointer
+        if (keys->Right || keys->Up) {
+            if (instrument + 1 < INSTRUMENT_COUNT) {
+                instrument++;
+            }
+        } else if (keys->Left || keys->Down) {
+            instrument = instrument ? instrument - 1 % INSTRUMENT_COUNT : 0;
+        }
+        return VIEW_CHANGED;
+    }
+};
+
+class App_View_InstrumentType : public App_View_InstrumentRow {
+public:
+    App_View_InstrumentType(App_Tracks* _tracks)
+        : App_View_InstrumentRow(_tracks, 12)
+    {
+    }
+
+    void renderLabel(App_Display* display)
+    {
+        strcat(display->text, "Type   ");
+    }
+
+    void renderValue(App_Display* display, App_Instrument* synth)
+    {
+        if (synth->isWavetable) {
+            strcat(display->text, "Wavetable   ");
+        } else {
+            strcat(display->text, "Sample      ");
+        }
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display) override
+    {
+        // FIXME
+        // if (keys->Right || keys->Up) {
+        //     synth->isWavetable = true;
+        // } else if (keys->Left || keys->Down) {
+        //     synth->isWavetable = false;
+        // }
+        // synth->setNext();
+        return VIEW_CHANGED;
     }
 };
 
@@ -21,9 +143,6 @@ protected:
     App_Tracks* tracks;
 
     uint8_t cursorSizeTable[VIEW_INSTR_LABELS * VIEW_INSTR_COL] = {
-        2, 0,
-        2, 0,
-        12, 0,
         12, 0,
         5, 5,
         5, 5,
@@ -33,25 +152,37 @@ protected:
     uint8_t instrument = 0;
 
     App_View_InstrumentTrack trackField;
-    App_View_TableField* fields[1 * 3] = {
-        &trackField,
-        NULL,
-        NULL,
+    App_View_InstrumentInstr instrField;
+    App_View_InstrumentType typeField;
+    App_View_TableField* fields[VIEW_INSTR_ROW * VIEW_INSTR_COL] = {
+        // clang-format off
+        &trackField, &trackField, NULL,
+        &instrField, &instrField, NULL,
+        &typeField, &typeField, NULL,
+        // clang-format on
     };
 
 public:
     App_View_Instrument(App_Tracks* _tracks)
-        : App_View_Table(fields, 1, 3)
+        : App_View_Table(fields, VIEW_INSTR_ROW, VIEW_INSTR_COL)
         , tracks(_tracks)
+        , trackField(_tracks)
+        , instrField(_tracks)
+        , typeField(_tracks)
     {
+        initSelection();
+    }
+
+    void initDisplay(App_Display* display)
+    {
+        display->useColoredLabel();
+        App_View_Table::initDisplay(display);
     }
 
     // void startRow(App_Display* display, uint16_t row) override
     // {
     //     const char label[VIEW_INSTR_LABELS][8] = {
-    //         "Track  ",
-    //         "Instr. ",
-    //         "Type   ",
+    //         ,
     //         "Wav    ",
     //         "Level  ",
     //         "Env    ",
@@ -63,37 +194,9 @@ public:
 
     // void renderCell(App_Display* display, uint16_t pos, uint16_t row, uint8_t col)
     // {
-    //     App_Instrument* synth = tracks->track->synths[instrument];
-    //     display->useColoredLabel();
-    //     if (cursor == pos) {
-    //         if (cursorSizeTable[pos]) {
-    //             display->setCursor(cursorSizeTable[pos]);
-    //         } else {
-    //             // If current cursor is 0 we get the cursor from the previous field
-    //             display->setCursor(cursorSizeTable[pos - 1], -(cursorSizeTable[pos - 1] + 1));
-    //         }
-    //     }
-
-    //     switch (row) {
-    //     case 0:
-    //         if (col == 0) {
-    //             sprintf(display->text + strlen(display->text), "%-2d", tracks->trackId + 1);
-    //         }
-    //         break;
-
-    //     case 1:
-    //         if (col == 0) {
-    //             sprintf(display->text + strlen(display->text), "%-2c", instrument + 'A');
-    //         }
-    //         break;
-
     //     case 2:
     //         if (col == 0) {
-    //             if (synth->isWavetable) {
-    //                 strcat(display->text, "Wavetable   ");
-    //             } else {
-    //                 strcat(display->text, "Sample      ");
-    //             }
+
     //         }
     //         break;
 
@@ -141,7 +244,7 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display)
     {
-        return 0;
+        return App_View_Table::update(keys, display);
         // App_Instrument* synth = tracks->track->synths[instrument];
 
         // int8_t row = cursor / VIEW_INSTR_COL;
@@ -149,31 +252,11 @@ public:
         // printf("row: %d, col: %d\n", row, col);
         // if (keys->A) {
         //     switch (row) {
-        //     case 0:
-        //         if (keys->Right || keys->Up) {
-        //             tracks->select(tracks->trackId + 1);
-        //         } else if (keys->Left || keys->Down) {
-        //             tracks->select(tracks->trackId - 1);
-        //         }
-        //         break;
 
         //     case 1:
-        //         if (keys->Right || keys->Up) {
-        //             if (instrument + 1 < INSTRUMENT_COUNT) {
-        //                 instrument++;
-        //             }
-        //         } else if (keys->Left || keys->Down) {
-        //             instrument = instrument ? instrument - 1 % INSTRUMENT_COUNT : 0;
-        //         }
         //         break;
 
         //     case 2:
-        //         if (keys->Right || keys->Up) {
-        //             synth->isWavetable = true;
-        //         } else if (keys->Left || keys->Down) {
-        //             synth->isWavetable = false;
-        //         }
-        //         synth->setNext();
         //         break;
 
         //     case 3:

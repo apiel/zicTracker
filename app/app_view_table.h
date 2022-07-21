@@ -44,7 +44,7 @@ protected:
         uint8_t start = selectedRow;
         do {
             selectedRow = (selectedRow + ROW_COUNT + direction) % ROW_COUNT;
-            if (getSelectedField()->isSelectable(selectedRow, selectedCol)) {
+            if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
                 break;
             }
         } while (selectedRow != start);
@@ -55,7 +55,7 @@ protected:
         uint8_t start = selectedCol;
         do {
             selectedCol = (selectedCol + COL_COUNT + direction) % COL_COUNT;
-            if (getSelectedField()->isSelectable(selectedRow, selectedCol)) {
+            if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
                 break;
             }
         } while (selectedCol != start);
