@@ -53,6 +53,7 @@ void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y,
             x = orig_x;
             y += (FONT_H + LINE_SPACING) * size;
             isHeader = false;
+            fontColor = SDL_MapRGB(surface->format, UI_COLOR_FONT);
         } else {
             if (display->isColoredLabel() && x == orig_x + (display->coloredLabel * FONT_W)) {
                 fontColor = SDL_MapRGB(surface->format, UI_COLOR_LABEL);

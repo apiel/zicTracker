@@ -230,6 +230,7 @@ public:
     void initDisplay(App_Display* display)
     {
         display->useColoredHeader();
+        display->useColoredLabel();
         App_View_Table::initDisplay(display);
     }
 
