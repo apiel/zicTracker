@@ -15,14 +15,15 @@ protected:
     App_Tracks* tracks;
     Zic_Seq_Loop_State newState;
     bool updating = false;
+    const char * label;
 
 public:
-    App_View_TrackRow(App_Tracks* _tracks)
+    App_View_TrackRow(App_Tracks* _tracks, const char * _label)
         : tracks(_tracks)
+        , label(_label)
     {
     }
 
-    virtual void renderLabel(App_Display* display) = 0;
     virtual void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
@@ -33,7 +34,7 @@ public:
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (col == 0) {
-            renderLabel(display);
+            strcat(display->text, label);
         } else {
             if (selectedRow == row && selectedCol == col) {
                 display->setCursor(3, 1);
@@ -64,13 +65,8 @@ public:
 class App_View_TrackHeader : public App_View_TrackRow {
 public:
     App_View_TrackHeader(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks)
+        : App_View_TrackRow(_tracks, "   ")
     {
-    }
-
-    void renderLabel(App_Display* display)
-    {
-        strcat(display->text, "   ");
     }
 
     void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
@@ -82,13 +78,8 @@ public:
 class App_View_TrackSequence : public App_View_TrackRow {
 public:
     App_View_TrackSequence(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks)
+        : App_View_TrackRow(_tracks, "SEQ")
     {
-    }
-
-    void renderLabel(App_Display* display)
-    {
-        strcat(display->text, "SEQ");
     }
 
     void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
@@ -110,13 +101,8 @@ public:
 class App_View_TrackPattern : public App_View_TrackRow {
 public:
     App_View_TrackPattern(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks)
+        : App_View_TrackRow(_tracks, "PAT")
     {
-    }
-
-    void renderLabel(App_Display* display)
-    {
-        strcat(display->text, "PAT");
     }
 
     void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
@@ -145,13 +131,8 @@ public:
 class App_View_TrackDetune : public App_View_TrackRow {
 public:
     App_View_TrackDetune(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks)
+        : App_View_TrackRow(_tracks, "DET")
     {
-    }
-
-    void renderLabel(App_Display* display)
-    {
-        strcat(display->text, "DET");
     }
 
     void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
@@ -177,13 +158,8 @@ public:
 class App_View_TrackMasterField : public App_View_TrackRow {
 public:
     App_View_TrackMasterField(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks)
+        : App_View_TrackRow(_tracks, "-M-")
     {
-    }
-
-    void renderLabel(App_Display* display)
-    {
-        strcat(display->text, "-M-");
     }
 
     void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
