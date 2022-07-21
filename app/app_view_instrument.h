@@ -11,18 +11,19 @@
 
 class App_View_InstrumentRow : public App_View_TableField {
 protected:
+    const char* label;
     App_Tracks* tracks;
     uint8_t cursorLen;
     uint8_t instrument = 0;
 
 public:
-    App_View_InstrumentRow(App_Tracks* _tracks, uint8_t _cursorLen = 5)
-        : tracks(_tracks)
+    App_View_InstrumentRow(App_Tracks* _tracks, const char* _label, uint8_t _cursorLen = 5)
+        : label(_label)
+        , tracks(_tracks)
         , cursorLen(_cursorLen)
     {
     }
 
-    virtual void renderLabel(App_Display* display) = 0;
     virtual void renderValue(App_Display* display, App_Instrument* synth) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
@@ -33,7 +34,7 @@ public:
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (col == 0) {
-            renderLabel(display);
+            strcat(display->text, label);
         } else {
             if (selectedRow == row && selectedCol == col) {
                 display->setCursor(cursorLen);
@@ -48,13 +49,8 @@ public:
 class App_View_InstrumentTrack : public App_View_InstrumentRow {
 public:
     App_View_InstrumentTrack(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, 2)
+        : App_View_InstrumentRow(_tracks, "Track  ", 2)
     {
-    }
-
-    void renderLabel(App_Display* display)
-    {
-        strcat(display->text, "Track  ");
     }
 
     void renderValue(App_Display* display, App_Instrument* synth)
@@ -76,13 +72,8 @@ public:
 class App_View_InstrumentInstr : public App_View_InstrumentRow {
 public:
     App_View_InstrumentInstr(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, 2)
+        : App_View_InstrumentRow(_tracks, "Instr. ", 2)
     {
-    }
-
-    void renderLabel(App_Display* display)
-    {
-        strcat(display->text, "Instr. ");
     }
 
     void renderValue(App_Display* display, App_Instrument* synth)
@@ -107,13 +98,8 @@ public:
 class App_View_InstrumentType : public App_View_InstrumentRow {
 public:
     App_View_InstrumentType(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, 12)
+        : App_View_InstrumentRow(_tracks, "Type   ", 12)
     {
-    }
-
-    void renderLabel(App_Display* display)
-    {
-        strcat(display->text, "Type   ");
     }
 
     void renderValue(App_Display* display, App_Instrument* synth)
