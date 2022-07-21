@@ -196,7 +196,7 @@ public:
 
 class App_View_Track : public App_View_Table {
 protected:
-App_Tracks* tracks;
+    App_Tracks* tracks;
 
     App_View_TrackHeader fieldHeader;
     App_View_TrackSequence sequenceField;
@@ -205,35 +205,13 @@ App_Tracks* tracks;
     App_View_TrackMasterField masterField;
 
     App_View_TableField* fields[VIEW_TRACK_ROW * VIEW_TRACK_COL] = {
-        &fieldHeader,
-        &fieldHeader,
-        &fieldHeader,
-        &fieldHeader,
-        &fieldHeader,
-
-        &sequenceField,
-        &sequenceField,
-        &sequenceField,
-        &sequenceField,
-        &sequenceField,
-
-        &patternField,
-        &patternField,
-        &patternField,
-        &patternField,
-        &patternField,
-
-        &detuneField,
-        &detuneField,
-        &detuneField,
-        &detuneField,
-        &detuneField,
-
-        &masterField,
-        &masterField,
-        &masterField,
-        &masterField,
-        &masterField,
+        // clang-format off
+        &fieldHeader, &fieldHeader, &fieldHeader, &fieldHeader, &fieldHeader,
+        &sequenceField, &sequenceField, &sequenceField, &sequenceField, &sequenceField,
+        &patternField, &patternField, &patternField, &patternField, &patternField,
+        &detuneField, &detuneField, &detuneField, &detuneField, &detuneField,
+        &masterField, &masterField, &masterField, &masterField, &masterField,
+        // clang-format on
     };
 
 public:
@@ -258,7 +236,7 @@ public:
     uint8_t update(UiKeys* keys, App_Display* display)
     {
         int8_t trackId = selectedCol - 1;
-                if (trackId != tracks->trackId) {
+        if (trackId != tracks->trackId) {
             tracks->select(trackId);
         }
         return App_View_Table::update(keys, display);
