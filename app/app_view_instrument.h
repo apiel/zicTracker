@@ -25,11 +25,16 @@ public:
     {
     }
 
-    virtual void renderValue(App_Display* display, uint8_t col, App_Instrument* synth) = 0;
+    virtual void renderValue(App_Display* display, uint8_t col) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return col != 0;
+    }
+
+    App_Instrument* getSynth()
+    {
+        return tracks->track->synths[*instrument];
     }
 
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
@@ -41,8 +46,7 @@ public:
                 display->setCursor(cursorLen);
             }
 
-            App_Instrument* synth = tracks->track->synths[*instrument];
-            renderValue(display, col, synth);
+            renderValue(display, col);
         }
     }
 };
@@ -54,7 +58,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col)
     {
         sprintf(display->text + strlen(display->text), "%-2d", tracks->trackId + 1);
     }
@@ -77,7 +81,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col)
     {
         sprintf(display->text + strlen(display->text), "%-2c", *instrument + 'A');
     }
@@ -102,9 +106,9 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col)
     {
-        if (synth->isWavetable) {
+        if (getSynth()->isWavetable) {
             strcat(display->text, "Wavetable   ");
         } else {
             strcat(display->text, "Sample      ");
@@ -131,10 +135,10 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col)
     {
         char filename[12];
-        strncpy(filename, synth->filename, 12);
+        strncpy(filename, getSynth()->filename, 12);
         sprintf(display->text + strlen(display->text), "%-12s", filename);
     }
 
@@ -157,12 +161,12 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col)
     {
         if (col == 1) {
-            sprintf(display->text + strlen(display->text), "%-3d%%  ", synth->wave.getAmplitude());
+            sprintf(display->text + strlen(display->text), "%-3d%%  ", getSynth()->wave.getAmplitude());
         } else {
-            if (synth->wave.isMuted()) {
+            if (getSynth()->wave.isMuted()) {
                 strcat(display->text, "Muted");
             } else {
                 strcat(display->text, ">ON  ");
@@ -201,12 +205,12 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col)
     {
         if (col == 1) {
-            sprintf(display->text + strlen(display->text), "%-5d ", synth->asr.getAttack());
+            sprintf(display->text + strlen(display->text), "%-5d ", getSynth()->asr.getAttack());
         } else {
-            sprintf(display->text + strlen(display->text), "%-5d", synth->asr.getRelease());
+            sprintf(display->text + strlen(display->text), "%-5d", getSynth()->asr.getRelease());
         }
     }
 
@@ -245,13 +249,13 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
+    void renderValue(App_Display* display, uint8_t col)
     {
         // could remove leading 0
         if (col == 1) {
-            sprintf(display->text + strlen(display->text), "%.3f ", synth->filter.cutoff);
+            sprintf(display->text + strlen(display->text), "%.3f ", getSynth()->filter.cutoff);
         } else {
-            sprintf(display->text + strlen(display->text), "%.3f", synth->filter.resonance);
+            sprintf(display->text + strlen(display->text), "%.3f", getSynth()->filter.resonance);
         }
     }
 
