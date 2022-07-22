@@ -6,6 +6,9 @@
 
 class App_View_TableField {
 public:
+    uint8_t row = 0;
+    uint8_t col = 0;
+
     virtual void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol) = 0;
 
     virtual uint8_t update(UiKeys* keys, App_Display* display)

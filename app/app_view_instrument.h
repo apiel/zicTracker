@@ -117,13 +117,12 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display) override
     {
-        // FIXME
-        // if (keys->Right || keys->Up) {
-        //     synth->isWavetable = true;
-        // } else if (keys->Left || keys->Down) {
-        //     synth->isWavetable = false;
-        // }
-        // synth->setNext();
+        if (keys->Right || keys->Up) {
+            getSynth()->isWavetable = true;
+        } else if (keys->Left || keys->Down) {
+            getSynth()->isWavetable = false;
+        }
+        getSynth()->setNext();
         return VIEW_CHANGED;
     }
 };
@@ -144,12 +143,11 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display) override
     {
-        // FIXME
-        // if (keys->Right || keys->Up) {
-        //     synth->setNext(+1);
-        // } else if (keys->Left || keys->Down) {
-        //     synth->setNext(-1);
-        // }
+        if (keys->Right || keys->Up) {
+            getSynth()->setNext(+1);
+        } else if (keys->Left || keys->Down) {
+            getSynth()->setNext(-1);
+        }
         return VIEW_CHANGED;
     }
 };
@@ -176,24 +174,24 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display) override
     {
-        // FIXME
-        //         if (col == 0) {
-        //             if (keys->Right) {
-        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
-        //             } else if (keys->Up) {
-        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() + 10);
-        //             } else if (keys->Left) {
-        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
-        //             } else if (keys->Down) {
-        //                 synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
-        //             }
-        //         } else {
-        //             if (synth->wave.isMuted()) {
-        //                 synth->wave.setMute(false);
-        //             } else {
-        //                 synth->wave.setMute();
-        //             }
-        //         }
+        App_Instrument* synth = getSynth();
+        if (col == 0) {
+            if (keys->Right) {
+                synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
+            } else if (keys->Up) {
+                synth->wave.setAmplitude(synth->wave.getAmplitude() + 10);
+            } else if (keys->Left) {
+                synth->wave.setAmplitude(synth->wave.getAmplitude() - 1);
+            } else if (keys->Down) {
+                synth->wave.setAmplitude(synth->wave.getAmplitude() - 10);
+            }
+        } else {
+            if (synth->wave.isMuted()) {
+                synth->wave.setMute(false);
+            } else {
+                synth->wave.setMute();
+            }
+        }
         return VIEW_CHANGED;
     }
 };
@@ -216,28 +214,28 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display) override
     {
-        // FIXME
-        //         if (col == 0) {
-        //             if (keys->Right) {
-        //                 synth->asr.setAttack(synth->asr.getAttack() + 1);
-        //             } else if (keys->Up) {
-        //                 synth->asr.setAttack(synth->asr.getAttack() + 10);
-        //             } else if (keys->Left) {
-        //                 synth->asr.setAttack(synth->asr.getAttack() - 1);
-        //             } else if (keys->Down) {
-        //                 synth->asr.setAttack(synth->asr.getAttack() - 10);
-        //             }
-        //         } else {
-        //             if (keys->Right) {
-        //                 synth->asr.setRelease(synth->asr.getRelease() + 1);
-        //             } else if (keys->Up) {
-        //                 synth->asr.setRelease(synth->asr.getRelease() + 10);
-        //             } else if (keys->Left) {
-        //                 synth->asr.setRelease(synth->asr.getRelease() - 1);
-        //             } else if (keys->Down) {
-        //                 synth->asr.setRelease(synth->asr.getRelease() - 10);
-        //             }
-        //         }
+        App_Instrument* synth = getSynth();
+        if (col == 0) {
+            if (keys->Right) {
+                synth->asr.setAttack(synth->asr.getAttack() + 1);
+            } else if (keys->Up) {
+                synth->asr.setAttack(synth->asr.getAttack() + 10);
+            } else if (keys->Left) {
+                synth->asr.setAttack(synth->asr.getAttack() - 1);
+            } else if (keys->Down) {
+                synth->asr.setAttack(synth->asr.getAttack() - 10);
+            }
+        } else {
+            if (keys->Right) {
+                synth->asr.setRelease(synth->asr.getRelease() + 1);
+            } else if (keys->Up) {
+                synth->asr.setRelease(synth->asr.getRelease() + 10);
+            } else if (keys->Left) {
+                synth->asr.setRelease(synth->asr.getRelease() - 1);
+            } else if (keys->Down) {
+                synth->asr.setRelease(synth->asr.getRelease() - 10);
+            }
+        }
         return VIEW_CHANGED;
     }
 };
@@ -261,28 +259,28 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display) override
     {
-        // FIXME
-        //         if (col == 0) {
-        //             if (keys->Right) {
-        //                 synth->filter.setCutoff(synth->filter.cutoff + 0.001);
-        //             } else if (keys->Up) {
-        //                 synth->filter.setCutoff(synth->filter.cutoff + 0.010);
-        //             } else if (keys->Left) {
-        //                 synth->filter.setCutoff(synth->filter.cutoff - 0.001);
-        //             } else if (keys->Down) {
-        //                 synth->filter.setCutoff(synth->filter.cutoff - 0.010);
-        //             }
-        //         } else {
-        //             if (keys->Right) {
-        //                 synth->filter.setResonance(synth->filter.resonance + 0.001);
-        //             } else if (keys->Up) {
-        //                 synth->filter.setResonance(synth->filter.resonance + 0.010);
-        //             } else if (keys->Left) {
-        //                 synth->filter.setResonance(synth->filter.resonance - 0.001);
-        //             } else if (keys->Down) {
-        //                 synth->filter.setResonance(synth->filter.resonance - 0.010);
-        //             }
-        //         }
+        App_Instrument* synth = getSynth();
+        if (col == 0) {
+            if (keys->Right) {
+                synth->filter.setCutoff(synth->filter.cutoff + 0.001);
+            } else if (keys->Up) {
+                synth->filter.setCutoff(synth->filter.cutoff + 0.010);
+            } else if (keys->Left) {
+                synth->filter.setCutoff(synth->filter.cutoff - 0.001);
+            } else if (keys->Down) {
+                synth->filter.setCutoff(synth->filter.cutoff - 0.010);
+            }
+        } else {
+            if (keys->Right) {
+                synth->filter.setResonance(synth->filter.resonance + 0.001);
+            } else if (keys->Up) {
+                synth->filter.setResonance(synth->filter.resonance + 0.010);
+            } else if (keys->Left) {
+                synth->filter.setResonance(synth->filter.resonance - 0.001);
+            } else if (keys->Down) {
+                synth->filter.setResonance(synth->filter.resonance - 0.010);
+            }
+        }
         return VIEW_CHANGED;
     }
 };
