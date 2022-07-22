@@ -6,12 +6,9 @@
 
 class App_View_TableField {
 public:
-    uint8_t row = 0;
-    uint8_t col = 0;
-
     virtual void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol) = 0;
 
-    virtual uint8_t update(UiKeys* keys, App_Display* display)
+    virtual uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
         return VIEW_NONE;
     }
@@ -81,18 +78,13 @@ public:
         for (uint8_t row = 0; row < ROW_COUNT; row++) {
             for (uint8_t col = 0; col < COL_COUNT; col++) {
                 App_View_TableField* field = fields[row * COL_COUNT + col];
-                if (field == NULL) {
-                    printf("isnull %d %d\n", row, col);
-                }
                 if (field != NULL && field->isSelectable(row, col)) {
                     selectedRow = row;
                     selectedCol = col;
-                    printf("selected %d %d\n", selectedRow, selectedCol);
                     return;
                 }
             }
         }
-        printf("no slectable field!!!!!\n");
     }
 
     virtual void initDisplay(App_Display* display)
@@ -129,7 +121,7 @@ public:
                 getSelectedField()->updateStart();
                 updating = true;
             }
-            res = getSelectedField()->update(keys, display);
+            res = getSelectedField()->update(keys, display, selectedRow, selectedCol);
         } else {
             if (updating) {
                 getSelectedField()->updateEnd();

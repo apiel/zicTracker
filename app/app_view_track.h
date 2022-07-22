@@ -91,7 +91,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display)
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
         newState.togglePlay();
         return VIEW_CHANGED;
@@ -110,7 +110,7 @@ public:
         sprintf(display->text + strlen(display->text), " %03d", state->pattern->id + 1);
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display)
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
         int8_t direction = 0;
         if (keys->Right) {
@@ -140,7 +140,7 @@ public:
         sprintf(display->text + strlen(display->text), " %c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display)
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
         if (keys->Right) {
             newState.set(newState.detune + 1);

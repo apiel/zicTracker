@@ -63,7 +63,7 @@ public:
         sprintf(display->text + strlen(display->text), "%-2d", tracks->trackId + 1);
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display) override
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
     {
         if (keys->Right || keys->Up) {
             tracks->select(tracks->trackId + 1);
@@ -86,7 +86,7 @@ public:
         sprintf(display->text + strlen(display->text), "%-2c", *instrument + 'A');
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display) override
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
     {
         uint8_t direction = 0;
         if (keys->Right || keys->Up) {
@@ -115,7 +115,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display) override
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
     {
         if (keys->Right || keys->Up) {
             getSynth()->isWavetable = true;
@@ -141,7 +141,7 @@ public:
         sprintf(display->text + strlen(display->text), "%-12s", filename);
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display) override
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
     {
         if (keys->Right || keys->Up) {
             getSynth()->setNext(+1);
@@ -172,10 +172,10 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display) override
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
     {
         App_Instrument* synth = getSynth();
-        if (col == 0) {
+        if (col == 1) {
             if (keys->Right) {
                 synth->wave.setAmplitude(synth->wave.getAmplitude() + 1);
             } else if (keys->Up) {
@@ -212,10 +212,10 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display) override
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
     {
         App_Instrument* synth = getSynth();
-        if (col == 0) {
+        if (col == 1) {
             if (keys->Right) {
                 synth->asr.setAttack(synth->asr.getAttack() + 1);
             } else if (keys->Up) {
@@ -257,10 +257,10 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display) override
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
     {
         App_Instrument* synth = getSynth();
-        if (col == 0) {
+        if (col == 1) {
             if (keys->Right) {
                 synth->filter.setCutoff(synth->filter.cutoff + 0.001);
             } else if (keys->Up) {
