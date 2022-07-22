@@ -14,6 +14,7 @@ If click save, create new state that can be restored...
 TODO
 
 A pattern, 32 - 64? step note for any of the 16 instrument
+conditional steps / step modification of time
 
 ## Tracks
 

@@ -5,10 +5,11 @@
 #include "./app_display.h"
 #include "./app_patterns.h"
 #include "./app_tracks.h"
+#include "./app_view_instrument.h"
 #include "./app_view_menu.h"
+#include "./app_view_pattern.h"
 #include "./app_view_track.h"
 #include "./app_view_trackMaster.h"
-#include "./app_view_instrument.h"
 #include <zic_seq_tempo.h>
 
 class App {
@@ -23,12 +24,14 @@ public:
     App_View_Track trackView;
     App_View_TrackMaster trackMasterView;
     App_View_Instrument instrumentView;
+    App_View_Pattern patternView;
 
     App(App_Patterns* patterns)
         : tracks(patterns)
         , trackView(&tracks)
         , trackMasterView(&tracks)
         , instrumentView(&tracks)
+        , patternView(patterns)
     {
     }
 
@@ -59,6 +62,10 @@ public:
 
         case VIEW_INSTRUMENT:
             instrumentView.render(&display);
+            break;
+
+        case VIEW_PATTERN:
+            patternView.render(&display);
             break;
 
         default:
@@ -94,6 +101,9 @@ public:
                 break;
             case VIEW_INSTRUMENT:
                 rendered = instrumentView.update(&keys, &display);
+                break;
+            case VIEW_PATTERN:
+                rendered = patternView.update(&keys, &display);
                 break;
             }
             if (!rendered) {
