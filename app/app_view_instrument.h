@@ -14,13 +14,14 @@ protected:
     const char* label;
     App_Tracks* tracks;
     uint8_t cursorLen;
-    uint8_t instrument = 0;
+    uint8_t * instrument;
 
 public:
-    App_View_InstrumentRow(App_Tracks* _tracks, const char* _label, uint8_t _cursorLen = 5)
+    App_View_InstrumentRow(App_Tracks* _tracks, uint8_t * _instrument, const char* _label, uint8_t _cursorLen = 5)
         : label(_label)
         , tracks(_tracks)
         , cursorLen(_cursorLen)
+        , instrument(_instrument)
     {
     }
 
@@ -40,7 +41,7 @@ public:
                 display->setCursor(cursorLen);
             }
 
-            App_Instrument* synth = tracks->track->synths[instrument];
+            App_Instrument* synth = tracks->track->synths[*instrument];
             renderValue(display, col, synth);
         }
     }
@@ -48,8 +49,8 @@ public:
 
 class App_View_InstrumentTrack : public App_View_InstrumentRow {
 public:
-    App_View_InstrumentTrack(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, "Track  ", 2)
+    App_View_InstrumentTrack(App_Tracks* _tracks, uint8_t * _instrument)
+        : App_View_InstrumentRow(_tracks, _instrument, "Track  ", 2)
     {
     }
 
@@ -71,25 +72,27 @@ public:
 
 class App_View_InstrumentInstr : public App_View_InstrumentRow {
 public:
-    App_View_InstrumentInstr(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, "Instr. ", 2)
+    App_View_InstrumentInstr(App_Tracks* _tracks, uint8_t * _instrument)
+        : App_View_InstrumentRow(_tracks, _instrument, "Instr. ", 2)
     {
     }
 
     void renderValue(App_Display* display, uint8_t col, App_Instrument* synth)
     {
-        sprintf(display->text + strlen(display->text), "%-2c", instrument + 'A');
+        sprintf(display->text + strlen(display->text), "%-2c", *instrument + 'A');
     }
 
     uint8_t update(UiKeys* keys, App_Display* display) override
     {
         // TODO need to male instrument pointer
         if (keys->Right || keys->Up) {
-            if (instrument + 1 < INSTRUMENT_COUNT) {
-                instrument++;
+            if (*instrument + 1 < INSTRUMENT_COUNT) {
+                // *instrument++;
+                *instrument = (*instrument + INSTRUMENT_COUNT + 1) % INSTRUMENT_COUNT;
             }
         } else if (keys->Left || keys->Down) {
-            instrument = instrument ? instrument - 1 % INSTRUMENT_COUNT : 0;
+            // instrument = *instrument ? *instrument - 1 % INSTRUMENT_COUNT : 0;
+            *instrument = (*instrument + INSTRUMENT_COUNT - 1) % INSTRUMENT_COUNT;
         }
         return VIEW_CHANGED;
     }
@@ -97,8 +100,8 @@ public:
 
 class App_View_InstrumentType : public App_View_InstrumentRow {
 public:
-    App_View_InstrumentType(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, "Type   ", 12)
+    App_View_InstrumentType(App_Tracks* _tracks, uint8_t * _instrument)
+        : App_View_InstrumentRow(_tracks, _instrument, "Type   ", 12)
     {
     }
 
@@ -126,8 +129,8 @@ public:
 
 class App_View_InstrumentWav : public App_View_InstrumentRow {
 public:
-    App_View_InstrumentWav(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, "Wav    ", 12)
+    App_View_InstrumentWav(App_Tracks* _tracks, uint8_t * _instrument)
+        : App_View_InstrumentRow(_tracks, _instrument, "Wav    ", 12)
     {
     }
 
@@ -152,8 +155,8 @@ public:
 
 class App_View_InstrumentLevel : public App_View_InstrumentRow {
 public:
-    App_View_InstrumentLevel(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, "Level  ")
+    App_View_InstrumentLevel(App_Tracks* _tracks, uint8_t * _instrument)
+        : App_View_InstrumentRow(_tracks, _instrument, "Level  ")
     {
     }
 
@@ -196,8 +199,8 @@ public:
 
 class App_View_InstrumentEnv : public App_View_InstrumentRow {
 public:
-    App_View_InstrumentEnv(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, "Env    ")
+    App_View_InstrumentEnv(App_Tracks* _tracks, uint8_t * _instrument)
+        : App_View_InstrumentRow(_tracks, _instrument, "Env    ")
     {
     }
 
@@ -240,8 +243,8 @@ public:
 
 class App_View_InstrumentFilter : public App_View_InstrumentRow {
 public:
-    App_View_InstrumentFilter(App_Tracks* _tracks)
-        : App_View_InstrumentRow(_tracks, "Filter ")
+    App_View_InstrumentFilter(App_Tracks* _tracks, uint8_t * _instrument)
+        : App_View_InstrumentRow(_tracks, _instrument, "Filter ")
     {
     }
 
@@ -312,13 +315,13 @@ public:
     App_View_Instrument(App_Tracks* _tracks)
         : App_View_Table(fields, VIEW_INSTR_ROW, VIEW_INSTR_COL)
         , tracks(_tracks)
-        , trackField(_tracks)
-        , instrField(_tracks)
-        , typeField(_tracks)
-        , wavField(_tracks)
-        , levelField(_tracks)
-        , envField(_tracks)
-        , filterField(_tracks)
+        , trackField(_tracks, &instrument)
+        , instrField(_tracks, &instrument)
+        , typeField(_tracks, &instrument)
+        , wavField(_tracks, &instrument)
+        , levelField(_tracks, &instrument)
+        , envField(_tracks, &instrument)
+        , filterField(_tracks, &instrument)
     {
         initSelection();
     }
