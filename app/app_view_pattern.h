@@ -4,7 +4,7 @@
 #include "./app_display.h"
 #include "./app_view.h"
 
-#define VIEW_PATTERN_ROW 1 //2 + MAX_STEPS_IN_PATTERN
+#define VIEW_PATTERN_ROW 1 // 2 + MAX_STEPS_IN_PATTERN
 #define VIEW_PATTERN_COL 5
 
 class App_View_PatternNumber : public App_View_TableField {
@@ -24,14 +24,37 @@ public:
 
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        if (col == 0) {
+        uint8_t cursorLen = 3;
+        switch (col) {
+        case 0:
             strcat(display->text, "PAT");
-        } else {
-            if (selectedRow == row && selectedCol == col) {
-                display->setCursor(3, 1);
-            }
+            break;
+
+        case 1:
             sprintf(display->text + strlen(display->text), " %03d", *currentPatternId + 1);
+            break;
+
+        case 2:
+            strcat(display->text, " LEN");
+            cursorLen = 2;
+            break;
+
+        case 3:
+            sprintf(display->text + strlen(display->text), " %02d", 64);
+            break;
         }
+        if (selectedRow == row && selectedCol == col) {
+            display->setCursor(cursorLen, 1);
+        }
+
+        // if (col == 0) {
+        //     strcat(display->text, "PAT");
+        // } else {
+        //     if (selectedRow == row && selectedCol == col) {
+        //         display->setCursor(3, 1);
+        //     }
+        //     sprintf(display->text + strlen(display->text), " %03d", *currentPatternId + 1);
+        // }
     }
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
@@ -60,7 +83,7 @@ protected:
 
     App_View_TableField* fields[VIEW_PATTERN_ROW * VIEW_PATTERN_COL] = {
         // clang-format off
-        &patNumberField, &patNumberField, NULL, NULL, NULL,
+        &patNumberField, &patNumberField, &patNumberField, &patNumberField, NULL,
         // clang-format on
     };
 
