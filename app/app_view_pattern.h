@@ -164,17 +164,35 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
-        // int8_t direction = 0;
-        // if (keys->Right) {
-        //     direction = 1;
-        // } else if (keys->Left) {
-        //     direction = -1;
-        // } else if (keys->Up) {
-        //     direction = 10;
-        // } else if (keys->Down) {
-        //     direction = -10;
-        // }
-        // *currentPatternId = (*currentPatternId + PATTERN_COUNT + direction) % PATTERN_COUNT;
+        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[row - VIEW_PATTERN_ROW_HEADERS];
+        if (col == 4) {
+            step->slide = !step->slide;
+        } else {
+            int8_t directions[] = { 0, 1, 12, 10 };
+            int8_t direction = 0;
+            if (keys->Right) {
+                direction = 1;
+            } else if (keys->Left) {
+                direction = -1;
+            } else if (keys->Up) {
+                direction = directions[col];
+            } else if (keys->Down) {
+                direction = -directions[col];
+            }
+            switch (col) {
+            case 1:
+                step->instrument = (step->instrument + INSTRUMENT_COUNT + direction) % INSTRUMENT_COUNT;
+                break;
+            case 2: {
+                uint8_t note = range(step->note + direction, Zic::_NOTE_START - 1, Zic::_NOTE_END);
+                step->note = range(note, Zic::_NOTE_START, Zic::_NOTE_END) != note ? 0 : note;
+                break;
+            }
+            case 3:
+                step->velocity = range(step->velocity + direction, 0, 127);
+                break;
+            }
+        }
         return VIEW_CHANGED;
     }
 };
