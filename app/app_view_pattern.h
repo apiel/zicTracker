@@ -75,16 +75,19 @@ public:
             } else if (keys->Left) {
                 *stepCount = (*stepCount + MAX_STEPS_IN_PATTERN - 1) % MAX_STEPS_IN_PATTERN;
             } else if (keys->Up) {
-                uint8_t i = 0;
-                // FIXME should not reach 0
-                for (; i < 7 && *stepCount >= steps[i]; i++) { }
-                printf("set steeeeeep! %d\n", i);
-                *stepCount = steps[i];
+                for (uint8_t i = 0; i < 7; i++) {
+                    if (steps[i] > *stepCount) {
+                        *stepCount = steps[i];
+                        break;
+                    }
+                }
             } else if (keys->Down) {
-                uint8_t i = 7;
-                // FIXME should not reach 0
-                for (; i > 0 && *stepCount <=  steps[i - 1]; i--) { }
-                *stepCount = steps[i - 1];
+                for (uint8_t i = 7; i > 0; i--) {
+                    if (steps[i - 1] < *stepCount) {
+                        *stepCount = steps[i - 1];
+                        break;
+                    }
+                }
             }
         }
         return VIEW_CHANGED;
