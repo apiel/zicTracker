@@ -4,7 +4,7 @@
 #include "./app_display.h"
 #include "./app_view.h"
 
-#define VIEW_PATTERN_ROW 2 // 2 + MAX_STEPS_IN_PATTERN
+#define VIEW_PATTERN_ROW 4 // 4 + MAX_STEPS_IN_PATTERN
 #define VIEW_PATTERN_COL 5
 
 class App_View_PatternHeader : public App_View_TableField {
@@ -66,17 +66,37 @@ public:
     }
 };
 
+class App_View_PatternStepHeader : public App_View_TableField {
+protected:
+    const char* headers[5] = { "STP ", "INS ", "NOT ", "VEL ", "SLID" };
+
+public:
+    bool isSelectable(uint8_t row, uint8_t col) override
+    {
+        return false;
+    }
+
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        strcat(display->text, headers[col]);
+    }
+};
+
+
 class App_View_Pattern : public App_View_Table {
 protected:
     App_Patterns* patterns;
     uint8_t currentPatternId = 0;
 
     App_View_PatternHeader headerField;
+    App_View_PatternStepHeader stepHeaderField;
 
     App_View_TableField* fields[VIEW_PATTERN_ROW * VIEW_PATTERN_COL] = {
         // clang-format off
         &headerField, &headerField, NULL, NULL, NULL,
         &headerField, &headerField, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL, NULL,
+        &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField, 
         // clang-format on
     };
 
