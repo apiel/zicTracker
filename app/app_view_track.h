@@ -107,7 +107,7 @@ public:
 
     void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
     {
-        sprintf(display->text + strlen(display->text), " %03d", state->pattern->id + 1);
+        sprintf(display->text + strlen(display->text), " %3d", state->pattern->id + 1);
     }
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)

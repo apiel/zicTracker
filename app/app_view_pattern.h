@@ -38,8 +38,9 @@ public:
         if (row == 0) {
             renderHeader(display, col);
         } else {
+            uint8_t cursorLen[] = { 3, 3, 4, 1 };
             if (selectedRow == row && selectedCol == col) {
-                display->setCursor(3);
+                display->setCursor(cursorLen[col]);
             }
             switch (col) {
             case 0:
@@ -47,7 +48,13 @@ public:
                 break;
 
             case 1:
-                sprintf(display->text + strlen(display->text), "%3d", patterns->patterns[*currentPatternId].stepCount);
+                sprintf(display->text + strlen(display->text), "%3d ", patterns->patterns[*currentPatternId].stepCount);
+                break;
+            case 2:
+                strcat(display->text, "SAVE ");
+                break;
+            case 3:
+                strcat(display->text, "X ");
                 break;
             }
         }
@@ -208,7 +215,7 @@ protected:
     App_View_TableField* fields[VIEW_PATTERN_ROW * VIEW_PATTERN_COL] = {
         // clang-format off
         &headerField, &headerField, NULL, NULL, NULL,
-        &headerField, &headerField, NULL, NULL, NULL,
+        &headerField, &headerField, &headerField, &headerField, NULL,
         NULL, NULL, NULL, NULL, NULL,
         &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
