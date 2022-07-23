@@ -55,17 +55,37 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
-        int8_t direction = 0;
-        if (keys->Right) {
-            direction = 1;
-        } else if (keys->Left) {
-            direction = -1;
-        } else if (keys->Up) {
-            direction = 10;
-        } else if (keys->Down) {
-            direction = -10;
+        if (col == 0) {
+            int8_t direction = 0;
+            if (keys->Right) {
+                direction = 1;
+            } else if (keys->Left) {
+                direction = -1;
+            } else if (keys->Up) {
+                direction = 10;
+            } else if (keys->Down) {
+                direction = -10;
+            }
+            *currentPatternId = (*currentPatternId + PATTERN_COUNT + direction) % PATTERN_COUNT;
+        } else if (col == 1) {
+            uint8_t steps[7] = { 1, 2, 4, 8, 16, 32, 64 };
+            uint8_t* stepCount = &patterns->patterns[*currentPatternId].stepCount;
+            if (keys->Right) {
+                *stepCount = (*stepCount + 1) % MAX_STEPS_IN_PATTERN;
+            } else if (keys->Left) {
+                *stepCount = (*stepCount + MAX_STEPS_IN_PATTERN - 1) % MAX_STEPS_IN_PATTERN;
+            } else if (keys->Up) {
+                uint8_t i = 0;
+                // FIXME should not reach 0
+                for (; i < 7 && *stepCount >= steps[i]; i++) { }
+                *stepCount = steps[i];
+            } else if (keys->Down) {
+                uint8_t i = 7;
+                // FIXME should not reach 0
+                for (; i > 0 && *stepCount <=  steps[i - 1]; i--) { }
+                *stepCount = steps[i - 1];
+            }
         }
-        *currentPatternId = (*currentPatternId + PATTERN_COUNT + direction) % PATTERN_COUNT;
         return VIEW_CHANGED;
     }
 };
