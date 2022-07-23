@@ -14,14 +14,16 @@ public:
     char* cursorPos = NULL;
     uint8_t cursorLen = 0;
     uint8_t coloredLabel = 255;
-    bool coloredHeader = false;
+    uint8_t coloredLabelFrom = 0;
+    int8_t coloredHeader[2] = { -1, -1 };
 
     void reset()
     {
         cursorPos = NULL;
         cursorLen = 0;
         coloredLabel = 255;
-        coloredHeader = false;
+        coloredLabelFrom = 0;
+        useColoredHeader(-1, -1);
     }
 
     void setCursor(uint8_t len, int8_t start = 0)
@@ -30,9 +32,10 @@ public:
         cursorLen = len;
     }
 
-    void useColoredLabel(uint8_t pos = 0)
+    void useColoredLabel(uint8_t pos = 0, uint8_t from = 0)
     {
         coloredLabel = pos;
+        coloredLabelFrom = from;
     }
 
     bool isColoredLabel()
@@ -42,7 +45,18 @@ public:
 
     void useColoredHeader()
     {
-        coloredHeader = true;
+        useColoredHeader(0, -1);
+    }
+
+    void useColoredHeader(int8_t row)
+    {
+        useColoredHeader(row, -1);
+    }
+
+    void useColoredHeader(int8_t row1, int8_t row2)
+    {
+        coloredHeader[0] = row1;
+        coloredHeader[1] = row2;
     }
 };
 

@@ -37,25 +37,36 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, U
     }
 }
 
-void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y, Uint8 size = 1)
+uint8_t getRow(Uint16 y, Uint8 size)
 {
-    Uint16 orig_x = x;
-    bool isHeader = true;
-    const char* text = display->text;
-    if (display->coloredHeader) {
+    return y / ((FONT_H + LINE_SPACING) * size);
+}
+
+void resetColor(SDL_Surface* surface, App_Display* display, Uint16 y, Uint8 size)
+{
+    uint8_t row = getRow(y, size);
+    if (display->coloredHeader[0] == row || display->coloredHeader[1] == row) {
         fontColor = SDL_MapRGB(surface->format, UI_COLOR_HEADER);
     } else {
         fontColor = SDL_MapRGB(surface->format, UI_COLOR_FONT);
     }
+}
+
+void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y, Uint8 size = 1)
+{
+    Uint16 orig_x = x;
+    const char* text = display->text;
+    resetColor(surface, display, y, size);
 
     while (*text) {
         if (*text == '\n') {
             x = orig_x;
             y += (FONT_H + LINE_SPACING) * size;
-            isHeader = false;
-            fontColor = SDL_MapRGB(surface->format, UI_COLOR_FONT);
+            resetColor(surface, display, y, size);
         } else {
-            if (display->isColoredLabel() && x == orig_x + (display->coloredLabel * FONT_W)) {
+            if (display->isColoredLabel()
+                && x == orig_x + (display->coloredLabel * FONT_W)
+                && getRow(y, size) >= display->coloredLabelFrom) {
                 fontColor = SDL_MapRGB(surface->format, UI_COLOR_LABEL);
             }
             if (*text == '>') {
@@ -63,11 +74,7 @@ void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y,
             } else if (*text == '*') {
                 fontColor = SDL_MapRGB(surface->format, UI_COLOR_STAR);
             } else if (*text == ' ' || *text == '\n') {
-                if (isHeader && display->coloredHeader) {
-                    fontColor = SDL_MapRGB(surface->format, UI_COLOR_HEADER);
-                } else {
-                    fontColor = SDL_MapRGB(surface->format, UI_COLOR_FONT);
-                }
+                resetColor(surface, display, y, size);
             }
 
             if (display->cursorLen && text >= display->cursorPos && text < display->cursorPos + display->cursorLen) {

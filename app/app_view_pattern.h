@@ -113,7 +113,7 @@ public:
         Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[stepPos];
         switch (col) {
         case 0:
-            sprintf(display->text + strlen(display->text), "%3d ", stepPos + 1);
+            sprintf(display->text + strlen(display->text), " %02d ", stepPos + 1);
             break;
 
         case 1:
@@ -247,8 +247,8 @@ public:
 
     void initDisplay(App_Display* display)
     {
-        // display->useColoredLabel();
-        display->useColoredHeader();
+        display->useColoredLabel(1, 4);
+        display->useColoredHeader(0, 3);
         App_View_Table::initDisplay(display);
     }
 };
