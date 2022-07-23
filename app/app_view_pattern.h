@@ -78,6 +78,7 @@ public:
                 uint8_t i = 0;
                 // FIXME should not reach 0
                 for (; i < 7 && *stepCount >= steps[i]; i++) { }
+                printf("set steeeeeep! %d\n", i);
                 *stepCount = steps[i];
             } else if (keys->Down) {
                 uint8_t i = 7;
