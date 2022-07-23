@@ -144,6 +144,7 @@ void audioCallBack(void* userdata, Uint8* stream, int len)
 void render(SDL_Surface* screenSurface, App_Display* display)
 {
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, UI_COLOR_BG));
+    // SDL_Log("Cursor: %d(%d)\n", display->cursorPos, display->cursorLen);
     SDL_Log("\n%s\n", display->text);
     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
 }

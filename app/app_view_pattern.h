@@ -5,7 +5,8 @@
 #include "./app_view.h"
 
 #define VIEW_PATTERN_ROW_HEADERS 4
-#define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + MAX_STEPS_IN_PATTERN)
+// #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + MAX_STEPS_IN_PATTERN)
+#define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + 2)
 #define VIEW_PATTERN_COL 5
 
 class App_View_PatternHeader : public App_View_TableField {
@@ -35,6 +36,7 @@ public:
         if (row == 0) {
             renderHeader(display, col);
         } else {
+            printf("col %d --> %d\n", col, selectedRow == row && selectedCol == col);
             if (selectedRow == row && selectedCol == col) {
                 display->setCursor(3);
             }
@@ -107,8 +109,9 @@ public:
 
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
+        uint8_t cursorLen[VIEW_PATTERN_COL] = { 0, 1, 3, 3, 3 };
         if (selectedRow == row && selectedCol == col) {
-            display->setCursor(3);
+            display->setCursor(cursorLen[col]);
         }
         uint8_t stepPos = row - VIEW_PATTERN_ROW_HEADERS;
         Zic_Seq_Step* step = &getPattern()->steps[stepPos];
@@ -172,68 +175,68 @@ protected:
         &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        // &stepField, &stepField, &stepField, &stepField, &stepField,
         // clang-format on
     };
 
