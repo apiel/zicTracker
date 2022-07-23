@@ -6,11 +6,12 @@
 
 #define VIEW_PATTERN_ROW_HEADERS 4
 // #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + MAX_STEPS_IN_PATTERN)
-#define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + 2)
+#define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + 6)
 #define VIEW_PATTERN_COL 5
 
 class App_View_PatternHeader : public App_View_TableField {
 protected:
+    App_Patterns* patterns;
     uint8_t* currentPatternId;
 
     const char* headers[2] = { "PAT ", "LEN" };
@@ -21,8 +22,9 @@ protected:
     }
 
 public:
-    App_View_PatternHeader(uint8_t* _currentPatternId)
-        : currentPatternId(_currentPatternId)
+    App_View_PatternHeader(App_Patterns* _patterns, uint8_t* _currentPatternId)
+        : patterns(_patterns)
+        , currentPatternId(_currentPatternId)
     {
     }
 
@@ -36,7 +38,6 @@ public:
         if (row == 0) {
             renderHeader(display, col);
         } else {
-            printf("col %d --> %d\n", col, selectedRow == row && selectedCol == col);
             if (selectedRow == row && selectedCol == col) {
                 display->setCursor(3);
             }
@@ -46,7 +47,7 @@ public:
                 break;
 
             case 1:
-                sprintf(display->text + strlen(display->text), "%3d", 64);
+                sprintf(display->text + strlen(display->text), "%3d", patterns->patterns[*currentPatternId].stepCount);
                 break;
             }
         }
@@ -90,11 +91,6 @@ protected:
     App_Patterns* patterns;
     uint8_t* currentPatternId;
 
-    Zic_Seq_Pattern* getPattern()
-    {
-        return &patterns->patterns[*currentPatternId];
-    }
-
 public:
     App_View_PatternStep(App_Patterns* _patterns, uint8_t* _currentPatternId)
         : patterns(_patterns)
@@ -114,7 +110,7 @@ public:
             display->setCursor(cursorLen[col]);
         }
         uint8_t stepPos = row - VIEW_PATTERN_ROW_HEADERS;
-        Zic_Seq_Step* step = &getPattern()->steps[stepPos];
+        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[stepPos];
         switch (col) {
         case 0:
             sprintf(display->text + strlen(display->text), "%3d ", stepPos + 1);
@@ -175,10 +171,10 @@ protected:
         &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
-        // &stepField, &stepField, &stepField, &stepField, &stepField,
-        // &stepField, &stepField, &stepField, &stepField, &stepField,
-        // &stepField, &stepField, &stepField, &stepField, &stepField,
-        // &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField,
         // &stepField, &stepField, &stepField, &stepField, &stepField,
         // &stepField, &stepField, &stepField, &stepField, &stepField,
         // &stepField, &stepField, &stepField, &stepField, &stepField,
@@ -243,7 +239,7 @@ protected:
 public:
     App_View_Pattern(App_Patterns* _patterns)
         : App_View_Table(fields, VIEW_PATTERN_ROW, VIEW_PATTERN_COL)
-        , headerField(&currentPatternId)
+        , headerField(_patterns, &currentPatternId)
         , stepField(_patterns, &currentPatternId)
     {
         initSelection();
