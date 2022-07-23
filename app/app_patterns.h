@@ -69,7 +69,7 @@ public:
                     instrument, Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note), step->slide ? '1' : '0');
             } else {
                 // 8 char "A --- 0\n"
-                snprintf(data + strlen(data), STEP_DATA_LEN, "%c --- %c\n", instrument, step->slide ? '1' : '0');
+                sprintf(data + strlen(data), "%c --- %c\n", instrument, step->slide ? '1' : '0');
             }
         }
         saveFilePattern(project, pos + 1, data);
