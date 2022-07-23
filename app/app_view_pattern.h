@@ -69,7 +69,7 @@ public:
 
 class App_View_PatternStepHeader : public App_View_TableField {
 protected:
-    const char* headers[5] = { "STP ", "INS ", "NOT ", "VEL ", "SLID" };
+    const char* headers[5] = { "STP ", "I ", "NOT ", "VEL ", "SLID" };
 
 public:
     bool isSelectable(uint8_t row, uint8_t col) override
@@ -85,8 +85,8 @@ public:
 
 class App_View_PatternStep : public App_View_TableField {
 protected:
-    uint8_t* currentPatternId;
     App_Patterns* patterns;
+    uint8_t* currentPatternId;
 
     Zic_Seq_Pattern* getPattern()
     {
@@ -118,11 +118,15 @@ public:
             break;
 
         case 1:
-            sprintf(display->text + strlen(display->text), "  %c ", step->instrument + 'A');
+            sprintf(display->text + strlen(display->text), "%c ", step->instrument + 'A');
             break;
 
         case 2:
-            sprintf(display->text + strlen(display->text), "%3d ", step->note);
+            if (step->note == 0) {
+                strcat(display->text, "--- ");
+            } else {
+                sprintf(display->text + strlen(display->text), "%s%d ", Zic::getNoteDash(step->note), Zic::getNoteOctave(step->note));
+            }
             break;
 
         case 3:
@@ -154,7 +158,6 @@ public:
 
 class App_View_Pattern : public App_View_Table {
 protected:
-    // App_Patterns* patterns;
     uint8_t currentPatternId = 0;
 
     App_View_PatternHeader headerField;
@@ -167,7 +170,6 @@ protected:
         &headerField, &headerField, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL,
         &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField,
-        // 1
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
@@ -178,7 +180,6 @@ protected:
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
-        // 11
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
@@ -189,7 +190,6 @@ protected:
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
-        //21
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
@@ -200,7 +200,6 @@ protected:
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
-        // 31
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
@@ -211,7 +210,6 @@ protected:
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
-        // 41
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
@@ -222,7 +220,6 @@ protected:
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
-        // 51
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
@@ -234,18 +231,15 @@ protected:
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
-        // 61
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField,
-        // &stepField, &stepField, &stepField, &stepField, &stepField,
         // clang-format on
     };
 
 public:
     App_View_Pattern(App_Patterns* _patterns)
         : App_View_Table(fields, VIEW_PATTERN_ROW, VIEW_PATTERN_COL)
-        // , patterns(_patterns)
         , headerField(&currentPatternId)
         , stepField(_patterns, &currentPatternId)
     {
