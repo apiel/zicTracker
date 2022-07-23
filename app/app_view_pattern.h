@@ -4,57 +4,49 @@
 #include "./app_display.h"
 #include "./app_view.h"
 
-#define VIEW_PATTERN_ROW 1 // 2 + MAX_STEPS_IN_PATTERN
+#define VIEW_PATTERN_ROW 2 // 2 + MAX_STEPS_IN_PATTERN
 #define VIEW_PATTERN_COL 5
 
-class App_View_PatternNumber : public App_View_TableField {
+class App_View_PatternHeader : public App_View_TableField {
 protected:
     uint8_t* currentPatternId;
 
+    const char* headers[2] = { "PAT ", "LEN" };
+
+    void renderHeader(App_Display* display, uint8_t col)
+    {
+        strcat(display->text, headers[col]);
+    }
+
 public:
-    App_View_PatternNumber(uint8_t* _currentPatternId)
+    App_View_PatternHeader(uint8_t* _currentPatternId)
         : currentPatternId(_currentPatternId)
     {
     }
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
-        return col != 0;
+        return row != 0;
     }
 
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        uint8_t cursorLen = 3;
-        switch (col) {
-        case 0:
-            strcat(display->text, "PAT");
-            break;
+        if (row == 0) {
+            renderHeader(display, col);
+        } else {
+            if (selectedRow == row && selectedCol == col) {
+                display->setCursor(3);
+            }
+            switch (col) {
+            case 0:
+                sprintf(display->text + strlen(display->text), "%3d ", *currentPatternId + 1);
+                break;
 
-        case 1:
-            sprintf(display->text + strlen(display->text), " %03d", *currentPatternId + 1);
-            break;
-
-        case 2:
-            strcat(display->text, " LEN");
-            cursorLen = 2;
-            break;
-
-        case 3:
-            sprintf(display->text + strlen(display->text), " %02d", 64);
-            break;
+            case 1:
+                sprintf(display->text + strlen(display->text), "%3d", 64);
+                break;
+            }
         }
-        if (selectedRow == row && selectedCol == col) {
-            display->setCursor(cursorLen, 1);
-        }
-
-        // if (col == 0) {
-        //     strcat(display->text, "PAT");
-        // } else {
-        //     if (selectedRow == row && selectedCol == col) {
-        //         display->setCursor(3, 1);
-        //     }
-        //     sprintf(display->text + strlen(display->text), " %03d", *currentPatternId + 1);
-        // }
     }
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
@@ -79,11 +71,12 @@ protected:
     App_Patterns* patterns;
     uint8_t currentPatternId = 0;
 
-    App_View_PatternNumber patNumberField;
+    App_View_PatternHeader headerField;
 
     App_View_TableField* fields[VIEW_PATTERN_ROW * VIEW_PATTERN_COL] = {
         // clang-format off
-        &patNumberField, &patNumberField, &patNumberField, &patNumberField, NULL,
+        &headerField, &headerField, NULL, NULL, NULL,
+        &headerField, &headerField, NULL, NULL, NULL,
         // clang-format on
     };
 
@@ -91,14 +84,15 @@ public:
     App_View_Pattern(App_Patterns* _patterns)
         : App_View_Table(fields, VIEW_PATTERN_ROW, VIEW_PATTERN_COL)
         , patterns(_patterns)
-        , patNumberField(&currentPatternId)
+        , headerField(&currentPatternId)
     {
         initSelection();
     }
 
     void initDisplay(App_Display* display)
     {
-        display->useColoredLabel();
+        // display->useColoredLabel();
+        display->useColoredHeader();
         App_View_Table::initDisplay(display);
     }
 };
