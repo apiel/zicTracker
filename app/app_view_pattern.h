@@ -96,6 +96,10 @@ public:
                     }
                 }
             }
+        } else if (col == 2) {
+                patterns->save(*currentPatternId);
+        } else if (col == 3) {
+                patterns->load(*currentPatternId);
         }
         return VIEW_CHANGED;
     }

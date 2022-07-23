@@ -65,11 +65,11 @@ public:
             char instrument = prevInstrument == step->instrument ? SAME_INSTRUMENT_SYMBOL : step->instrument + 'A';
             prevInstrument = step->instrument;
             if (step->note) {
-                snprintf(data + strlen(data), STEP_DATA_LEN, "%c %s%d %d\n", // 8 char "A C-4 1\n"
-                    instrument, Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note), step->slide);
+                snprintf(data + strlen(data), STEP_DATA_LEN, "%c %s%d %c\n", // 8 char "A C-4 1\n"
+                    instrument, Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note), step->slide ? '1' : '0');
             } else {
                 // 8 char "A --- 0\n"
-                snprintf(data + strlen(data), STEP_DATA_LEN, "%c --- %d\n", instrument, step->slide);
+                snprintf(data + strlen(data), STEP_DATA_LEN, "%c --- %c\n", instrument, step->slide ? '1' : '0');
             }
         }
         saveFilePattern(project, pos + 1, data);
