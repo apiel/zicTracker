@@ -39,7 +39,7 @@ public:
             Zic_Seq_Step* step = patterns[pos].steps;
             uint8_t prevInstrument = 255;
             uint8_t count = 0;
-            for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN, step++, count++) {
+            for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN - 1, step++, count++) {
                 char* stepData = data + d;
                 if (stepData[0] != SAME_INSTRUMENT_SYMBOL && (stepData[0] < 'A' || stepData[0] > 'Z')) {
                     // printf("exit loop %d at step %d\n", pos + 1, count);
