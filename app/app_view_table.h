@@ -4,6 +4,10 @@
 #include "./app_display.h"
 #include "./app_view.h"
 
+#ifndef TABLE_VISIBLE_ROWS
+#define TABLE_VISIBLE_ROWS 7
+#endif
+
 class App_View_TableField {
 public:
     virtual void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol) = 0;
@@ -33,6 +37,8 @@ protected:
     const uint8_t COL_COUNT;
     App_View_TableField** fields;
     bool updating = false;
+
+    uint8_t startRow = 0;
 
     App_View_TableField* getSelectedField()
     {
@@ -100,7 +106,7 @@ public:
     void render(App_Display* display)
     {
         initDisplay(display);
-        for (uint8_t row = 0; row < ROW_COUNT; row++) {
+        for (uint8_t row = startRow; row < ROW_COUNT && row - startRow < TABLE_VISIBLE_ROWS; row++) {
             // here would come if visible row
             for (uint8_t col = 0; col < COL_COUNT; col++) {
                 // here would come if visible col
@@ -135,6 +141,14 @@ public:
                 selectNextCol(-1);
             } else if (keys->Right) {
                 selectNextCol(+1);
+            }
+
+            if (selectedRow < TABLE_VISIBLE_ROWS * 0.5) {
+                startRow = 0;
+            } else if (selectedRow > startRow + TABLE_VISIBLE_ROWS - 1) {
+                startRow = selectedRow - TABLE_VISIBLE_ROWS + 1;
+            } else if (selectedRow < startRow) {
+                startRow = selectedRow;
             }
         }
         if (res == VIEW_CHANGED) {
