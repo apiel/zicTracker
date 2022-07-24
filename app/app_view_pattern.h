@@ -28,6 +28,8 @@ public:
     {
     }
 
+    // TODO by default select pattern base on the last selected track
+
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return row != 0;

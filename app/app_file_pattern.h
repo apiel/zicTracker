@@ -11,6 +11,11 @@ enum {
     PAT_LOAD_SUCCESS,
 };
 
+enum {
+    PAT_SAVE_NONE,
+    PAT_SAVE_SUCCESS,
+};
+
 #define MAX_PATTERN_FILENAME 100
 char patternFilepath[MAX_PATTERN_FILENAME];
 
@@ -31,9 +36,16 @@ uint8_t loadFilePattern(uint8_t project, uint8_t pos, char* content, uint16_t le
     return PAT_LOAD_NONE;
 }
 
-void saveFilePattern(uint8_t project, uint8_t pos, char* content)
+uint8_t saveFilePattern(uint8_t project, uint8_t pos, char* content, uint16_t len)
 {
     setPatternFilename(project, pos);
-    // TODO
+    Zic_File file(patternFilepath, "w");
+    if (file.isOpen()) {
+        file.seekFromStart(0);
+        file.write(content, len);
+        file.close();
+        return PAT_SAVE_SUCCESS;
+    }
+    return PAT_SAVE_NONE;
 }
 #endif

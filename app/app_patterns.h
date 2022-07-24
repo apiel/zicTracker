@@ -9,8 +9,8 @@
 #include "./app_def.h"
 #include "./app_file_pattern.h"
 
-#define STEP_DATA_LEN 8
-#define PATTERN_DATA_LEN 8 * MAX_STEPS_IN_PATTERN // 8*64=512
+#define STEP_DATA_LEN 9
+#define PATTERN_DATA_LEN STEP_DATA_LEN * MAX_STEPS_IN_PATTERN
 #define SAME_INSTRUMENT_SYMBOL '_'
 
 class App_Patterns {
@@ -66,13 +66,13 @@ public:
             prevInstrument = step->instrument;
             if (step->note) {
                 snprintf(data + strlen(data), STEP_DATA_LEN, "%c %s%d %c\n", // 8 char "A C-4 1\n"
-                    instrument, Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note), step->slide ? '1' : '0');
+                    instrument, Zic::getNoteDash(step->note), Zic::getNoteOctave(step->note), step->slide ? '1' : '0');
             } else {
                 // 8 char "A --- 0\n"
-                sprintf(data + strlen(data), "%c --- %c\n", instrument, step->slide ? '1' : '0');
+                snprintf(data + strlen(data), STEP_DATA_LEN, "%c --- %c\n", instrument, step->slide ? '1' : '0');
             }
         }
-        saveFilePattern(project, pos + 1, data);
+        saveFilePattern(project, pos + 1, data, strlen(data));
     }
 
     void debug(void (*log)(const char* fmt, ...))
@@ -90,7 +90,7 @@ public:
             Zic_Seq_Step* step = &patterns[pos].steps[s];
             if (step->note) {
                 log(" [%d,%s%d (%d)%s]", step->instrument,
-                    Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note), step->note, step->slide ? ",slide" : "");
+                    Zic::getNoteDash(step->note), Zic::getNoteOctave(step->note), step->note, step->slide ? ",slide" : "");
             } else {
                 log(" [%d,--- (%d)%s]", step->instrument, step->note, step->slide ? ",slide" : "");
             }

@@ -44,6 +44,11 @@ public:
         return (uint64_t)SDL_RWread((SDL_RWops*)file, ptr, size, 1);
     }
 
+    virtual uint64_t write(void* ptr, uint16_t size)
+    {
+        return (uint64_t)SDL_RWwrite((SDL_RWops*)file, ptr, size, 1);
+    }
+
     virtual bool seekFromStart(uint64_t offset)
     {
         return SDL_RWseek((SDL_RWops*)file, offset, SEEK_SET) != -1;
