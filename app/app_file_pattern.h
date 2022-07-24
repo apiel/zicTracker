@@ -38,6 +38,7 @@ uint8_t loadFilePattern(uint8_t project, uint8_t pos, char* content, uint16_t le
 
 uint8_t saveFilePattern(uint8_t project, uint8_t pos, char* content, uint16_t len)
 {
+    printf("data to write: %s\n", content);
     setPatternFilename(project, pos);
     Zic_File file(patternFilepath, "w");
     if (file.isOpen()) {

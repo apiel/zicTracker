@@ -60,6 +60,7 @@ public:
     {
         Zic_Seq_Pattern* pattern = &patterns[pos];
         uint8_t prevInstrument = 255;
+        strcpy(data, "");
         for (uint8_t s = 0; s < pattern->stepCount; s++) {
             Zic_Seq_Step* step = &pattern->steps[s];
             char instrument = prevInstrument == step->instrument ? SAME_INSTRUMENT_SYMBOL : step->instrument + 'A';
