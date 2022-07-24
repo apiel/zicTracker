@@ -17,6 +17,8 @@ public:
     uint8_t coloredLabelFrom = 0;
     int8_t coloredHeader[2] = { -1, -1 };
 
+    uint8_t startRow = 0;
+
     void reset()
     {
         cursorPos = NULL;

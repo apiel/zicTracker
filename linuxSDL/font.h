@@ -37,14 +37,14 @@ void draw_char(SDL_Surface* surface, unsigned char symbol, Uint16 x, Uint16 y, U
     }
 }
 
-uint8_t getRow(Uint16 y, Uint8 size)
+uint8_t getRow(App_Display* display, Uint16 y, Uint8 size)
 {
-    return y / ((FONT_H + LINE_SPACING) * size);
+    return (y / ((FONT_H + LINE_SPACING) * size)) + display->startRow;
 }
 
 void resetColor(SDL_Surface* surface, App_Display* display, Uint16 y, Uint8 size)
 {
-    uint8_t row = getRow(y, size);
+    uint8_t row = getRow(display, y, size);
     if (display->coloredHeader[0] == row || display->coloredHeader[1] == row) {
         fontColor = SDL_MapRGB(surface->format, UI_COLOR_HEADER);
     } else {
@@ -66,7 +66,7 @@ void draw_string(SDL_Surface* surface, App_Display* display, Uint16 x, Uint16 y,
         } else {
             if (display->isColoredLabel()
                 && x == orig_x + (display->coloredLabel * FONT_W)
-                && getRow(y, size) >= display->coloredLabelFrom) {
+                && getRow(display, y, size) >= display->coloredLabelFrom) {
                 fontColor = SDL_MapRGB(surface->format, UI_COLOR_LABEL);
             }
             if (*text == '>') {

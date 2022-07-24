@@ -38,8 +38,6 @@ protected:
     App_View_TableField** fields;
     bool updating = false;
 
-    uint8_t startRow = 0;
-
     App_View_TableField* getSelectedField()
     {
         return fields[selectedRow * COL_COUNT + selectedCol];
@@ -106,7 +104,7 @@ public:
     void render(App_Display* display)
     {
         initDisplay(display);
-        for (uint8_t row = startRow; row < ROW_COUNT && row - startRow < TABLE_VISIBLE_ROWS; row++) {
+        for (uint8_t row = display->startRow; row < ROW_COUNT && row - display->startRow < TABLE_VISIBLE_ROWS; row++) {
             // here would come if visible row
             for (uint8_t col = 0; col < COL_COUNT; col++) {
                 // here would come if visible col
@@ -144,11 +142,11 @@ public:
             }
 
             if (selectedRow < TABLE_VISIBLE_ROWS * 0.5) {
-                startRow = 0;
-            } else if (selectedRow > startRow + TABLE_VISIBLE_ROWS - 1) {
-                startRow = selectedRow - TABLE_VISIBLE_ROWS + 1;
-            } else if (selectedRow < startRow) {
-                startRow = selectedRow;
+                display->startRow = 0;
+            } else if (selectedRow > display->startRow + TABLE_VISIBLE_ROWS - 1) {
+                display->startRow = selectedRow - TABLE_VISIBLE_ROWS + 1;
+            } else if (selectedRow < display->startRow) {
+                display->startRow = selectedRow;
             }
         }
         if (res == VIEW_CHANGED) {
