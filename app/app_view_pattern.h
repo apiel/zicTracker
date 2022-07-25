@@ -99,9 +99,9 @@ public:
                 }
             }
         } else if (col == 2) {
-                patterns->save(*currentPatternId);
+            patterns->save(*currentPatternId);
         } else if (col == 3) {
-                patterns->load(*currentPatternId);
+            patterns->load(*currentPatternId);
         }
         return VIEW_CHANGED;
     }
@@ -212,6 +212,7 @@ public:
 
 class App_View_Pattern : public App_View_Table {
 protected:
+    App_Patterns* patterns;
     uint8_t currentPatternId = 0;
 
     App_View_PatternHeader headerField;
@@ -295,6 +296,7 @@ protected:
 public:
     App_View_Pattern(App_Patterns* _patterns)
         : App_View_Table(fields, VIEW_PATTERN_ROW, VIEW_PATTERN_COL)
+        , patterns(_patterns)
         , headerField(_patterns, &currentPatternId)
         , stepField(_patterns, &currentPatternId)
     {
@@ -306,6 +308,13 @@ public:
         display->useColoredLabel(1, 4);
         display->useColoredHeader(0, 3);
         App_View_Table::initDisplay(display);
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display) override
+    {
+        uint8_t ret = App_View_Table::update(keys, display);
+        setLastRow(patterns->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
+        return ret;
     }
 };
 

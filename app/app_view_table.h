@@ -34,6 +34,7 @@ public:
 class App_View_Table : App_View {
 protected:
     const uint8_t ROW_COUNT;
+    uint8_t lastRow;
     const uint8_t COL_COUNT;
     App_View_TableField** fields;
     bool updating = false;
@@ -47,7 +48,7 @@ protected:
     {
         uint8_t start = selectedRow;
         do {
-            selectedRow = (selectedRow + ROW_COUNT + direction) % ROW_COUNT;
+            selectedRow = (selectedRow + lastRow + direction) % lastRow;
             if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
                 break;
             }
@@ -71,6 +72,7 @@ public:
 
     App_View_Table(App_View_TableField** _fields, uint8_t _row, uint8_t _col)
         : ROW_COUNT(_row)
+        , lastRow(_row)
         , COL_COUNT(_col)
         , fields(_fields)
     {
@@ -91,6 +93,11 @@ public:
         }
     }
 
+    void setLastRow(uint8_t _lastRow)
+    {
+        lastRow = _lastRow > ROW_COUNT ? ROW_COUNT : _lastRow;
+    }
+
     virtual void initDisplay(App_Display* display)
     {
         strcpy(display->text, "");
@@ -104,7 +111,7 @@ public:
     void render(App_Display* display)
     {
         initDisplay(display);
-        for (uint8_t row = display->startRow; row < ROW_COUNT && row - display->startRow < TABLE_VISIBLE_ROWS; row++) {
+        for (uint8_t row = display->startRow; row < lastRow && row - display->startRow < TABLE_VISIBLE_ROWS; row++) {
             // here would come if visible row
             for (uint8_t col = 0; col < COL_COUNT; col++) {
                 // here would come if visible col
