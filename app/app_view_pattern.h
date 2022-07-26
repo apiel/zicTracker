@@ -29,6 +29,10 @@ public:
     }
 
     // TODO by default select pattern base on the last selected track
+    // use some event system
+    // need to find a way to dispatch event to app
+    // and app would popupate the event to each view
+    // or use a centralize object to share events
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
