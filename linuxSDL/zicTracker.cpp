@@ -24,14 +24,14 @@
 // this include must be before initilizing zic lib, to be sure to override zic_file.h!
 #include "zic_file_sdl.h"
 
+#include "display.h"
+
 #include "../app/app.h"
 #include "../app/app_def.h"
 #include "../app/app_display.h"
 #include "../app/app_file.h"
 #include "../app/app_patterns.h"
 #include "zicKeyMap.h"
-
-#include "display.h"
 
 UI_Display display;
 App_Patterns patterns;

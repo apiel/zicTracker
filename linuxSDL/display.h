@@ -7,6 +7,12 @@
 #include <SDL/SDL.h>
 #endif
 
+// #define FONT_SIZE 3
+
+#define FONT_FILE "./fonts/fontData8x8.h"
+#define FONT_SIZE 2
+#define LINE_SPACING 8
+
 #include "../app/app_display.h"
 
 #define SCREEN_W 320
@@ -17,21 +23,20 @@ protected:
     SDL_Surface* surface;
 
     Uint32 fontColor = 0;
-    uint8_t fontSize = 3;
 
     void drawPixel(int16_t x, int16_t y)
     {
-        if (x < 0 || x * fontSize >= SCREEN_W || y < 0 || y * fontSize >= SCREEN_H) {
+        if (x < 0 || x * FONT_SIZE >= SCREEN_W || y < 0 || y * FONT_SIZE >= SCREEN_H) {
             return;
         }
 
-        SDL_Rect r = { x * fontSize, y * fontSize, fontSize, fontSize };
+        SDL_Rect r = { x * FONT_SIZE, y * FONT_SIZE, FONT_SIZE, FONT_SIZE };
         SDL_FillRect(surface, &r, fontColor);
     }
 
     void drawCursor(int16_t x, int16_t y)
     {
-        SDL_Rect r = { x * fontSize, y * fontSize, FONT_W * fontSize, FONT_H * fontSize };
+        SDL_Rect r = { x * FONT_SIZE, y * FONT_SIZE, FONT_W * FONT_SIZE, FONT_H * FONT_SIZE };
         SDL_FillRect(surface, &r, rgb565(UI_COLOR_CURSOR));
     }
 
@@ -46,6 +51,12 @@ protected:
     }
 
 public:
+    UI_Display()
+    {
+        xScreen = 4;
+        yScreen = 5;
+    }
+
     // Dont forget to call at start, else crash
     void init(SDL_Surface* _surface)
     {

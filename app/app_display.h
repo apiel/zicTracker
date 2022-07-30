@@ -3,8 +3,8 @@
 
 #include "./app_display_base.h"
 
-#ifdef FONT_8x8
-#include "./fonts/fontData8x8.h"
+#ifdef FONT_FILE
+#include FONT_FILE
 #else
 #include "./fonts/fontData5x7.h"
 #endif
