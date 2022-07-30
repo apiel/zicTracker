@@ -37,17 +37,17 @@ protected:
     void drawCursor(int16_t x, int16_t y)
     {
         SDL_Rect r = { x * FONT_SIZE, y * FONT_SIZE, FONT_W * FONT_SIZE, FONT_H * FONT_SIZE };
-        SDL_FillRect(surface, &r, rgb565(UI_COLOR_CURSOR));
+        SDL_FillRect(surface, &r, rgb(UI_COLOR_CURSOR));
     }
 
-    uint16_t rgb565(uint8_t r, uint8_t g, uint8_t b)
+    Uint32 rgb(uint8_t r, uint8_t g, uint8_t b)
     {
         return SDL_MapRGB(surface->format, r, g, b);
     }
 
     void setColor(uint8_t r, uint8_t g, uint8_t b)
     {
-        fontColor = rgb565(r, g, b);
+        fontColor = rgb(r, g, b);
     }
 
 public:
@@ -65,7 +65,7 @@ public:
 
     void clearScreen()
     {
-        SDL_FillRect(surface, NULL, rgb565(UI_COLOR_BG));
+        SDL_FillRect(surface, NULL, rgb(UI_COLOR_BG));
     }
 };
 
