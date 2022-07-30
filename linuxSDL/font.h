@@ -9,13 +9,9 @@
 
 #include "../app/app_display.h"
 #include "color.h"
+
 #include "fontData.h"
-
-#define FONT_H 8
-#define FONT_W 8
 #define LINE_SPACING 8
-
-#define COLOR_SYMBOL '~'
 
 Uint32 fontColor = 0;
 

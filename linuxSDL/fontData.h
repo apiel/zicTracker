@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define FONT_W 8
+#define FONT_H 8
+
 // static const unsigned char fontData[] = {
 static uint8_t fontData[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* Char 000 (.) */
