@@ -13,6 +13,7 @@ enum {
 };
 
 enum {
+    VIEW_MENU,
     VIEW_TRACK,
     VIEW_TRACK_MASTER,
     VIEW_PATTERN,

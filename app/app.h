@@ -57,6 +57,9 @@ public:
 
         uint8_t view = menuView.getView();
         switch (view) {
+        case VIEW_MENU:
+            menuView.render(display);
+            break;
         case VIEW_TRACK_MASTER:
             trackMasterView.render(display);
             break;
@@ -87,11 +90,8 @@ public:
         keys.B = (keysBin >> UI_KEY_B) & 1;
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
-        display->reset();
         if (menuView.update(&keys, display) != VIEW_NONE) {
-            display->drawText(); // This is weeeeeird should just handle everything the same way
-            // then no need to reset here...
-            // FIXME
+            render();
         } else {
             uint8_t viewUpdated = VIEW_NONE;
             uint8_t view = menuView.getView();

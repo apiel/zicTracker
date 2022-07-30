@@ -66,7 +66,7 @@ protected:
     }
 
 public:
-    UiKeys keys;
+    UiKeys* keys = NULL;
 
     Menu menu[APP_MENU_SIZE] = {
         { "Tracks", 'T', VIEW_TRACK, 'T', true },
@@ -82,6 +82,10 @@ public:
 
     uint8_t getView()
     {
+        if (keys && keys->B) {
+            return VIEW_MENU;
+        }
+
         return menu[currentMenu].view;
     }
 
@@ -100,8 +104,9 @@ public:
         sprintf(display->text + strlen(display->text), "\n\n %s", menu[currentMenu].name);
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display)
+    uint8_t update(UiKeys* _keys, App_Display* display)
     {
+        keys = _keys;
         if (keys->B) {
             if (keys->Right) {
                 menuPlus();
@@ -112,7 +117,6 @@ public:
             } else if (keys->Down) {
                 groupPlus();
             }
-            render(display);
             return VIEW_CHANGED;
         }
         return VIEW_NONE;
