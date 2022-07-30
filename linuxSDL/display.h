@@ -17,7 +17,7 @@ protected:
     SDL_Surface* surface;
 
     Uint32 fontColor = 0;
-    uint8_t fontSize = 1;
+    uint8_t fontSize = 3;
 
     void drawPixel(int16_t x, int16_t y)
     {

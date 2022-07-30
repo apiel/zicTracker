@@ -4,9 +4,9 @@
 #include "./app_display_base.h"
 
 #ifdef FONT_8x8
-#include "./fontData8x8.h"
+#include "./fonts/fontData8x8.h"
 #else
-#include "./fontData5x7.h"
+#include "./fonts/fontData5x7.h"
 #endif
 
 #ifndef LINE_SPACING

@@ -29,16 +29,9 @@
 #include "../app/app_display.h"
 #include "../app/app_file.h"
 #include "../app/app_patterns.h"
-// #include "color.h"
-// #include "font.h"
 #include "zicKeyMap.h"
 
 #include "display.h"
-
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
-
-#define TEXT_SIZE 2
 
 UI_Display display;
 App_Patterns patterns;
@@ -181,7 +174,7 @@ int main(int argc, char* args[])
     SDL_Window* window = SDL_CreateWindow(
         "Zic",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        SCREEN_WIDTH, SCREEN_HEIGHT,
+        SCREEN_W, SCREEN_H,
         SDL_WINDOW_SHOWN);
 
     if (window == NULL) {
