@@ -27,19 +27,22 @@
 #include "../app/app.h"
 #include "../app/app_def.h"
 #include "../app/app_display.h"
-#include "../app/app_patterns.h"
 #include "../app/app_file.h"
-#include "color.h"
-#include "font.h"
+#include "../app/app_patterns.h"
+// #include "color.h"
+// #include "font.h"
 #include "zicKeyMap.h"
+
+#include "display.h"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
 
 #define TEXT_SIZE 2
 
+UI_Display display;
 App_Patterns patterns;
-App app(&patterns);
+App app(&patterns, &display);
 
 typedef struct {
     bool keysChanged = false;
@@ -141,13 +144,13 @@ void audioCallBack(void* userdata, Uint8* stream, int len)
     }
 }
 
-void render(SDL_Surface* screenSurface, App_Display* display)
-{
-    SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, UI_COLOR_BG));
-    // SDL_Log("Cursor: %d(%d)\n", display->cursorPos, display->cursorLen);
-    SDL_Log("\n%s\n", display->text);
-    draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
-}
+// void render(SDL_Surface* screenSurface, App_Display* display)
+// {
+//     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, UI_COLOR_BG));
+//     // SDL_Log("Cursor: %d(%d)\n", display->cursorPos, display->cursorLen);
+//     SDL_Log("\n%s\n", display->text);
+//     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
+// }
 
 int main(int argc, char* args[])
 {
@@ -195,8 +198,9 @@ int main(int argc, char* args[])
     SDL_Surface* screenSurface = SDL_CreateRGBSurface(SDL_HWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
 #endif
 
+    display.init(screenSurface);
     app.start();
-    render(screenSurface, app.render());
+    app.render();
 #if ZIC_SDL2
     SDL_UpdateWindowSurface(window);
 #else
@@ -207,7 +211,8 @@ int main(int argc, char* args[])
     while (handleEvent()) {
         if (ui.keysChanged) {
             ui.keysChanged = false;
-            render(screenSurface, app.handleUi(ui.keys));
+            app.handleUi(ui.keys);
+            SDL_Log("\n%s\n", display.text);
 #if ZIC_SDL2
             SDL_UpdateWindowSurface(window);
 #else

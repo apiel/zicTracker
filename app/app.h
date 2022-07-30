@@ -17,7 +17,7 @@ public:
     Zic_Seq_Tempo<> tempo;
     App_Tracks tracks;
 
-    App_Display display;
+    App_Display* display;
     UiKeys keys;
 
     App_View_Menu menuView;
@@ -26,8 +26,9 @@ public:
     App_View_Instrument instrumentView;
     App_View_Pattern patternView;
 
-    App(App_Patterns* patterns)
+    App(App_Patterns* patterns, App_Display* _display)
         : tracks(patterns)
+        , display(_display)
         , trackView(&tracks)
         , trackMasterView(&tracks)
         , instrumentView(&tracks)
@@ -49,37 +50,35 @@ public:
         return tracks.sample();
     }
 
-    App_Display* render()
+    void render()
     {
         // TODO find a better place way to reset cursor
-        display.reset();
+        display->reset();
 
         uint8_t view = menuView.getView();
         switch (view) {
         case VIEW_TRACK_MASTER:
-            trackMasterView.render(&display);
+            trackMasterView.render(display);
             break;
 
         case VIEW_INSTRUMENT:
-            instrumentView.render(&display);
+            instrumentView.render(display);
             break;
 
         case VIEW_PATTERN:
-            patternView.render(&display);
+            patternView.render(display);
             break;
 
         default:
-            trackView.render(&display);
+            trackView.render(display);
             break;
         }
-        return &display;
+
+        display->drawText();
     }
 
-    App_Display* handleUi(uint8_t keysBin)
+    void handleUi(uint8_t keysBin)
     {
-        // TODO find a better place way to reset cursor
-        display.reset();
-
         keys.Up = (keysBin >> UI_KEY_UP) & 1;
         keys.Down = (keysBin >> UI_KEY_DOWN) & 1;
         keys.Left = (keysBin >> UI_KEY_LEFT) & 1;
@@ -88,29 +87,32 @@ public:
         keys.B = (keysBin >> UI_KEY_B) & 1;
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
-        if (menuView.update(&keys, &display)) {
+        display->reset();
+        if (menuView.update(&keys, display) != VIEW_NONE) {
+            display->drawText(); // This is weeeeeird should just handle everything the same way
+            // then no need to reset here...
+            // FIXME
         } else {
-            bool rendered = false;
+            uint8_t viewUpdated = VIEW_NONE;
             uint8_t view = menuView.getView();
             switch (view) {
             case VIEW_TRACK:
-                rendered = trackView.update(&keys, &display);
+                viewUpdated = trackView.update(&keys, display);
                 break;
             case VIEW_TRACK_MASTER:
-                rendered = trackMasterView.update(&keys, &display);
+                viewUpdated = trackMasterView.update(&keys, display);
                 break;
             case VIEW_INSTRUMENT:
-                rendered = instrumentView.update(&keys, &display);
+                viewUpdated = instrumentView.update(&keys, display);
                 break;
             case VIEW_PATTERN:
-                rendered = patternView.update(&keys, &display);
+                viewUpdated = patternView.update(&keys, display);
                 break;
             }
-            if (!rendered) {
+            if (viewUpdated != VIEW_NONE) {
                 render();
             }
         }
-        return &display;
     }
 };
 
