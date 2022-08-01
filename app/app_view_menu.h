@@ -75,7 +75,7 @@ public:
         { "Instruments kit", 'K', VIEW_INSTRUMENT, 'I', false }, // this is how to save a kit
         // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
         { "Pattern", 'P', VIEW_PATTERN, 'P', true },
-        { "Wavetable sampler", 'W', VIEW_WAVETABLE_SAMPLER, 'S', true }, // generate some wavetable by combining multiple wavetable and detune, effect?, lfo?
+        { "Sampler", 'S', VIEW_SAMPLER, 'S', true }, // Record all track to sample and edit sample
         { "Project", 'P', VIEW_TRACK, 'P', true }, // Select project
     };
     uint8_t currentMenu = 0;
