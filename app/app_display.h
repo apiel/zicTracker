@@ -31,7 +31,7 @@ protected:
     virtual void drawCursor(int16_t x, int16_t y) = 0;
     virtual void setColor(uint8_t r, uint8_t g, uint8_t b) = 0;
 
-    void drawChar(unsigned char chr, uint16_t x, uint16_t y)
+    virtual void drawChar(unsigned char chr, uint16_t x, uint16_t y)
     {
         const unsigned char* ptr = fontData + (chr - FONT_ASCII_START) * FONT_H;
 
@@ -68,7 +68,7 @@ public:
         App_Display_Base::reset();
     }
 
-    void drawText()
+    virtual void drawText()
     {
         uint16_t x = xScreen;
         uint16_t y = yScreen;
