@@ -30,7 +30,7 @@ public:
         : tracks(patterns)
         , display(_display)
         , trackView(&tracks)
-        , trackMasterView(&tracks)
+        , trackMasterView(&tracks, &tempo)
         , instrumentView(&tracks)
         , patternView(patterns)
     {
