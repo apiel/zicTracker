@@ -7,7 +7,7 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
-#define VIEW_TRACK_MASTER_ROW 1
+#define VIEW_TRACK_MASTER_ROW 2
 #define VIEW_TRACK_MASTER_COL 2
 
 class App_View_TrackMasterRow : public App_View_TableLabeledRow {
@@ -53,13 +53,36 @@ public:
     }
 };
 
+class App_View_TrackMasterAllOff : public App_View_TrackMasterRow {
+public:
+    App_View_TrackMasterAllOff(App_Tracks* _tracks)
+        : App_View_TrackMasterRow(_tracks, "All ", 3)
+    {
+    }
+
+    void renderValue(App_Display* display, uint8_t col)
+    {
+        strcat(display->text, "OFF");
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
+    {
+        for (uint8_t i = 0; i < TRACK_COUNT; i++) {
+            tracks->tracks[i]->looper.nextState.stop();
+        }
+        return VIEW_CHANGED;
+    }
+};
+
 class App_View_TrackMaster : public App_View_Table {
 protected:
     App_View_TrackMasterBpm bpmField;
+    App_View_TrackMasterAllOff allOffField;
 
     App_View_TableField* fields[VIEW_TRACK_MASTER_ROW * VIEW_TRACK_MASTER_COL] = {
         // clang-format off
         &bpmField, &bpmField,
+        &allOffField, &allOffField,
         // clang-format on
     };
 
@@ -67,6 +90,7 @@ public:
     App_View_TrackMaster(App_Tracks* _tracks, Zic_Seq_Tempo<>* tempo)
         : App_View_Table(fields, VIEW_TRACK_MASTER_ROW, VIEW_TRACK_MASTER_COL)
         , bpmField(_tracks, tempo)
+        , allOffField(_tracks)
     {
         initSelection();
     }
