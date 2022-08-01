@@ -45,8 +45,15 @@ public:
             synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
             // printf("Note %d instrument %d\n", stepOn->note, stepOn->instrument % INSTRUMENT_COUNT);
 
-            synth->wave.restart();
+            synth->wave.reset();
             synth->wave.setNote(stepOn->note);
+
+            // static int count = 0;
+            // printf("%d Freq %.3f Time %.3f Amp %d\n",
+            //        count++,
+            //        synth->wave.getFrequency(),
+            //        synth->wave.getTime(),
+            //        synth->wave.getAmplitude());
 
             if (looper.wasSlide()) {
                 synth->asr.slide();
