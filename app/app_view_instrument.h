@@ -9,45 +9,22 @@
 #define VIEW_INSTR_COL 3
 #define VIEW_INSTR_LABELS 7
 
-class App_View_InstrumentRow : public App_View_TableField {
+class App_View_InstrumentRow : public App_View_TableLabeledRow {
 protected:
-    const char* label;
     App_Tracks* tracks;
-    uint8_t cursorLen;
     uint8_t* instrument;
 
 public:
     App_View_InstrumentRow(App_Tracks* _tracks, uint8_t* _instrument, const char* _label, uint8_t _cursorLen = 5)
-        : label(_label)
+        : App_View_TableLabeledRow(_label, _cursorLen) 
         , tracks(_tracks)
-        , cursorLen(_cursorLen)
         , instrument(_instrument)
     {
-    }
-
-    virtual void renderValue(App_Display* display, uint8_t col) = 0;
-
-    bool isSelectable(uint8_t row, uint8_t col) override
-    {
-        return col != 0;
     }
 
     App_Instrument* getSynth()
     {
         return tracks->track->synths[*instrument];
-    }
-
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-    {
-        if (col == 0) {
-            strcat(display->text, label);
-        } else {
-            if (selectedRow == row && selectedCol == col) {
-                display->setCursor(cursorLen);
-            }
-
-            renderValue(display, col);
-        }
     }
 };
 

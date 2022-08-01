@@ -31,6 +31,39 @@ public:
     }
 };
 
+class App_View_TableLabeledRow : public App_View_TableField {
+protected:
+    const char* label;
+    uint8_t cursorLen;
+
+public:
+    App_View_TableLabeledRow(const char* _label, uint8_t _cursorLen)
+        : label(_label)
+        , cursorLen(_cursorLen)
+    {
+    }
+
+    virtual void renderValue(App_Display* display, uint8_t col) = 0;
+
+    bool isSelectable(uint8_t row, uint8_t col) override
+    {
+        return col != 0;
+    }
+
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        if (col == 0) {
+            strcat(display->text, label);
+        } else {
+            if (selectedRow == row && selectedCol == col) {
+                display->setCursor(cursorLen);
+            }
+
+            renderValue(display, col);
+        }
+    }
+};
+
 class App_View_Table : App_View {
 protected:
     const uint8_t ROW_COUNT;
