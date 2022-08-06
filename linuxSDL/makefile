@@ -17,20 +17,11 @@ OPENDINGUX_CC=$(OPENDINGUX_ROOT)/usr/bin/mipsel-gcw0-linux-uclibc-g++ -o zicTrac
 OPENDINGUX_SDL_CONFIG=$(OPENDINGUX_ROOT)/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/sdl2-config
 OPENDINGUX_TARGET=1
 
-# Miyoo
-MIYOO_ROOT=/opt/miyoomini-toolchain
-MIYOO_CC=$(MIYOO_ROOT)/usr/bin/arm-linux-gnueabihf-g++ -o zicTrackerMiyoo
-MIYOO_SDL_CONFIG=$(MIYOO_ROOT)/usr/arm-linux-gnueabihf/sysroot/usr/bin/sdl2-config
-MIYOO_SDL12_CONFIG=$(MIYOO_ROOT)/usr/arm-linux-gnueabihf/sysroot/usr/bin/sdl-config
-MIYOO_TARGET=2
+#rg351
+# https://github.com/christianhaitian/arkos/wiki/Building
+# or https://github.com/mica-angeli/retrooz_dev_docker
 
 linux: build run
-
-miyoo2:
-	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-2" SDL_CONFIG="$(MIYOO_SDL_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) build
-
-miyoo1.2:
-	make ROOT=$(MIYOO_ROOT) CC="$(MIYOO_CC)-1.2" SDL_CONFIG="$(MIYOO_SDL12_CONFIG)" ZIC_TARGET=$(MIYOO_TARGET) ZIC_SDL2=false ZIC_SDL_MIXER=SDL_mixer build serial_send
 
 opendingux:
 	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL_CONFIG="$(OPENDINGUX_SDL_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
@@ -55,7 +46,3 @@ opk:
 
 # echo 'opkrun /media/data/apps/zicTracker.opk' | telnet 10.1.1.2
 # echo 'opkrun /media/data/apps/zicTracker.opk' | nc 10.1.1.2 23
-
-serial_send:
-	cd serial
-	node main.js

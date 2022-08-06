@@ -11,7 +11,8 @@ protected:
 
 public:
     uint8_t id = 0;
-    char filename[256] = "59.wav";
+    // char filename[256] = "59.wav";
+    char filename[256] = {'5','9','.','w', 'a', 'v','\0'};
     bool isWavetable = true;
 
     App_Instrument(uint8_t _id = 0)

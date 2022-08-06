@@ -48,20 +48,6 @@ Sample and waveform are both using wav file from the SD card.
 - make graph using https://en.wikipedia.org/wiki/Braille_ASCII but then need to update font...
 
 ## Toolchain
-### Miyoo mini
-
-Need to use buildroot https://github.com/shauninman/miyoomini-toolchain-buildroot/
-
-```sh
-make shell
-cd ~/buildroot
-make menuconfig
-make sdk
-cd ~
-./package-toolchain.sh
-exit
-```
-
 ### anbernic rg 280v
 
 Might need to install gcc-multilib, gcc-multilib and maybe some other stuff for x64 bit computer

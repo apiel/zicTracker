@@ -73,6 +73,9 @@ public:
         { "Master track", 'M', VIEW_TRACK_MASTER, 'T', false },
         { "Instruments", 'I', VIEW_INSTRUMENT, 'I', true },
         { "Instruments kit", 'K', VIEW_INSTRUMENT, 'I', false }, // this is how to save a kit
+        // 4 LFO -> can be assigned to any changeable values and can be use for multiple instrument at the same time
+        // 4 Extra Envelop -> same as LFO
+        // IFX: reverb, distortion... 
         // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
         { "Pattern", 'P', VIEW_PATTERN, 'P', true },
         { "Sampler", 'S', VIEW_SAMPLER, 'S', true }, // Record all track to sample and edit sample
