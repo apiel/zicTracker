@@ -1,7 +1,10 @@
 #include <SDL2/SDL.h>
-// TODO make SDL mixer optional
+
+#if ZIC_SDL_MIXER
 #include <SDL2/SDL_mixer.h>
-// #define __LINUX_PULSE__
+#else
+#define __LINUX_PULSE__
+#endif
 
 #include <stdio.h>
 
@@ -128,13 +131,32 @@ void audioCallBack(void* userdata, Uint8* stream, int len)
     }
 }
 
-// void render(SDL_Surface* screenSurface, App_Display* display)
-// {
-//     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, UI_COLOR_BG));
-//     // SDL_Log("Cursor: %d(%d)\n", display->cursorPos, display->cursorLen);
-//     SDL_Log("\n%s\n", display->text);
-//     draw_string(screenSurface, display, 2, TEXT_SIZE * FONT_H, TEXT_SIZE);
-// }
+#ifndef ZIC_SDL_MIXER
+SDL_AudioDeviceID initAudio()
+{
+    SDL_AudioSpec spec, aspec;
+
+    SDL_zero(spec);
+    spec.freq = SAMPLE_RATE;
+    spec.format = APP_AUDIO_FORMAT;
+    spec.channels = CHANNELS;
+    spec.samples = APP_AUDIO_CHUNK;
+    spec.callback = audioCallBack;
+    spec.userdata = NULL;
+
+    SDL_AudioDeviceID audioDevice = SDL_OpenAudioDevice(NULL, 0, &spec, &aspec, SDL_AUDIO_ALLOW_ANY_CHANGE);
+    if (audioDevice <= 0) {
+        fprintf(stderr, "Couldn't open audio: %s\n", SDL_GetError());
+        return false;
+    }
+
+    SDL_Log("aspec freq %d channel %d sample %d format %d", aspec.freq, aspec.channels, aspec.samples, aspec.format);
+
+    // Start playing, "unpause"
+    SDL_PauseAudioDevice(audioDevice, 0);
+    return audioDevice;
+}
+#endif
 
 int main(int argc, char* args[])
 {
@@ -150,12 +172,19 @@ int main(int argc, char* args[])
         return 1;
     }
 
+#if ZIC_SDL_MIXER
     if (Mix_OpenAudio(SAMPLE_RATE, APP_AUDIO_FORMAT, CHANNELS, APP_AUDIO_CHUNK) < 0) {
         fprintf(stderr, "Open audio mixer error: %s\n", SDL_GetError());
     } else {
         SDL_Log("Open audio mixer success\n");
     }
     Mix_HookMusic(audioCallBack, NULL);
+#else
+    SDL_AudioDeviceID audioDevice = initAudio();
+    if (SDL_getenv("ZIC_SKIP_AUDIO") == NULL && !audioDevice) {
+        return 1;
+    }
+#endif
 
     char fileFound[256];
     nextFile(fileFound, "samples", "kick.wav", -1);
@@ -190,7 +219,12 @@ int main(int argc, char* args[])
 
     SDL_DestroyWindow(window);
 
+#if ZIC_SDL_MIXER
     Mix_CloseAudio();
+#else
+    SDL_CloseAudioDevice(audioDevice);
+#endif
+
     SDL_Quit();
     return 0;
 }

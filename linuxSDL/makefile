@@ -8,7 +8,7 @@ ZIC_LIB=../../zic
 SDL_CONFIG=sdl2-config
 CC=g++ -o zicTracker
 ZIC_TARGET=0
-ZIC_SDL_MIXER=SDL2_mixer
+#ZIC_SDL_MIXER=-l SDL2_mixer -DZIC_SDL_MIXER=1
 
 # Open Dingux
 OPENDINGUX_ROOT=/opt/gcw0-toolchain
@@ -26,7 +26,7 @@ opendingux:
 	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL_CONFIG="$(OPENDINGUX_SDL_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
 
 build:
-	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) `$(SDL_CONFIG) --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET) -l$(ZIC_SDL_MIXER)
+	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) `$(SDL_CONFIG) --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET) $(ZIC_SDL_MIXER)
 
 # -fopenmp for soundTouch "warning: ignoring #pragma omp parallel"
 # -Wno-narrowing for font.h:62:56: warning: narrowing conversion of ‘(8 * ((int)size))’ from ‘int’ to ‘Uint16’ {aka ‘short unsigned int’} inside { } [-Wnarrowing]
