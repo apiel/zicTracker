@@ -1,11 +1,7 @@
 #ifndef UI_DISPLAY_H_
 #define UI_DISPLAY_H_
 
-#if ZIC_SDL2
 #include <SDL2/SDL.h>
-#else
-#include <SDL/SDL.h>
-#endif
 
 // #define FONT_SIZE 3
 
