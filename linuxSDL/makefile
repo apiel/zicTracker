@@ -31,6 +31,10 @@ rg351:
 rg351Chroot:
 	sudo chroot /mnt/data/arm64/ /bin/bash -c "cd /home/alex/zic/zicTracker/linuxSDL && make rg351Chrooted"
 
+# or manualy: 
+# sudo chroot /mnt/data/arm64/
+# and then run `make rg351Chrooted` in the chroot
+
 rg351Chrooted:
 	make CC="g++ -o zicTrackerRG351" build
 
