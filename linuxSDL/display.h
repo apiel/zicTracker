@@ -11,8 +11,12 @@
 
 #include "../app/app_display.h"
 
-#define SCREEN_W 320
-#define SCREEN_H 240
+// rg351
+#define SCREEN_W 640
+#define SCREEN_H 480
+
+// #define SCREEN_W 320
+// #define SCREEN_H 240
 
 class UI_Display : public App_Display {
 protected:

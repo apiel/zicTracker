@@ -81,11 +81,73 @@ bool handleKeyboard(SDL_KeyboardEvent* event)
     return true;
 }
 
+bool handleController(SDL_ControllerButtonEvent* event)
+{
+    uint8_t bit;
+
+    SDL_Log("handleController btn %d state %d\n", event->button, event->state);
+    switch (event->button) {
+    case 11:
+        bit = UI_KEY_UP;
+        break;
+    case 12:
+        bit = UI_KEY_DOWN;
+        break;
+    case 13:
+        bit = UI_KEY_LEFT;
+        break;
+    case 14:
+        bit = UI_KEY_RIGHT;
+        break;
+    case 0:
+        bit = UI_KEY_A;
+        break;
+    case 1: // Should be configurable!
+        bit = UI_KEY_B;
+        break;
+    case 9:
+        return false;
+    default:
+        break;
+    }
+
+    if (event->state == SDL_PRESSED) {
+        ui.keys |= 1 << bit; // Set bit to 1
+    } else {
+        ui.keys &= ~(1 << bit); // unset bit (to 0)
+    }
+
+    // we could skip keyChange on A repeat
+    ui.keysChanged = true;
+
+    return true;
+}
+
+void initController()
+{
+    int num = SDL_NumJoysticks();
+    // SDL_Log("%d joysticks connected\n", num);
+    for (int i = 0; i < num; i++) {
+        SDL_JoystickOpen(i);
+        // SDL_Joystick* joystick = SDL_JoystickOpen(i);
+        // SDL_Log("Joystick %d: %s\n", i, SDL_JoystickName(joystick));
+        if (SDL_IsGameController(i)) {
+            SDL_GameControllerOpen(i);
+            // SDL_GameController* controller = SDL_GameControllerOpen(i);
+            // SDL_Log("Game controller %d: %s\n", i, SDL_GameControllerName(controller));
+        }
+    }
+}
+
 bool handleEvent()
 {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
+        if (event.type > 0x300 && event.type < 0x800) {
+            SDL_Log("handleEvent %d\n", event.type);
+        }
+
         switch (event.type) {
         case SDL_QUIT:
             return false;
@@ -93,8 +155,12 @@ bool handleEvent()
         case SDL_KEYUP:
         case SDL_KEYDOWN:
             return handleKeyboard(&event.key);
-        // could be useful to simulate a pot
-        // case SDL_MOUSEWHEEL:
+            // could be useful to simulate a pot
+            // case SDL_MOUSEWHEEL:
+            //     break;
+
+        // case SDL_JOYDEVICEADDED:
+        //     SDL_Log("handleEvent SDL_JOYDEVICEADDED\n");
         //     break;
         case SDL_JOYAXISMOTION:
             SDL_Log("SDL_JOYAXISMOTION\n");
@@ -102,7 +168,17 @@ bool handleEvent()
         case SDL_JOYBUTTONDOWN:
         case SDL_JOYBUTTONUP:
             SDL_Log("SDL_JOYBUTTON\n");
+
+        case SDL_CONTROLLERDEVICEADDED:
+            // SDL_Log("SDL_CONTROLLERDEVICEADDED\n");
+            initController();
             break;
+        // case SDL_CONTROLLERAXISMOTION:
+        //     SDL_Log("SDL_CONTROLLERAXISMOTION\n");
+        //     break;
+        case SDL_CONTROLLERBUTTONDOWN:
+        case SDL_CONTROLLERBUTTONUP:
+            return handleController(&event.cbutton);
         }
     }
 
