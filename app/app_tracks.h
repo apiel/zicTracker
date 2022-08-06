@@ -29,6 +29,9 @@ public:
         , track3(_patterns, TRACK_4)
     {
         select(trackId);
+
+        // just for testing
+        track0.looper.nextState.play();
     }
 
     void select(uint8_t id)

@@ -25,6 +25,21 @@ linux: build run
 opendingux:
 	make ROOT=$(OPENDINGUX_ROOT) CC="$(OPENDINGUX_CC)" SDL_CONFIG="$(OPENDINGUX_SDL_CONFIG)" ZIC_TARGET=$(OPENDINGUX_TARGET) build opk
 
+rg351:
+	make rg351Chroot rg351SCP
+	
+rg351Chroot:
+	sudo chroot /mnt/data/arm64/ /bin/bash -c "cd /home/alex/zic/zicTracker/linuxSDL && make rg351Chrooted"
+
+rg351Chrooted:
+	make CC="g++ -o zicTrackerRG351" build
+
+rg351SCP:
+	sshpass -p "ark" scp zicTrackerRG351 ark@192.168.1.108:/roms/ports/zic/zicTracker
+
+rg351Kill:
+	sshpass -p "ark" ssh ark@192.168.1.108 /roms/ports/zic/kill.sh
+
 build:
 	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) `$(SDL_CONFIG) --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET) $(ZIC_SDL_MIXER)
 

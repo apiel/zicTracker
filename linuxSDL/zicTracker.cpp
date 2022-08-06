@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-#define SAMPLE_RATE 48000
+#define SAMPLE_RATE 44100
 // #define CHANNELS 1
 #define CHANNELS 2 // to be fixed
 #define APP_AUDIO_FORMAT AUDIO_S16LSB
@@ -167,7 +167,7 @@ int main(int argc, char* args[])
     // patterns.debug(SDL_Log, 5);
     // patterns.debug(SDL_Log, 199);
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         fprintf(stderr, "Could not initialize SDL: %s\n", SDL_GetError());
         return 1;
     }
