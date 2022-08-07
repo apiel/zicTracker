@@ -55,3 +55,37 @@ Install toolchain opendingux-gcw0-toolchain.2014-08-20
 maybe there: http://www.gcw-zero.com/develop
 or somewhere there: http://od.abstraction.se/opendingux/
                     http://od.abstraction.se/opendingux/toolchain/
+
+### anbernic rg351
+
+https://github.com/christianhaitian/arkos/wiki/Building
+
+To create debian based chroots in a Linux environment.
+These instructions are based on a Ubuntu 16 or newer install or VM.
+install Prereqs:
+
+```sh
+sudo apt update
+sudo apt install -y build-essential debootstrap binfmt-support qemu-user-static
+```
+
+Then install armhf and arm64 chroots:
+
+sudo qemu-debootstrap --arch arm64 buster /mnt/data/arm64 http://deb.debian.org/debian/
+
+Get into chroots:
+
+For 64 bit Arm environment:
+```sh
+sudo chroot /mnt/data/arm64/
+```
+or create a Arm64 shortcut on the desktop gui and click on Arm64 shortcut on desktop
+
+
+Helpful tools to install in both environments for RK3326 app builds
+
+```sh
+apt -y install build-essential git wget libdrm-dev python3 python3-pip python3-setuptools python3-wheel ninja-build libopenal-dev premake4 autoconf libevdev-dev ffmpeg libsnappy-dev libboost-tools-dev magics++ libboost-thread-dev libboost-all-dev pkg-config zlib1g-dev libpng-dev libsdl2-dev clang cmake cmake-data libarchive13 libcurl4 libfreetype6-dev libjsoncpp1 librhash0 libuv1 mercurial mercurial-common libgbm-dev libsdl2-ttf-2.0-0 libsdl2-ttf-dev
+```
+
+or using docker https://github.com/mica-angeli/retrooz_dev_docker
