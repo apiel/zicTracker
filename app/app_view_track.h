@@ -15,10 +15,10 @@ protected:
     App_Tracks* tracks;
     Zic_Seq_Loop_State newState;
     bool updating = false;
-    const char * label;
+    const char* label;
 
 public:
-    App_View_TrackRow(App_Tracks* _tracks, const char * _label)
+    App_View_TrackRow(App_Tracks* _tracks, const char* _label)
         : tracks(_tracks)
         , label(_label)
     {
@@ -93,7 +93,20 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
+
         newState.togglePlay();
+        if (newState.playing) {
+            App_Audio_Track* track = NULL;
+            for (uint8_t i = 0; i < TRACK_COUNT; i++) {
+                if (tracks->tracks[i]->looper.state.playing) {
+                    track = tracks->tracks[i];
+                    break;
+                }
+            }
+            if (track != NULL) {
+                newState.playCountdown = track->looper.getStepsLeft();
+            }
+        }
         return VIEW_CHANGED;
     }
 };
