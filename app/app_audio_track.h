@@ -7,6 +7,14 @@
 #include <wavetables/wavetable_Bank.h>
 #include <zic_seq_loop.h>
 
+// On teensy we might reduce this significantly
+// Or find another way to store it
+#ifndef APP_AUDIO_TRACK_HISTORY_SEC
+#define APP_AUDIO_TRACK_HISTORY_SEC 5
+#endif
+
+#define APP_AUDIO_TRACK_HISTORY_SAMPLES (APP_AUDIO_TRACK_HISTORY_SEC * SAMPLE_RATE)
+
 class App_Audio_Track {
 public:
     uint8_t id = 0;
@@ -15,6 +23,9 @@ public:
     App_Instrument* synths[INSTRUMENT_COUNT] = { &synth0, &synth1, &synth2, &synth3 };
     App_Instrument* synth = NULL;
     Zic_Seq_Loop looper;
+
+    int16_t history[APP_AUDIO_TRACK_HISTORY_SAMPLES] = { 0 };
+    uint32_t historyIndex = 0;
 
     App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
         : synth0(0)
@@ -61,6 +72,14 @@ public:
                 synth->asr.on();
             }
         }
+    }
+
+    int16_t sample()
+    {
+        int16_t s = synth->next();
+        historyIndex = (historyIndex + 1) % APP_AUDIO_TRACK_HISTORY_SAMPLES;
+        history[historyIndex] = s;
+        return s;
     }
 };
 

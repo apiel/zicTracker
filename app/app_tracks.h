@@ -53,7 +53,7 @@ public:
         int16_t sample = 0;
         for (uint8_t t = 0; t < TRACK_COUNT; t++) {
             if (tracks[t]->synth) {
-                sample += tracks[t]->synth->next();
+                sample += tracks[t]->sample();
             }
         }
         return sample;
