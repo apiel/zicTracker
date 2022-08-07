@@ -144,9 +144,9 @@ bool handleEvent()
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
-        if (event.type > 0x300 && event.type < 0x800) {
-            SDL_Log("handleEvent %d\n", event.type);
-        }
+        // if (event.type > 0x300 && event.type < 0x800) {
+        //     SDL_Log("handleEvent %d\n", event.type);
+        // }
 
         switch (event.type) {
         case SDL_QUIT:
