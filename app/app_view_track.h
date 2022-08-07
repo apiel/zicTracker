@@ -96,6 +96,7 @@ public:
 
         newState.togglePlay();
         if (newState.playing) {
+            // Get the first playing track and sync it to the new started track
             App_Audio_Track* track = NULL;
             for (uint8_t i = 0; i < TRACK_COUNT; i++) {
                 if (tracks->tracks[i]->looper.state.playing) {
@@ -104,7 +105,7 @@ public:
                 }
             }
             if (track != NULL) {
-                newState.playCountdown = track->looper.getStepsLeft();
+                newState.currentStepSync = &track->looper.currentStep;
             }
         }
         return VIEW_CHANGED;
