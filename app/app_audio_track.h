@@ -79,7 +79,14 @@ public:
         int16_t s = synth->next();
         historyIndex = (historyIndex + 1) % APP_AUDIO_TRACK_HISTORY_SAMPLES;
         history[historyIndex] = s;
-        return s;
+        // return s;
+        return s 
+        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.9)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.40)
+        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.8)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.35)
+        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.7)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.30)
+        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.6)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.25)
+        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.5)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.20)
+        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.4)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.15);
     }
 };
 

@@ -1,3 +1,12 @@
+We should consider using soundfont as alternative synth engine to wav table/sample
+Maybe even use https://github.com/schellingb/TinySoundFont/blob/master/examples/example1.c
+
+
+let have a look at some headless synth like:
+    - fluidsynth is just to play sample file base soundfont
+    - zynaddsubfx --auto-connect --no-gui --> is really too complexe to use with zicTrack (too much features, too much CPU ressources)
+    - amsynth (doesnt seem to have headless feature)
+
 TODO table should be compose of class row and class field
 
 TODO fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
