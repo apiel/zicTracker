@@ -29,6 +29,7 @@ rg351:
 	make rg351Chroot rg351SCP rg351Log
 	
 rg351Chroot:
+	sudo mount --bind /home/alex/Music/zic /mnt/data/arm64/home/alex/zic
 	sudo chroot /mnt/data/arm64/ /bin/bash -c "cd /home/alex/zic/zicTracker/linuxSDL && make rg351Chrooted"
 
 # or manualy: 
