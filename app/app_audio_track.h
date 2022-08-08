@@ -79,10 +79,14 @@ public:
     int16_t sample()
     {
         int16_t s = synth ? synth->next() : 0;
-        // int16_t d = history[historyIndex];
         history[historyIndex] = s;
-        historyIndex = (historyIndex + 1) % APP_AUDIO_TRACK_HISTORY_SAMPLES;
-        // return s;
+
+        // avoid using modulo
+        // historyIndex = (historyIndex + 1) % APP_AUDIO_TRACK_HISTORY_SAMPLES;
+        // instead
+        if (historyIndex++ >= APP_AUDIO_TRACK_HISTORY_SAMPLES) {
+            historyIndex = 0;
+        }
         return s
             // + (d * 0.80);
             // + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.1)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.60);

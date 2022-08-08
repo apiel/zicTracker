@@ -1,3 +1,5 @@
+// FIXME modulo, dont use motulo but comparison
+
 We should consider using soundfont as alternative synth engine to wav table/sample
 Maybe even use https://github.com/schellingb/TinySoundFont/blob/master/examples/example1.c
 

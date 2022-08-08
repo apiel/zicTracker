@@ -81,6 +81,7 @@ protected:
     {
         uint8_t start = selectedRow;
         do {
+            // FIXME modulo, dont use motulo but comparison?
             selectedRow = (selectedRow + lastRow + direction) % lastRow;
             if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
                 break;
@@ -92,6 +93,7 @@ protected:
     {
         uint8_t start = selectedCol;
         do {
+            // FIXME modulo, dont use motulo but comparison?
             selectedCol = (selectedCol + COL_COUNT + direction) % COL_COUNT;
             if (getSelectedField() && getSelectedField()->isSelectable(selectedRow, selectedCol)) {
                 break;
