@@ -11,6 +11,7 @@
 // Or find another way to store it
 #ifndef APP_AUDIO_TRACK_HISTORY_SEC
 #define APP_AUDIO_TRACK_HISTORY_SEC 5
+// #define APP_AUDIO_TRACK_HISTORY_SEC 1
 #endif
 
 #define APP_AUDIO_TRACK_HISTORY_SAMPLES (APP_AUDIO_TRACK_HISTORY_SEC * SAMPLE_RATE)
@@ -80,13 +81,20 @@ public:
         historyIndex = (historyIndex + 1) % APP_AUDIO_TRACK_HISTORY_SAMPLES;
         history[historyIndex] = s;
         // return s;
-        return s 
-        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.9)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.40)
-        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.8)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.35)
-        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.7)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.30)
-        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.6)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.25)
-        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.5)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.20)
-        + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.4)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.15);
+        return s
+            + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.1)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.40)
+            + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.2)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.35)
+            + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.3)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.30)
+            + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.4)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.25)
+            + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.5)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.20)
+            + (history[(historyIndex + APP_AUDIO_TRACK_HISTORY_SAMPLES - (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.6)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.15);
+
+            // + (history[(historyIndex + (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.9)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.40)
+            // + (history[(historyIndex + (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.8)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.35)
+            // + (history[(historyIndex + (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.7)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.30)
+            // + (history[(historyIndex + (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.6)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.25)
+            // + (history[(historyIndex + (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.5)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.20)
+            // + (history[(historyIndex + (uint32_t)(APP_AUDIO_TRACK_HISTORY_SAMPLES * 0.4)) % APP_AUDIO_TRACK_HISTORY_SAMPLES] * 0.15);
     }
 };
 
