@@ -80,7 +80,6 @@ public:
             display->setCursor(cursorLen[col]);
         }
         uint8_t delayPos = row - VIEW_TRACK_DELAY_ROW_HEADERS;
-        // Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[stepPos];
         Zic_Effect_Delay* delay = tracks->track->delays[delayPos];
         switch (col) {
         case 0:
@@ -111,35 +110,30 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
-        // Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[row - VIEW_PATTERN_ROW_HEADERS];
-        // if (col == 4) {
-        //     step->slide = !step->slide;
-        // } else {
-        //     int8_t directions[] = { 0, 1, 12, 10 };
-        //     int8_t direction = 0;
-        //     if (keys->Right) {
-        //         direction = 1;
-        //     } else if (keys->Left) {
-        //         direction = -1;
-        //     } else if (keys->Up) {
-        //         direction = directions[col];
-        //     } else if (keys->Down) {
-        //         direction = -directions[col];
-        //     }
-        //     switch (col) {
-        //     case 1:
-        //         step->instrument = (step->instrument + INSTRUMENT_COUNT + direction) % INSTRUMENT_COUNT;
-        //         break;
-        //     case 2: {
-        //         uint8_t note = range(step->note + direction, Zic::_NOTE_START - 1, Zic::_NOTE_END);
-        //         step->note = range(note, Zic::_NOTE_START, Zic::_NOTE_END) != note ? 0 : note;
-        //         break;
-        //     }
-        //     case 3:
-        //         step->velocity = range(step->velocity + direction, 0, 127);
-        //         break;
-        //     }
-        // }
+        Zic_Effect_Delay* delay = tracks->track->delays[row - VIEW_TRACK_DELAY_ROW_HEADERS];
+
+        float direction = 0;
+        if (keys->Right) {
+            direction = 0.01;
+        } else if (keys->Left) {
+            direction = -0.01;
+        } else if (keys->Up) {
+            direction = 0.10;
+        } else if (keys->Down) {
+            direction = -0.10;
+        }
+        switch (col) {
+        case 1:
+            delay->setSec(delay->sec + direction);
+            break;
+        case 2: {
+            delay->setAmplitude(delay->amplitude + direction);
+            break;
+        }
+        case 3:
+            delay->setFeedback(delay->feedback + direction);
+            break;
+        }
         return VIEW_CHANGED;
     }
 };
