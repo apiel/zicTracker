@@ -5,8 +5,8 @@
 #include "./app_patterns.h"
 
 #include <wavetables/wavetable_Bank.h>
-#include <zic_seq_loop.h>
 #include <zic_effect_delay.h>
+#include <zic_seq_loop.h>
 
 class App_Audio_Track {
 public:
@@ -16,7 +16,8 @@ public:
     App_Instrument* synths[INSTRUMENT_COUNT] = { &synth0, &synth1, &synth2, &synth3 };
     App_Instrument* synth = NULL;
     Zic_Seq_Loop looper;
-    Zic_Effect_Delay delay;
+    Zic_Effect_DelayHistory delayHistory;
+    Zic_Effect_Delay delay0, delay1, delay2, delay3, delay4;
 
     App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
         : synth0(0)
@@ -24,10 +25,21 @@ public:
         , synth2(2)
         , synth3(3)
         , looper(&patterns->patterns[0])
+        , delay0(&delayHistory)
+        , delay1(&delayHistory)
+        , delay2(&delayHistory)
+        , delay3(&delayHistory)
+        , delay4(&delayHistory)
     {
         id = _id;
         // TODO load pattern from last state saved in project status file
         synth1.set("kick.wav", false)->open();
+
+        delay0.set(0.5, 0.5);
+        delay1.set(1.0, 0.4);
+        delay2.set(1.5, 0.3);
+        delay3.set(2.0, 0.2);
+        delay4.set(2.5, 0.1);
     }
 
     void next()
@@ -68,7 +80,13 @@ public:
     int16_t sample()
     {
         int16_t s = synth ? synth->next() : 0;
-        return delay.sample(s);
+        return delayHistory.sample(s)
+            + delay0.sample()
+            + delay1.sample()
+            + delay2.sample()
+            + delay3.sample()
+            + delay4.sample();
+        ;
     }
 };
 
