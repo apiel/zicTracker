@@ -4,7 +4,7 @@
 #include "./app_display.h"
 #include "./app_view.h"
 
-#define APP_MENU_SIZE 7
+#define APP_MENU_SIZE 8
 
 typedef struct {
     const char* name;
@@ -70,6 +70,7 @@ public:
 
     Menu menu[APP_MENU_SIZE] = {
         { "Tracks", 'T', VIEW_TRACK, 'T', true },
+        { "Track delay", 'D', VIEW_TRACK_DELAY, 'T', false },
         { "Master track", 'M', VIEW_TRACK_MASTER, 'T', false },
         { "Instruments", 'I', VIEW_INSTRUMENT, 'I', true },
         { "Instruments kit", 'K', VIEW_INSTRUMENT, 'I', false }, // this is how to save a kit

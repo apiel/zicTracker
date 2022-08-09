@@ -172,7 +172,7 @@ public:
 class App_View_TrackMasterField : public App_View_TrackRow {
 public:
     App_View_TrackMasterField(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks, "-M-")
+        : App_View_TrackRow(_tracks, "VOL")
     {
     }
 

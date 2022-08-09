@@ -18,6 +18,7 @@ public:
     Zic_Seq_Loop looper;
     Zic_Effect_DelayHistory delayHistory;
     Zic_Effect_Delay delay0, delay1, delay2, delay3, delay4;
+    Zic_Effect_Delay * delays[DELAY_COUNT] = { &delay0, &delay1, &delay2, &delay3, &delay4 };
 
     App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
         : synth0(0)

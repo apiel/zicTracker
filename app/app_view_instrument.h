@@ -264,7 +264,7 @@ public:
 
 class App_View_Instrument : public App_View_Table {
 protected:
-    App_Tracks* tracks;
+    // App_Tracks* tracks;
 
     uint8_t instrument = 0;
 
@@ -290,7 +290,7 @@ protected:
 public:
     App_View_Instrument(App_Tracks* _tracks)
         : App_View_Table(fields, VIEW_INSTR_ROW, VIEW_INSTR_COL)
-        , tracks(_tracks)
+        // , tracks(_tracks)
         , trackField(_tracks, &instrument)
         , instrField(_tracks, &instrument)
         , typeField(_tracks, &instrument)

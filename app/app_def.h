@@ -15,6 +15,7 @@ enum {
 enum {
     VIEW_MENU,
     VIEW_TRACK,
+    VIEW_TRACK_DELAY,
     VIEW_TRACK_MASTER,
     VIEW_PATTERN,
     VIEW_INSTRUMENT,
@@ -36,6 +37,15 @@ enum {
     INSTRUMENT_3,
     INSTRUMENT_4,
     INSTRUMENT_COUNT
+};
+
+enum {
+    DELAY_1,
+    DELAY_2,
+    DELAY_3,
+    DELAY_4,
+    DELAY_5,
+    DELAY_COUNT
 };
 
 enum {

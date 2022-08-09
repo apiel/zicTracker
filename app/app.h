@@ -9,6 +9,7 @@
 #include "./app_view_menu.h"
 #include "./app_view_pattern.h"
 #include "./app_view_track.h"
+#include "./app_view_trackDelay.h"
 #include "./app_view_trackMaster.h"
 #include <zic_seq_tempo.h>
 
@@ -25,6 +26,7 @@ public:
     App_View_TrackMaster trackMasterView;
     App_View_Instrument instrumentView;
     App_View_Pattern patternView;
+    App_View_TrackDelay trackDelayView;
 
     App(App_Patterns* patterns, App_Display* _display)
         : tracks(patterns)
@@ -33,6 +35,7 @@ public:
         , trackMasterView(&tracks, &tempo)
         , instrumentView(&tracks)
         , patternView(patterns)
+        , trackDelayView(&tracks)
     {
     }
 
@@ -62,6 +65,10 @@ public:
             break;
         case VIEW_TRACK_MASTER:
             trackMasterView.render(display);
+            break;
+
+        case VIEW_TRACK_DELAY:
+            trackDelayView.render(display);
             break;
 
         case VIEW_INSTRUMENT:
@@ -98,6 +105,9 @@ public:
             switch (view) {
             case VIEW_TRACK:
                 viewUpdated = trackView.update(&keys, display);
+                break;
+            case VIEW_TRACK_DELAY:
+                viewUpdated = trackDelayView.update(&keys, display);
                 break;
             case VIEW_TRACK_MASTER:
                 viewUpdated = trackMasterView.update(&keys, display);
