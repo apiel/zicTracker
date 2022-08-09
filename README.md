@@ -1,3 +1,8 @@
+Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
+
+Pattern should use alpha num value as name
+There should be a way to chain pattern
+
 // FIXME modulo, dont use motulo but comparison
 
 We should consider using soundfont as alternative synth engine to wav table/sample
