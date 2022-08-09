@@ -35,11 +35,11 @@ public:
         // TODO load pattern from last state saved in project status file
         synth1.set("kick.wav", false)->open();
 
-        delay0.set(0.5, 0.5);
-        delay1.set(1.0, 0.4);
-        delay2.set(1.5, 0.3);
-        delay3.set(2.0, 0.2);
-        delay4.set(2.5, 0.1);
+        // delay0.set(0.5, 0.8, 1.0);
+        // delay1.set(1.0, 0.4, 1.0);
+        // delay2.set(1.5, 0.3, 1.0);
+        // delay3.set(2.0, 0.2, 1.0);
+        // delay4.set(2.5, 0.1, 1.0);
     }
 
     void next()
