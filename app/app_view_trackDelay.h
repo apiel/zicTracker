@@ -9,6 +9,12 @@
 #define VIEW_TRACK_DELAY_COL 4
 #define VIEW_TRACK_DELAY_ROW_HEADERS 3
 
+// TODO
+// make a way to save delay settings
+// to be able to load settings
+// might add filter to make reverb...
+// might add lfo to make chorus...
+
 class App_View_TrackDelaySelect : public App_View_TableLabeledRow {
 protected:
     App_Tracks* tracks;
