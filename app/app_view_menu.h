@@ -70,8 +70,8 @@ public:
 
     Menu menu[APP_MENU_SIZE] = {
         { "Tracks", 'T', VIEW_TRACK, 'T', true },
+        { "Tracks sequencer", 'S', VIEW_TRACK_SEQUENCER, 'T', false },
         { "Track delay", 'D', VIEW_TRACK_DELAY, 'T', false },
-        { "Master track", 'M', VIEW_TRACK_MASTER, 'T', false },
         { "Instruments", 'I', VIEW_INSTRUMENT, 'I', true },
         { "Instruments kit", 'K', VIEW_INSTRUMENT, 'I', false }, // this is how to save a kit
         // 4 LFO -> can be assigned to any changeable values and can be use for multiple instrument at the same time

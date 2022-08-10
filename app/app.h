@@ -11,7 +11,7 @@
 #include "./app_view_project.h"
 #include "./app_view_track.h"
 #include "./app_view_trackDelay.h"
-#include "./app_view_trackMaster.h"
+#include "./app_view_trackSequencer.h"
 #include <zic_seq_tempo.h>
 
 class App {
@@ -24,7 +24,7 @@ public:
 
     App_View_Menu menuView;
     App_View_Track trackView;
-    App_View_TrackMaster trackMasterView;
+    App_View_TrackSequencer trackSeqView;
     App_View_Instrument instrumentView;
     App_View_Pattern patternView;
     App_View_TrackDelay trackDelayView;
@@ -34,7 +34,7 @@ public:
         : tracks(patterns)
         , display(_display)
         , trackView(&tracks)
-        , trackMasterView(&tracks, &tempo)
+        , trackSeqView(&tracks)
         , instrumentView(&tracks)
         , patternView(patterns)
         , trackDelayView(&tracks)
@@ -66,8 +66,8 @@ public:
         case VIEW_MENU:
             menuView.render(display);
             break;
-        case VIEW_TRACK_MASTER:
-            trackMasterView.render(display);
+        case VIEW_TRACK_SEQUENCER:
+            trackSeqView.render(display);
             break;
 
         case VIEW_TRACK_DELAY:
@@ -116,8 +116,8 @@ public:
             case VIEW_TRACK_DELAY:
                 viewUpdated = trackDelayView.update(&keys, display);
                 break;
-            case VIEW_TRACK_MASTER:
-                viewUpdated = trackMasterView.update(&keys, display);
+            case VIEW_TRACK_SEQUENCER:
+                viewUpdated = trackSeqView.update(&keys, display);
                 break;
             case VIEW_INSTRUMENT:
                 viewUpdated = instrumentView.update(&keys, display);
