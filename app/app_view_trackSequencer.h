@@ -54,7 +54,7 @@ protected:
 
 public:
     App_View_TrackSequencer(App_Tracks* _tracks)
-        : App_View_Table(fields, VIEW_TRACK_SEQUENCER_ROW, VIEW_TRACK_SEQUENCER_COL)
+        : App_View_Table(VIEW_TRACK_SEQUENCER, fields, VIEW_TRACK_SEQUENCER_ROW, VIEW_TRACK_SEQUENCER_COL)
         , allOffField(_tracks)
     {
         initSelection();

@@ -86,7 +86,7 @@ public:
     }
 };
 
-class App_View_Table : App_View {
+class App_View_Table : public App_View {
 protected:
     const uint8_t ROW_COUNT;
     uint8_t lastRow;
@@ -127,8 +127,9 @@ public:
     uint8_t selectedRow = 0;
     uint8_t selectedCol = 0;
 
-    App_View_Table(App_View_TableField** _fields, uint8_t _row, uint8_t _col)
-        : ROW_COUNT(_row)
+    App_View_Table(uint8_t viewId, App_View_TableField** _fields, uint8_t _row, uint8_t _col)
+        : App_View(viewId)
+        , ROW_COUNT(_row)
         , lastRow(_row)
         , COL_COUNT(_col)
         , fields(_fields)

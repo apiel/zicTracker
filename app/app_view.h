@@ -7,11 +7,17 @@
 #include <cstring>
 #include <stdio.h>
 
-class App_View
-{
+class App_View {
 public:
-    virtual void render(App_Display *display) = 0;
-    virtual uint8_t update(UiKeys* keys, App_Display * display) = 0;
+    uint8_t viewId = 0;
+
+    virtual void render(App_Display* display) = 0;
+    virtual uint8_t update(UiKeys* keys, App_Display* display) = 0;
+
+    App_View(u_int8_t _viewId)
+        : viewId(_viewId)
+    {
+    }
 };
 
 #endif
