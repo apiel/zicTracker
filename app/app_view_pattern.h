@@ -299,7 +299,7 @@ protected:
 
 public:
     App_View_Pattern(App_Patterns* _patterns)
-        : App_View_Table(VIEW_PATTERN, fields, VIEW_PATTERN_ROW, VIEW_PATTERN_COL)
+        : App_View_Table(fields, VIEW_PATTERN_ROW, VIEW_PATTERN_COL)
         , patterns(_patterns)
         , headerField(_patterns, &currentPatternId)
         , stepField(_patterns, &currentPatternId)

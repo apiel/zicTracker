@@ -53,7 +53,7 @@ protected:
 
 public:
     App_View_Project(Zic_Seq_Tempo<>* tempo)
-        : App_View_Table(VIEW_PROJECT, fields, VIEW_PROJECT_ROW, VIEW_PROJECT_COL)
+        : App_View_Table(fields, VIEW_PROJECT_ROW, VIEW_PROJECT_COL)
         , bpmField(tempo)
     {
         initSelection();

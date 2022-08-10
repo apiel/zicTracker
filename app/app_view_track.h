@@ -233,7 +233,7 @@ protected:
 
 public:
     App_View_Track(App_Tracks* _tracks)
-        : App_View_Table(VIEW_TRACK, fields, VIEW_TRACK_ROW, VIEW_TRACK_COL)
+        : App_View_Table(fields, VIEW_TRACK_ROW, VIEW_TRACK_COL)
         , tracks(_tracks)
         , fieldHeader(_tracks)
         , sequenceField(_tracks)

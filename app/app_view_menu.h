@@ -87,19 +87,14 @@ public:
     };
     uint8_t currentMenu = 0;
 
-    App_View_Menu()
-        : App_View(VIEW_MENU)
-    {
-    }
-
-    App_View_Menu* add(App_View* view)
+    App_View_Menu* add(uint8_t viewId, App_View* view)
     {
         for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
-            if (menu[i].viewId == view->viewId) {
+            if (menu[i].viewId == viewId) {
                 menu[i].view = view;
             }
         }
-        if (view->viewId == VIEW_MENU) {
+        if (viewId == VIEW_MENU) {
             viewMenu = view;
         }
         return this;

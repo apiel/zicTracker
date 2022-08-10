@@ -191,7 +191,7 @@ protected:
 
 public:
     App_View_TrackDelay(App_Tracks* _tracks)
-        : App_View_Table(VIEW_TRACK_DELAY, fields, VIEW_TRACK_DELAY_ROW, VIEW_TRACK_DELAY_COL)
+        : App_View_Table(fields, VIEW_TRACK_DELAY_ROW, VIEW_TRACK_DELAY_COL)
         // , tracks(_tracks)
         , selectField(_tracks)
         , onOffField(_tracks)

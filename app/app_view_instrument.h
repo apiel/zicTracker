@@ -289,7 +289,7 @@ protected:
 
 public:
     App_View_Instrument(App_Tracks* _tracks)
-        : App_View_Table(VIEW_INSTRUMENT, fields, VIEW_INSTR_ROW, VIEW_INSTR_COL)
+        : App_View_Table(fields, VIEW_INSTR_ROW, VIEW_INSTR_COL)
         // , tracks(_tracks)
         , trackField(_tracks, &instrument)
         , instrField(_tracks, &instrument)

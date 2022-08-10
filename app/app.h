@@ -40,13 +40,13 @@ public:
         , trackDelayView(&tracks)
         , projectView(&tempo)
     {
-        menuView.add(&menuView)
-            ->add(&trackView)
-            ->add(&trackSeqView)
-            ->add(&instrumentView)
-            ->add(&patternView)
-            ->add(&trackDelayView)
-            ->add(&projectView);
+        menuView.add(VIEW_MENU, &menuView)
+            ->add(VIEW_TRACK, &trackView)
+            ->add(VIEW_TRACK_SEQUENCER, &trackSeqView)
+            ->add(VIEW_INSTRUMENT, &instrumentView)
+            ->add(VIEW_PATTERN, &patternView)
+            ->add(VIEW_TRACK_DELAY, &trackDelayView)
+            ->add(VIEW_PROJECT, &projectView);
     }
 
     void start()
