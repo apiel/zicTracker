@@ -9,8 +9,6 @@
 #define VIEW_TRACK_DELAY_COL 4
 #define VIEW_TRACK_DELAY_ROW_HEADERS 3
 
-// TODO add on/off button
-
 // TODO
 // make a way to save delay settings
 // to be able to load settings
@@ -25,7 +23,7 @@ protected:
 
 public:
     App_View_TrackDelaySelect(App_Tracks* _tracks)
-        : App_View_TableLabeledRow("Track ", 2)
+        : App_View_TableLabeledRow("Track ", 1)
         , tracks(_tracks)
     {
     }
@@ -42,6 +40,33 @@ public:
         } else if (keys->Left || keys->Down) {
             tracks->select(tracks->trackId - 1);
         }
+        return VIEW_CHANGED;
+    }
+};
+
+class App_View_TrackDelayOnOff : public App_View_TableFieldCursor {
+protected:
+    App_Tracks* tracks;
+
+public:
+    App_View_TrackDelayOnOff(App_Tracks* _tracks)
+        : App_View_TableFieldCursor(3)
+        , tracks(_tracks)
+    {
+    }
+
+    void renderValue(App_Display* display, uint8_t col)
+    {
+        if (tracks->track->delayEnabled) {
+            strcat(display->text, "ON ");
+        } else {
+            strcat(display->text, "OFF");
+        }
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
+    {
+        tracks->track->toggleDelay();
         return VIEW_CHANGED;
     }
 };
@@ -147,12 +172,13 @@ protected:
     // App_Tracks* tracks;
 
     App_View_TrackDelaySelect selectField;
+    App_View_TrackDelayOnOff onOffField;
     App_View_TrackDelayHeader headerField;
     App_View_TrackDelaySetting settingField;
 
     App_View_TableField* fields[VIEW_TRACK_DELAY_ROW * VIEW_TRACK_DELAY_COL] = {
         // clang-format off
-        &selectField, &selectField, NULL, NULL,
+        &selectField, &selectField, &onOffField, NULL,
         NULL, NULL, NULL, NULL,
         &headerField, &headerField, &headerField, &headerField,
         &settingField, &settingField, &settingField, &settingField,
@@ -168,6 +194,7 @@ public:
         : App_View_Table(fields, VIEW_TRACK_DELAY_ROW, VIEW_TRACK_DELAY_COL)
         // , tracks(_tracks)
         , selectField(_tracks)
+        , onOffField(_tracks)
         , settingField(_tracks)
     {
         initSelection();
