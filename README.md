@@ -2,7 +2,9 @@ SHould we use audio block processing instead of indiviual sample processing?? ma
 
 Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
 
-Pattern should use alpha num value as name
+Pattern should use alpha num value as name???not really anyway it is limited to 200 pattern as they are loaded in memory
+But could use hex number so we have 256 pattern with only 2 letter instead of 3
+
 There should be a way to chain pattern
 
 // FIXME modulo, dont use motulo but comparison

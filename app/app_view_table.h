@@ -31,19 +31,45 @@ public:
     }
 };
 
-class App_View_TableLabeledRow : public App_View_TableField {
+class App_View_TableFieldCursor : public App_View_TableField {
 protected:
-    const char* label;
     uint8_t cursorLen;
 
 public:
-    App_View_TableLabeledRow(const char* _label, uint8_t _cursorLen)
-        : label(_label)
-        , cursorLen(_cursorLen)
+    App_View_TableFieldCursor(uint8_t _cursorLen)
+        : cursorLen(_cursorLen)
     {
     }
 
     virtual void renderValue(App_Display* display, uint8_t col) = 0;
+
+    bool isSelectable(uint8_t row, uint8_t col) override
+    {
+        return true;
+    }
+
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        if (selectedRow == row && selectedCol == col) {
+            display->setCursor(cursorLen);
+        }
+
+        renderValue(display, col);
+    }
+};
+
+class App_View_TableLabeledRow : public App_View_TableFieldCursor {
+protected:
+    const char* label;
+
+public:
+    App_View_TableLabeledRow(const char* _label, uint8_t _cursorLen)
+        : App_View_TableFieldCursor(_cursorLen)
+        , label(_label)
+    {
+    }
+
+    // virtual void renderValue(App_Display* display, uint8_t col) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
@@ -55,16 +81,12 @@ public:
         if (col == 0) {
             strcat(display->text, label);
         } else {
-            if (selectedRow == row && selectedCol == col) {
-                display->setCursor(cursorLen);
-            }
-
-            renderValue(display, col);
+            App_View_TableFieldCursor::render(display, row, col, selectedRow, selectedCol);
         }
     }
 };
 
-class App_View_Table : App_View {
+class App_View_Table : public App_View {
 protected:
     const uint8_t ROW_COUNT;
     uint8_t lastRow;
@@ -105,8 +127,9 @@ public:
     uint8_t selectedRow = 0;
     uint8_t selectedCol = 0;
 
-    App_View_Table(App_View_TableField** _fields, uint8_t _row, uint8_t _col)
-        : ROW_COUNT(_row)
+    App_View_Table(uint8_t viewId, App_View_TableField** _fields, uint8_t _row, uint8_t _col)
+        : App_View(viewId)
+        , ROW_COUNT(_row)
         , lastRow(_row)
         , COL_COUNT(_col)
         , fields(_fields)

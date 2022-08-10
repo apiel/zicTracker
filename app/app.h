@@ -8,9 +8,10 @@
 #include "./app_view_instrument.h"
 #include "./app_view_menu.h"
 #include "./app_view_pattern.h"
+#include "./app_view_project.h"
 #include "./app_view_track.h"
 #include "./app_view_trackDelay.h"
-#include "./app_view_trackMaster.h"
+#include "./app_view_trackSequencer.h"
 #include <zic_seq_tempo.h>
 
 class App {
@@ -23,20 +24,29 @@ public:
 
     App_View_Menu menuView;
     App_View_Track trackView;
-    App_View_TrackMaster trackMasterView;
+    App_View_TrackSequencer trackSeqView;
     App_View_Instrument instrumentView;
     App_View_Pattern patternView;
     App_View_TrackDelay trackDelayView;
+    App_View_Project projectView;
 
     App(App_Patterns* patterns, App_Display* _display)
         : tracks(patterns)
         , display(_display)
         , trackView(&tracks)
-        , trackMasterView(&tracks, &tempo)
+        , trackSeqView(&tracks)
         , instrumentView(&tracks)
         , patternView(patterns)
         , trackDelayView(&tracks)
+        , projectView(&tempo)
     {
+        menuView.add(&menuView)
+            ->add(&trackView)
+            ->add(&trackSeqView)
+            ->add(&instrumentView)
+            ->add(&patternView)
+            ->add(&trackDelayView)
+            ->add(&projectView);
     }
 
     void start()
@@ -57,32 +67,37 @@ public:
     {
         // TODO find a better place way to reset cursor
         display->reset();
+        menuView.getView()->render(display);
 
-        uint8_t view = menuView.getView();
-        switch (view) {
-        case VIEW_MENU:
-            menuView.render(display);
-            break;
-        case VIEW_TRACK_MASTER:
-            trackMasterView.render(display);
-            break;
+        // App_View * view = menuView.getView();
+        // switch (view) {
+        // case VIEW_MENU:
+        //     menuView.render(display);
+        //     break;
+        // case VIEW_TRACK_SEQUENCER:
+        //     trackSeqView.render(display);
+        //     break;
 
-        case VIEW_TRACK_DELAY:
-            trackDelayView.render(display);
-            break;
+        // case VIEW_TRACK_DELAY:
+        //     trackDelayView.render(display);
+        //     break;
 
-        case VIEW_INSTRUMENT:
-            instrumentView.render(display);
-            break;
+        // case VIEW_INSTRUMENT:
+        //     instrumentView.render(display);
+        //     break;
 
-        case VIEW_PATTERN:
-            patternView.render(display);
-            break;
+        // case VIEW_PATTERN:
+        //     patternView.render(display);
+        //     break;
 
-        default:
-            trackView.render(display);
-            break;
-        }
+        // case VIEW_PROJECT:
+        //     projectView.render(display);
+        //     break;
+
+        // default:
+        //     trackView.render(display);
+        //     break;
+        // }
 
         display->drawText();
     }
@@ -100,25 +115,29 @@ public:
         if (menuView.update(&keys, display) != VIEW_NONE) {
             render();
         } else {
-            uint8_t viewUpdated = VIEW_NONE;
-            uint8_t view = menuView.getView();
-            switch (view) {
-            case VIEW_TRACK:
-                viewUpdated = trackView.update(&keys, display);
-                break;
-            case VIEW_TRACK_DELAY:
-                viewUpdated = trackDelayView.update(&keys, display);
-                break;
-            case VIEW_TRACK_MASTER:
-                viewUpdated = trackMasterView.update(&keys, display);
-                break;
-            case VIEW_INSTRUMENT:
-                viewUpdated = instrumentView.update(&keys, display);
-                break;
-            case VIEW_PATTERN:
-                viewUpdated = patternView.update(&keys, display);
-                break;
-            }
+            // uint8_t viewUpdated = VIEW_NONE;
+            // uint8_t view = menuView.getView();
+            // switch (view) {
+            // case VIEW_TRACK:
+            //     viewUpdated = trackView.update(&keys, display);
+            //     break;
+            // case VIEW_TRACK_DELAY:
+            //     viewUpdated = trackDelayView.update(&keys, display);
+            //     break;
+            // case VIEW_TRACK_SEQUENCER:
+            //     viewUpdated = trackSeqView.update(&keys, display);
+            //     break;
+            // case VIEW_INSTRUMENT:
+            //     viewUpdated = instrumentView.update(&keys, display);
+            //     break;
+            // case VIEW_PATTERN:
+            //     viewUpdated = patternView.update(&keys, display);
+            //     break;
+            // case VIEW_PROJECT:
+            //     viewUpdated = projectView.update(&keys, display);
+            //     break;
+            // }
+            uint8_t viewUpdated = menuView.getView()->update(&keys, display);
             if (viewUpdated != VIEW_NONE) {
                 render();
             }
