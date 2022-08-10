@@ -9,11 +9,15 @@
 #define VIEW_TRACK_DELAY_COL 4
 #define VIEW_TRACK_DELAY_ROW_HEADERS 3
 
+// TODO add on/off button
+
 // TODO
 // make a way to save delay settings
 // to be able to load settings
 // might add filter to make reverb...
 // might add lfo to make chorus...
+
+// TODO improve delay audio
 
 class App_View_TrackDelaySelect : public App_View_TableLabeledRow {
 protected:
@@ -92,7 +96,7 @@ public:
 
         case 2:
             if (delay->amplitude == 1.0f) {
-                strcat(display->text, "1.00 ");
+                strcat(display->text, "1.0 ");
             } else {
                 sprintf(display->text + strlen(display->text), ".%02d ", (uint8_t)(delay->amplitude * 100));
             }
@@ -100,7 +104,7 @@ public:
 
         case 3:
             if (delay->feedback == 1.0f) {
-                strcat(display->text, "1.00 ");
+                strcat(display->text, "1.0 ");
             } else {
                 sprintf(display->text + strlen(display->text), ".%02d ", (uint8_t)(delay->feedback * 100));
             }

@@ -18,7 +18,8 @@ public:
     Zic_Seq_Loop looper;
     Zic_Effect_DelayHistory delayHistory;
     Zic_Effect_Delay delay0, delay1, delay2, delay3, delay4;
-    Zic_Effect_Delay * delays[DELAY_COUNT] = { &delay0, &delay1, &delay2, &delay3, &delay4 };
+    Zic_Effect_Delay* delays[DELAY_COUNT] = { &delay0, &delay1, &delay2, &delay3, &delay4 };
+    bool delayEnabled = false;
 
     App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
         : synth0(0)
@@ -82,12 +83,12 @@ public:
     {
         int16_t s = synth ? synth->next() : 0;
         return delayHistory.sample(s)
-            + delay0.sample()
-            + delay1.sample()
-            + delay2.sample()
-            + delay3.sample()
-            + delay4.sample();
-        ;
+            + (delayEnabled ? delay0.sample() + delay1.sample() + delay2.sample() + delay3.sample() + delay4.sample() : 0);
+    }
+
+    void toggleDelay()
+    {
+        delayEnabled = !delayEnabled;
     }
 };
 

@@ -7,7 +7,7 @@
 
 #include <zic_seq_pattern.h>
 
-#define VIEW_TRACK_ROW 5
+#define VIEW_TRACK_ROW 6
 #define VIEW_TRACK_COL 5
 
 class App_View_TrackRow : public App_View_TableField {
@@ -24,7 +24,7 @@ public:
     {
     }
 
-    virtual void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state) = 0;
+    virtual void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
@@ -40,10 +40,11 @@ public:
                 display->setCursor(3, 1);
             }
             uint8_t trackId = col - 1;
+            App_Audio_Track* track = tracks->tracks[trackId];
             // printf("%d col %d row %d updating %d %d %d\n", trackId, col, row, updating, col == selectedCol, row == selectedRow);
-            Zic_Seq_Loop_State* state = updating && col == selectedCol && row == selectedRow ? &newState : &tracks->tracks[trackId]->looper.nextState;
+            Zic_Seq_Loop_State* state = updating && col == selectedCol && row == selectedRow ? &newState : &track->looper.nextState;
 
-            renderValue(display, trackId, state);
+            renderValue(display, trackId, track, state);
         }
     }
 
@@ -69,7 +70,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
     {
         sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == trackId ? '*' : ' ', trackId + 1);
     }
@@ -82,7 +83,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
     {
         if (state->playing) {
             strcat(display->text, " >ON");
@@ -119,7 +120,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
     {
         sprintf(display->text + strlen(display->text), " %3d", state->pattern->id + 1);
     }
@@ -149,7 +150,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
     {
         sprintf(display->text + strlen(display->text), " %c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
     }
@@ -176,10 +177,35 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
     {
         // TBD. to be linked
         strcat(display->text, " ---");
+    }
+};
+
+class App_View_TrackDelayEnabled : public App_View_TrackRow {
+public:
+    App_View_TrackDelayEnabled(App_Tracks* _tracks)
+        : App_View_TrackRow(_tracks, "DLY")
+    {
+    }
+
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
+    {
+        if (track->delayEnabled) {
+            strcat(display->text, " ON ");
+        } else {
+            strcat(display->text, " OFF");
+        }
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    {
+        // TODO lets just make track part of the whole object
+        uint8_t trackId = col - 1;
+        tracks->tracks[trackId]->toggleDelay();
+        return VIEW_CHANGED;
     }
 };
 
@@ -192,6 +218,7 @@ protected:
     App_View_TrackPattern patternField;
     App_View_TrackDetune detuneField;
     App_View_TrackMasterField masterField;
+    App_View_TrackDelayEnabled delayField;
 
     App_View_TableField* fields[VIEW_TRACK_ROW * VIEW_TRACK_COL] = {
         // clang-format off
@@ -200,6 +227,7 @@ protected:
         &patternField, &patternField, &patternField, &patternField, &patternField,
         &detuneField, &detuneField, &detuneField, &detuneField, &detuneField,
         &masterField, &masterField, &masterField, &masterField, &masterField,
+        &delayField, &delayField, &delayField, &delayField, &delayField,
         // clang-format on
     };
 
@@ -212,6 +240,7 @@ public:
         , patternField(_tracks)
         , detuneField(_tracks)
         , masterField(_tracks)
+        , delayField(_tracks)
     {
         initSelection();
     }
