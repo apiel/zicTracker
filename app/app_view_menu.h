@@ -69,8 +69,6 @@ protected:
 public:
     UiKeys* keys = NULL;
 
-    App_View* viewMenu;
-
     Menu menu[APP_MENU_SIZE] = {
         { "Tracks", 'T', VIEW_TRACK, NULL, 'T', true },
         { "Tracks sequencer", 'S', VIEW_TRACK_SEQUENCER, NULL, 'T', false },
@@ -87,6 +85,8 @@ public:
     };
     uint8_t currentMenu = 0;
 
+    // App_View_Menu(Menu*)
+
     App_View_Menu* add(uint8_t viewId, App_View* view)
     {
         for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
@@ -94,20 +94,17 @@ public:
                 menu[i].view = view;
             }
         }
-        if (viewId == VIEW_MENU) {
-            viewMenu = view;
-        }
         return this;
     }
 
     App_View* getView()
     {
         if (keys && keys->B) {
-            return viewMenu;
+            return this;
         }
 
         App_View* view = menu[currentMenu].view;
-        return view ? view : viewMenu;
+        return view ? view : this;
     }
 
     void render(App_Display* display)
