@@ -68,37 +68,6 @@ public:
         // TODO find a better place way to reset cursor
         display->reset();
         menuView.getView()->render(display);
-
-        // App_View * view = menuView.getView();
-        // switch (view) {
-        // case VIEW_MENU:
-        //     menuView.render(display);
-        //     break;
-        // case VIEW_TRACK_SEQUENCER:
-        //     trackSeqView.render(display);
-        //     break;
-
-        // case VIEW_TRACK_DELAY:
-        //     trackDelayView.render(display);
-        //     break;
-
-        // case VIEW_INSTRUMENT:
-        //     instrumentView.render(display);
-        //     break;
-
-        // case VIEW_PATTERN:
-        //     patternView.render(display);
-        //     break;
-
-        // case VIEW_PROJECT:
-        //     projectView.render(display);
-        //     break;
-
-        // default:
-        //     trackView.render(display);
-        //     break;
-        // }
-
         display->drawText();
     }
 
@@ -114,33 +83,8 @@ public:
 
         if (menuView.update(&keys, display) != VIEW_NONE) {
             render();
-        } else {
-            // uint8_t viewUpdated = VIEW_NONE;
-            // uint8_t view = menuView.getView();
-            // switch (view) {
-            // case VIEW_TRACK:
-            //     viewUpdated = trackView.update(&keys, display);
-            //     break;
-            // case VIEW_TRACK_DELAY:
-            //     viewUpdated = trackDelayView.update(&keys, display);
-            //     break;
-            // case VIEW_TRACK_SEQUENCER:
-            //     viewUpdated = trackSeqView.update(&keys, display);
-            //     break;
-            // case VIEW_INSTRUMENT:
-            //     viewUpdated = instrumentView.update(&keys, display);
-            //     break;
-            // case VIEW_PATTERN:
-            //     viewUpdated = patternView.update(&keys, display);
-            //     break;
-            // case VIEW_PROJECT:
-            //     viewUpdated = projectView.update(&keys, display);
-            //     break;
-            // }
-            uint8_t viewUpdated = menuView.getView()->update(&keys, display);
-            if (viewUpdated != VIEW_NONE) {
-                render();
-            }
+        } else if (menuView.getView()->update(&keys, display) != VIEW_NONE) {
+            render();
         }
     }
 };
