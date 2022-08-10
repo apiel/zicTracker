@@ -4,8 +4,6 @@
 #include "./app_display.h"
 #include "./app_view.h"
 
-#define APP_MENU_SIZE 8
-
 typedef struct {
     const char* name;
     char key;
@@ -16,15 +14,18 @@ typedef struct {
 
 class App_View_Menu : public App_View {
 protected:
+    Menu* menu;
+    uint8_t menuSize = 0;
+
     void inc(int8_t val)
     {
         // or could be:
-        // currentMenu = ((currentMenu ? currentMenu : APP_MENU_SIZE) + val) % APP_MENU_SIZE;
+        // currentMenu = ((currentMenu ? currentMenu : menuSize) + val) % menuSize;
         currentMenu = (currentMenu + val);
         if (currentMenu == 255) {
-            currentMenu = APP_MENU_SIZE - 1;
+            currentMenu = menuSize - 1;
         }
-        currentMenu = currentMenu % APP_MENU_SIZE;
+        currentMenu = currentMenu % menuSize;
     }
 
     void menuInc(int8_t val)
@@ -67,12 +68,11 @@ protected:
 
 public:
     UiKeys* keys = NULL;
-
-    Menu* menu;
     uint8_t currentMenu = 0;
 
-    App_View_Menu(Menu* _menu)
+    App_View_Menu(Menu* _menu, uint8_t _menuSize)
         : menu(_menu)
+        , menuSize(_menuSize)
     {
     }
 
@@ -89,7 +89,7 @@ public:
     void render(App_Display* display)
     {
         strcpy(display->text, "");
-        for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
+        for (uint8_t i = 0; i < menuSize; i++) {
             if (i != 0 && menu[i].group != menu[i - 1].group) {
                 strcat(display->text, "\n");
             }

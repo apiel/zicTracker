@@ -13,18 +13,6 @@ enum {
 };
 
 enum {
-    VIEW_MENU,
-    VIEW_TRACK,
-    VIEW_TRACK_DELAY,
-    VIEW_TRACK_SEQUENCER,
-    VIEW_PATTERN,
-    VIEW_INSTRUMENT,
-    VIEW_SAMPLER,
-    VIEW_PROJECT,
-    VIEW_COUNT
-};
-
-enum {
     TRACK_1,
     TRACK_2,
     TRACK_3,
