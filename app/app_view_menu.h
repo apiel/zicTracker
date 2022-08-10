@@ -19,13 +19,7 @@ protected:
 
     void inc(int8_t val)
     {
-        // or could be:
-        // currentMenu = ((currentMenu ? currentMenu : menuSize) + val) % menuSize;
-        currentMenu = (currentMenu + val);
-        if (currentMenu == 255) {
-            currentMenu = menuSize - 1;
-        }
-        currentMenu = currentMenu % menuSize;
+        currentMenu = (currentMenu + val + menuSize) % menuSize;
     }
 
     void menuInc(int8_t val)
