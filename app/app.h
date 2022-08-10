@@ -8,6 +8,7 @@
 #include "./app_view_instrument.h"
 #include "./app_view_menu.h"
 #include "./app_view_pattern.h"
+#include "./app_view_project.h"
 #include "./app_view_track.h"
 #include "./app_view_trackDelay.h"
 #include "./app_view_trackMaster.h"
@@ -27,6 +28,7 @@ public:
     App_View_Instrument instrumentView;
     App_View_Pattern patternView;
     App_View_TrackDelay trackDelayView;
+    App_View_Project projectView;
 
     App(App_Patterns* patterns, App_Display* _display)
         : tracks(patterns)
@@ -36,6 +38,7 @@ public:
         , instrumentView(&tracks)
         , patternView(patterns)
         , trackDelayView(&tracks)
+        , projectView(&tempo)
     {
     }
 
@@ -79,6 +82,10 @@ public:
             patternView.render(display);
             break;
 
+        case VIEW_PROJECT:
+            projectView.render(display);
+            break;
+
         default:
             trackView.render(display);
             break;
@@ -117,6 +124,9 @@ public:
                 break;
             case VIEW_PATTERN:
                 viewUpdated = patternView.update(&keys, display);
+                break;
+            case VIEW_PROJECT:
+                viewUpdated = projectView.update(&keys, display);
                 break;
             }
             if (viewUpdated != VIEW_NONE) {

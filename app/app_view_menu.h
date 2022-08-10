@@ -80,7 +80,7 @@ public:
         // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
         { "Pattern", 'P', VIEW_PATTERN, 'P', true },
         { "Sampler", 'S', VIEW_SAMPLER, 'S', true }, // Record all track to sample and edit sample
-        { "Project", 'P', VIEW_TRACK, 'P', true }, // Select project
+        { "Project", 'P', VIEW_PROJECT, 'P', true }, // Select project
     };
     uint8_t currentMenu = 0;
 

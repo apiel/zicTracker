@@ -20,6 +20,7 @@ enum {
     VIEW_PATTERN,
     VIEW_INSTRUMENT,
     VIEW_SAMPLER,
+    VIEW_PROJECT,
     VIEW_COUNT
 };
 
