@@ -1,3 +1,5 @@
+SHould we use audio block processing instead of indiviual sample processing?? maybe :p
+
 Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
 
 Pattern should use alpha num value as name
