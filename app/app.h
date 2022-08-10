@@ -22,13 +22,29 @@ public:
     App_Display* display;
     UiKeys keys;
 
-    App_View_Menu menuView;
     App_View_Track trackView;
     App_View_TrackSequencer trackSeqView;
     App_View_Instrument instrumentView;
     App_View_Pattern patternView;
     App_View_TrackDelay trackDelayView;
     App_View_Project projectView;
+
+    App_View_Menu menuView;
+
+    Menu menu[APP_MENU_SIZE] = {
+        (Menu){ "Tracks", 'T', &trackView, 'T', true },
+        (Menu){ "Tracks sequencer", 'S', &trackSeqView, 'T', false },
+        (Menu){ "Track delay", 'D', &trackDelayView, 'T', false },
+        (Menu){ "Instruments", 'I', &instrumentView, 'I', true },
+        (Menu){ "Instruments kit", 'K', NULL, 'I', false }, // this is how to save a kit
+        // 4 LFO -> can be assigned to any changeable values and can be use for multiple instrument at the same time
+        // 4 Extra Envelop -> same as LFO
+        // IFX: reverb, distortion...
+        // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
+        (Menu){ "Pattern", 'P', &patternView, 'P', true },
+        (Menu){ "Sampler", 'S', NULL, 'S', true }, // Record all track to sample and edit sample
+        (Menu){ "Project", 'P', &projectView, 'P', true }, // Select project
+    };
 
     App(App_Patterns* patterns, App_Display* _display)
         : tracks(patterns)
@@ -39,14 +55,8 @@ public:
         , patternView(patterns)
         , trackDelayView(&tracks)
         , projectView(&tempo)
+        , menuView(&menu[0])
     {
-        menuView.add(VIEW_MENU, &menuView)
-            ->add(VIEW_TRACK, &trackView)
-            ->add(VIEW_TRACK_SEQUENCER, &trackSeqView)
-            ->add(VIEW_INSTRUMENT, &instrumentView)
-            ->add(VIEW_PATTERN, &patternView)
-            ->add(VIEW_TRACK_DELAY, &trackDelayView)
-            ->add(VIEW_PROJECT, &projectView);
     }
 
     void start()

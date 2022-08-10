@@ -9,7 +9,6 @@
 typedef struct {
     const char* name;
     char key;
-    uint8_t viewId;
     App_View* view;
     char group;
     bool selected;
@@ -69,32 +68,12 @@ protected:
 public:
     UiKeys* keys = NULL;
 
-    Menu menu[APP_MENU_SIZE] = {
-        { "Tracks", 'T', VIEW_TRACK, NULL, 'T', true },
-        { "Tracks sequencer", 'S', VIEW_TRACK_SEQUENCER, NULL, 'T', false },
-        { "Track delay", 'D', VIEW_TRACK_DELAY, NULL, 'T', false },
-        { "Instruments", 'I', VIEW_INSTRUMENT, NULL, 'I', true },
-        { "Instruments kit", 'K', VIEW_INSTRUMENT, NULL, 'I', false }, // this is how to save a kit
-        // 4 LFO -> can be assigned to any changeable values and can be use for multiple instrument at the same time
-        // 4 Extra Envelop -> same as LFO
-        // IFX: reverb, distortion...
-        // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
-        { "Pattern", 'P', VIEW_PATTERN, NULL, 'P', true },
-        { "Sampler", 'S', VIEW_SAMPLER, NULL, 'S', true }, // Record all track to sample and edit sample
-        { "Project", 'P', VIEW_PROJECT, NULL, 'P', true }, // Select project
-    };
+    Menu* menu;
     uint8_t currentMenu = 0;
 
-    // App_View_Menu(Menu*)
-
-    App_View_Menu* add(uint8_t viewId, App_View* view)
+    App_View_Menu(Menu* _menu)
+        : menu(_menu)
     {
-        for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
-            if (menu[i].viewId == viewId) {
-                menu[i].view = view;
-            }
-        }
-        return this;
     }
 
     App_View* getView()
