@@ -116,11 +116,6 @@ protected:
     const char* headers[5] = { "STP ", "I ", "NOT ", "VEL ", "SLID" };
 
 public:
-    bool isSelectable(uint8_t row, uint8_t col) override
-    {
-        return false;
-    }
-
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         strcat(display->text, headers[col]);

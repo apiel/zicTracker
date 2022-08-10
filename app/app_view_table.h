@@ -5,7 +5,7 @@
 #include "./app_view.h"
 
 #ifndef TABLE_VISIBLE_ROWS
-#define TABLE_VISIBLE_ROWS 7
+#define TABLE_VISIBLE_ROWS 10
 #endif
 
 class App_View_TableField {

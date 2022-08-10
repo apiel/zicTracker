@@ -16,6 +16,8 @@ OPENDINGUX_CC=$(OPENDINGUX_ROOT)/usr/bin/mipsel-gcw0-linux-uclibc-g++ -o zicTrac
 OPENDINGUX_SDL_CONFIG=$(OPENDINGUX_ROOT)/usr/mipsel-gcw0-linux-uclibc/sysroot/usr/bin/sdl2-config
 OPENDINGUX_TARGET=1
 
+RG351_IP=192.168.1.111
+
 #rg351
 # https://github.com/christianhaitian/arkos/wiki/Building
 # or https://github.com/mica-angeli/retrooz_dev_docker
@@ -40,13 +42,13 @@ rg351Chrooted:
 	make CC="g++ -o zicTrackerRG351" build
 
 rg351SCP:
-	sshpass -p "ark" scp zicTrackerRG351 ark@192.168.1.108:/roms/ports/zic/zicTracker
+	sshpass -p "ark" scp zicTrackerRG351 ark@$(RG351_IP):/roms/ports/zic/zicTracker
 
 rg351Kill:
-	sshpass -p "ark" ssh ark@192.168.1.108 /roms/ports/zic/kill.sh
+	sshpass -p "ark" ssh ark@$(RG351_IP) /roms/ports/zic/kill.sh
 
 rg351Log:
-	sshpass -p "ark" ssh ark@192.168.1.108 tail -f /roms/ports/zic/zic.log
+	sshpass -p "ark" ssh ark@$(RG351_IP) tail -f /roms/ports/zic/zic.log
 
 build:
 	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) `$(SDL_CONFIG) --cflags --libs` -DZIC_TARGET=$(ZIC_TARGET) $(ZIC_SDL_MIXER)

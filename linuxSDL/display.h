@@ -12,8 +12,8 @@
 #include "../app/app_display.h"
 
 // rg351
-#define SCREEN_W 640
-#define SCREEN_H 480
+#define SCREEN_W 480
+#define SCREEN_H 320
 
 // #define SCREEN_W 320
 // #define SCREEN_H 240
@@ -30,6 +30,9 @@ protected:
             return;
         }
 
+// #if FONT_SIZE == 1
+// should tryy to just draw a pixel....
+// #else
         SDL_Rect r = { x * FONT_SIZE, y * FONT_SIZE, FONT_SIZE, FONT_SIZE };
         SDL_FillRect(surface, &r, fontColor);
     }
