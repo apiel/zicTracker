@@ -3,9 +3,7 @@
 
 #include <stdint.h>
 
-#ifndef PATTERN_COUNT
-#define PATTERN_COUNT 200
-#endif
+#define PATTERN_COUNT 255 // uint8 -> 2 hex
 
 enum {
     VIEW_NONE,

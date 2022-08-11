@@ -21,7 +21,7 @@ char patternFilepath[MAX_PATTERN_FILENAME];
 
 void setPatternFilename(uint8_t project, uint8_t pos)
 {
-    snprintf(patternFilepath, MAX_PATTERN_FILENAME, "projects/%d/patterns/%d.pat", project, pos);
+    snprintf(patternFilepath, MAX_PATTERN_FILENAME, "projects/%d/patterns/%02X.pat", project, pos);
 }
 
 uint8_t loadFilePattern(uint8_t project, uint8_t pos, char* content, uint16_t len)

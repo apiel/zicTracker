@@ -50,7 +50,7 @@ public:
             }
             switch (col) {
             case 0:
-                sprintf(display->text + strlen(display->text), "%3d ", *currentPatternId + 1);
+                sprintf(display->text + strlen(display->text), " %02X ", *currentPatternId + 1);
                 break;
 
             case 1:
@@ -75,9 +75,9 @@ public:
             } else if (keys->Left) {
                 direction = -1;
             } else if (keys->Up) {
-                direction = 10;
+                direction = col == 0 ? 16 : 10;
             } else if (keys->Down) {
-                direction = -10;
+                direction = col == 0 ? -16 : -10;
             }
             *currentPatternId = (*currentPatternId + PATTERN_COUNT + direction) % PATTERN_COUNT;
         } else if (col == 1) {
@@ -160,7 +160,7 @@ public:
             if (step->note == 0) {
                 strcat(display->text, "--- ");
             } else {
-                sprintf(display->text + strlen(display->text), "%s%d ", Zic::getNoteDash(step->note), Zic::getNoteOctave(step->note));
+                sprintf(display->text + strlen(display->text), "%2s%d ", Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note));
             }
             break;
 

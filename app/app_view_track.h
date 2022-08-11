@@ -122,7 +122,7 @@ public:
 
     void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
     {
-        sprintf(display->text + strlen(display->text), " %3d", state->pattern->id + 1);
+        sprintf(display->text + strlen(display->text), "  %02X", state->pattern->id + 1);
     }
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
@@ -133,9 +133,9 @@ public:
         } else if (keys->Left) {
             direction = -1;
         } else if (keys->Up) {
-            direction = 10;
+            direction = 16;
         } else if (keys->Down) {
-            direction = -10;
+            direction = -16;
         }
         uint16_t id = newState.pattern->id ? newState.pattern->id : PATTERN_COUNT;
         newState.pattern = &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT];
