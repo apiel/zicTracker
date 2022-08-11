@@ -6,16 +6,20 @@
 
 #include <wavetables/wavetable_Bank.h>
 #include <zic_effect_delay.h>
-#include <zic_seq_loop.h>
+#include <zic_seq_loopMaster.h>
+
+#define PATTERN_COMPONENT_COUNT 5
 
 class App_Audio_Track {
 public:
     uint8_t id = 0;
 
+    Zic_Seq_PatternComponent components[PATTERN_COMPONENT_COUNT];
+
     App_Instrument synth0, synth1, synth2, synth3;
     App_Instrument* synths[INSTRUMENT_COUNT] = { &synth0, &synth1, &synth2, &synth3 };
     App_Instrument* synth = NULL;
-    Zic_Seq_Loop looper;
+    Zic_Seq_LoopMaster looper;
     Zic_Effect_DelayHistory delayHistory;
     Zic_Effect_Delay delay0, delay1, delay2, delay3, delay4;
     Zic_Effect_Delay* delays[DELAY_COUNT] = { &delay0, &delay1, &delay2, &delay3, &delay4 };
@@ -26,7 +30,7 @@ public:
         , synth1(1)
         , synth2(2)
         , synth3(3)
-        , looper(&patterns->patterns[0])
+        , looper(&components[0], PATTERN_COMPONENT_COUNT)
         , delay0(&delayHistory)
         , delay1(&delayHistory)
         , delay2(&delayHistory)

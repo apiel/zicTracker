@@ -18,18 +18,36 @@ public:
 };
 
 class App_View_TrackSequencerPat : public App_View_TableField {
+protected:
+    App_Tracks* tracks;
+
 public:
+    App_View_TrackSequencerPat(App_Tracks* _tracks)
+        : tracks(_tracks)
+    {
+    }
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
+        App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+        Zic_Seq_PatternComponent* component = &track->components[(row - 1) % PATTERN_COMPONENT_COUNT];
+
         if (selectedRow == row && selectedCol == col) {
             display->setCursor(2, col % 3 == 0 ? 1 : 0);
         }
         if (col % 3 == 0) {
-            strcat(display->text, " 0B");
+            if (component->pattern == NULL) {
+                strcat(display->text, " --");
+            } else {
+                sprintf(display->text + strlen(display->text), "%02X", component->pattern->id + 1);
+            }
         } else if (col % 3 == 1) {
-            strcat(display->text, "+0");
+            if (component->detune < 0) {
+                sprintf(display->text + strlen(display->text), "-%c", '0' - component->detune);
+            } else {
+                sprintf(display->text + strlen(display->text), "+%c", '0' + component->detune);
+            }
         } else {
-            strcat(display->text, "x4");
+            strcat(display->text, SEQ_CONDITIONS_NAMES[component->condition]);
         }
     }
 
@@ -57,6 +75,7 @@ protected:
 public:
     App_View_TrackSequencer(App_Tracks* _tracks)
         : App_View_Table(fields, VIEW_TRACK_SEQUENCER_ROW, VIEW_TRACK_SEQUENCER_COL)
+        , patField(_tracks)
     {
         initSelection();
     }

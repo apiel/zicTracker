@@ -1,26 +1,18 @@
-SHould we use audio block processing instead of indiviual sample processing?? maybe :p
+## TODO
 
-Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
+- use https://waveeditonline.com/ to load morphable wavetables
 
-Pattern should use alpha num value as name???not really anyway it is limited to 200 pattern as they are loaded in memory
-But could use hex number so we have 256 pattern with only 2 letter instead of 3
+- SHould we use audio block processing instead of indiviual sample processing?? maybe :p
 
-There should be a way to chain pattern
+- Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
 
-// FIXME modulo, dont use motulo but comparison
+- // FIXME modulo, dont use motulo but comparison
 
-We should consider using soundfont as alternative synth engine to wav table/sample
-Maybe even use https://github.com/schellingb/TinySoundFont/blob/master/examples/example1.c
+- Use soundfont as alternative synth engine to wav table/sample
+            Maybe even use https://github.com/schellingb/TinySoundFont/blob/master/examples/example1.c
 
-
-let have a look at some headless synth like:
-    - fluidsynth is just to play sample file base soundfont
-    - zynaddsubfx --auto-connect --no-gui --> is really too complexe to use with zicTrack (too much features, too much CPU ressources)
-    - amsynth (doesnt seem to have headless feature)
-
-TODO table should be compose of class row and class field
-
-TODO fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
+- fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
+    At least be able to map midi controller!
 
 ## Project
 

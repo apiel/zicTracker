@@ -33,8 +33,8 @@ public:
 
 #define APP_MENU_SIZE 8
     Menu menu[APP_MENU_SIZE] = {
-        (Menu) { "Tracks", 'T', &trackView, 'T', true },
-        (Menu) { "Tracks sequencer", 'S', &trackSeqView, 'T', false },
+        (Menu) { "Tracks sequencer", 'S', &trackSeqView, 'T', true },
+        (Menu) { "Tracks", 'T', &trackView, 'T', false },
         (Menu) { "Track delay", 'D', &trackDelayView, 'T', false },
         (Menu) { "Instruments", 'I', &instrumentView, 'I', true },
         (Menu) { "Instruments kit", 'K', NULL, 'I', false }, // this is how to save a kit
