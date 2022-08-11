@@ -44,7 +44,7 @@ public:
             if (component->pattern == NULL) {
                 strcat(display->text, " --");
             } else {
-                sprintf(display->text + strlen(display->text), "%02X", component->pattern->id + 1);
+                sprintf(display->text + strlen(display->text), " %02X", component->pattern->id + 1);
             }
         } else if (col % 3 == 1) {
             if (component->detune < 0) {
@@ -76,9 +76,12 @@ public:
 
         switch (col) {
         case 0:
-            // delay->setSec(delay->sec + direction);
-            // component->setDetune(component->detune + direction);
+        {
+            int16_t id = component->pattern == NULL ? -1 : component->pattern->id;
+            id = (id + direction) % PATTERN_COUNT;
+            component->pattern = id < 0 ? NULL : &tracks->patterns->patterns[id];
             break;
+        }
         case 1: {
             component->setDetune(component->detune + direction);
             break;
