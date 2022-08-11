@@ -13,7 +13,7 @@
 class App_View_TrackRow : public App_View_TableField {
 protected:
     App_Tracks* tracks;
-    Zic_Seq_Loop_State newState;
+    Zic_Seq_LoopState newState;
     bool updating = false;
     const char* label;
 
@@ -24,7 +24,7 @@ public:
     {
     }
 
-    virtual void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state) = 0;
+    virtual void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
@@ -42,7 +42,7 @@ public:
             uint8_t trackId = col - 1;
             App_Audio_Track* track = tracks->tracks[trackId];
             // printf("%d col %d row %d updating %d %d %d\n", trackId, col, row, updating, col == selectedCol, row == selectedRow);
-            Zic_Seq_Loop_State* state = updating && col == selectedCol && row == selectedRow ? &newState : &track->looper.nextState;
+            Zic_Seq_LoopState* state = updating && col == selectedCol && row == selectedRow ? &newState : &track->looper.nextState;
 
             renderValue(display, trackId, track, state);
         }
@@ -50,14 +50,14 @@ public:
 
     void updateStart()
     {
-        Zic_Seq_Loop_State* nextState = &tracks->looper->nextState;
+        Zic_Seq_LoopState* nextState = &tracks->looper->nextState;
         newState.set(nextState);
         updating = true;
     }
 
     void updateEnd()
     {
-        Zic_Seq_Loop_State* nextState = &tracks->looper->nextState;
+        Zic_Seq_LoopState* nextState = &tracks->looper->nextState;
         nextState->set(&newState);
         updating = false;
     }
@@ -70,7 +70,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
     {
         sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == trackId ? '*' : ' ', trackId + 1);
     }
@@ -83,7 +83,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
     {
         if (state->playing) {
             strcat(display->text, " >ON");
@@ -120,7 +120,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
     {
         sprintf(display->text + strlen(display->text), "  %02X", state->pattern->id + 1);
     }
@@ -150,7 +150,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
     {
         sprintf(display->text + strlen(display->text), " %c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
     }
@@ -177,7 +177,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
     {
         // TBD. to be linked
         strcat(display->text, " ---");
@@ -191,7 +191,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_Loop_State* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
     {
         if (track->delayEnabled) {
             strcat(display->text, " ON ");
