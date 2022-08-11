@@ -1,8 +1,8 @@
 ## TODO
 
-- use https://waveeditonline.com/ to load morphable wavetables
+- !NEXT! use https://waveeditonline.com/ to load morphable wavetables
 
-- SHould we use audio block processing instead of indiviual sample processing?? maybe :p
+- Should we use audio block processing instead of indiviual sample processing?? maybe :p
 
 - Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
 
