@@ -26,6 +26,12 @@ public:
         : tracks(_tracks)
     {
     }
+
+    bool isSelectable(uint8_t row, uint8_t col) override
+    {
+        return true;
+    }
+
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
@@ -42,18 +48,46 @@ public:
             }
         } else if (col % 3 == 1) {
             if (component->detune < 0) {
-                sprintf(display->text + strlen(display->text), "-%c", '0' - component->detune);
+                sprintf(display->text + strlen(display->text), "-%c", alphanum[-component->detune]);
             } else {
-                sprintf(display->text + strlen(display->text), "+%c", '0' + component->detune);
+                sprintf(display->text + strlen(display->text), "+%c", alphanum[component->detune]);
             }
         } else {
             strcat(display->text, SEQ_CONDITIONS_NAMES[component->condition]);
         }
     }
 
-    bool isSelectable(uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
-        return true;
+        App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+        Zic_Seq_PatternComponent* component = &track->components[(row - 1) % PATTERN_COMPONENT_COUNT];
+
+        int8_t directions[] = { 16, 12, 1 };
+        int8_t direction = 0;
+        if (keys->Right) {
+            direction = 1;
+        } else if (keys->Left) {
+            direction = -1;
+        } else if (keys->Up) {
+            direction = directions[col % 3];
+        } else if (keys->Down) {
+            direction = -directions[col % 3];
+        }
+
+        switch (col) {
+        case 0:
+            // delay->setSec(delay->sec + direction);
+            // component->setDetune(component->detune + direction);
+            break;
+        case 1: {
+            component->setDetune(component->detune + direction);
+            break;
+        }
+        case 2:
+            component->setCondition(component->condition + direction);
+            break;
+        }
+        return VIEW_CHANGED;
     }
 };
 

@@ -1,6 +1,9 @@
 ## TODO
 
 - !NEXT! use https://waveeditonline.com/ to load morphable wavetables
+    - make wavetable morphable
+    - download wavetable zip when newer available https://waveeditonline.com/wav-files.zip
+    - ultimately would be great to be able to create new wavetable and upload it...
 
 - Should we use audio block processing instead of indiviual sample processing?? maybe :p
 
@@ -13,6 +16,8 @@
 
 - fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
     At least be able to map midi controller!
+
+- be able to save project / pat / samples on github repo
 
 ## Project
 
