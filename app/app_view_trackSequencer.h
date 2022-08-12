@@ -10,6 +10,8 @@
 
 class App_View_TrackSequencerHeader : public App_View_TableField {
 public:
+    // TODO action on header would be to start/stop sequencer
+    
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         // sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == trackId ? '*' : ' ', trackId + 1);
@@ -75,8 +77,7 @@ public:
         }
 
         switch (col) {
-        case 0:
-        {
+        case 0: {
             int16_t id = component->pattern == NULL ? -1 : component->pattern->id;
             id = (id + direction) % PATTERN_COUNT;
             component->pattern = id < 0 ? NULL : &tracks->patterns->patterns[id];
