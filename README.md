@@ -6,6 +6,8 @@
     - make wavetable morphable
     - download wavetable zip when newer available https://waveeditonline.com/wav-files.zip
     - ultimately would be great to be able to create new wavetable and upload it...
+    - should the morphable wavetable be in a separate folder
+    - or should we try to had some header in the wavetable to know the samples size 256 * 64
 
 - Should we use audio block processing instead of indiviual sample processing?? maybe :p
 

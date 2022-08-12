@@ -78,7 +78,7 @@ public:
             direction = -directions[col % 3];
         }
 
-        switch (col) {
+        switch (col % 3) {
         case 0: {
             int16_t id = component->pattern == NULL ? -1 : component->pattern->id;
             id = (id + direction) % PATTERN_COUNT;
