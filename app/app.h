@@ -31,6 +31,8 @@ public:
 
     App_View_Menu menuView;
 
+    bool rendered = false;
+
 #define APP_MENU_SIZE 8
     Menu menu[APP_MENU_SIZE] = {
         (Menu) { "Tracks sequencer", 'S', &trackSeqView, 'T', true },
@@ -83,6 +85,7 @@ public:
         display->reset();
         menuView.getView()->render(display);
         display->drawText();
+        rendered = true;
     }
 
     void handleUi(uint8_t keysBin)

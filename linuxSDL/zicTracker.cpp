@@ -288,9 +288,13 @@ int main(int argc, char* args[])
             ui.keysChanged = false;
             app.handleUi(ui.keys);
             SDL_Log("\n%s\n", display.text);
-            SDL_UpdateWindowSurface(window);
+            // SDL_UpdateWindowSurface(window);
         }
         // SDL_Delay(10);
+        if (app.rendered) {
+            app.rendered = false;
+            SDL_UpdateWindowSurface(window);
+        }
     }
 
     SDL_DestroyWindow(window);
