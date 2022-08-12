@@ -13,8 +13,6 @@
 class App_View_TrackRow : public App_View_TableField {
 protected:
     App_Tracks* tracks;
-    Zic_Seq_LoopState newState;
-    bool updating = false;
     const char* label;
 
 public:
@@ -24,7 +22,7 @@ public:
     {
     }
 
-    virtual void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state) = 0;
+    virtual void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
@@ -41,25 +39,18 @@ public:
             }
             uint8_t trackId = col - 1;
             App_Audio_Track* track = tracks->tracks[trackId];
-            // printf("%d col %d row %d updating %d %d %d\n", trackId, col, row, updating, col == selectedCol, row == selectedRow);
-            Zic_Seq_LoopState* state = updating && col == selectedCol && row == selectedRow ? &newState : &track->looper.nextState;
-
-            renderValue(display, trackId, track, state);
+            renderValue(display, trackId, track);
         }
     }
 
-    void updateStart()
+    virtual uint8_t update(UiKeys* keys, App_Display* display, App_Audio_Track* track)
     {
-        Zic_Seq_LoopState* nextState = &tracks->looper->nextState;
-        newState.set(nextState);
-        updating = true;
+        return VIEW_NONE;
     }
 
-    void updateEnd()
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
-        Zic_Seq_LoopState* nextState = &tracks->looper->nextState;
-        nextState->set(&newState);
-        updating = false;
+        return update(keys, display, tracks->tracks[col - 1]);
     }
 };
 
@@ -70,7 +61,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track)
     {
         sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == trackId ? '*' : ' ', trackId + 1);
     }
@@ -83,7 +74,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track)
     {
         // TBD. to be linked
         strcat(display->text, " ---");
@@ -97,7 +88,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
+    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track)
     {
         if (track->delayEnabled) {
             strcat(display->text, " ON ");
@@ -106,11 +97,9 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Display* display, App_Audio_Track* track)
     {
-        // TODO lets just make track part of the whole object
-        uint8_t trackId = col - 1;
-        tracks->tracks[trackId]->toggleDelay();
+        track->toggleDelay();
         return VIEW_CHANGED;
     }
 };

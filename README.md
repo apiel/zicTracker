@@ -1,5 +1,7 @@
 ## TODO
 
+- A + B play / pause and in project play / pause / stop
+
 - rename key from A/B to edit/menu 
 
 - !NEXT! use https://waveeditonline.com/ to load morphable wavetables
