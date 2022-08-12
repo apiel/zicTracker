@@ -70,6 +70,9 @@ public:
     {
         if (tempo.next()) {
             tracks.next();
+            if (menuView.getView()->renderOn(EVENT_VIEW_ON_TEMPO)) {
+                render();
+            }
         }
         return tracks.sample();
     }

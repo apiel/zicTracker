@@ -45,10 +45,11 @@ public:
             display->setCursor(2, col % 3 == 0 ? 1 : 0);
         }
         if (col % 3 == 0) {
+            strcat(display->text, track->looper.isComponentPlaying(row - 1) ? ">" : " ");
             if (component->pattern == NULL) {
-                strcat(display->text, " --");
+                strcat(display->text, "--");
             } else {
-                sprintf(display->text + strlen(display->text), " %02X", component->pattern->id + 1);
+                sprintf(display->text + strlen(display->text), "%02X", component->pattern->id + 1);
             }
         } else if (col % 3 == 1) {
             if (component->detune < 0) {
@@ -118,6 +119,11 @@ public:
         , patField(_tracks)
     {
         initSelection();
+    }
+
+    bool renderOn(uint8_t event) override
+    {
+        return true;
     }
 
     void initDisplay(App_Display* display)

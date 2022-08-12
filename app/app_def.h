@@ -29,6 +29,10 @@ enum {
 };
 
 enum {
+    EVENT_VIEW_ON_TEMPO,
+};
+
+enum {
     DELAY_1,
     DELAY_2,
     DELAY_3,
