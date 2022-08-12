@@ -7,7 +7,7 @@
 
 #include <zic_seq_pattern.h>
 
-#define VIEW_TRACK_ROW 6
+#define VIEW_TRACK_ROW 3
 #define VIEW_TRACK_COL 5
 
 class App_View_TrackRow : public App_View_TableField {
@@ -66,7 +66,7 @@ public:
 class App_View_TrackHeader : public App_View_TrackRow {
 public:
     App_View_TrackHeader(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks, "   ")
+        : App_View_TrackRow(_tracks, "      ")
     {
     }
 
@@ -76,104 +76,10 @@ public:
     }
 };
 
-class App_View_TrackSequence : public App_View_TrackRow {
-public:
-    App_View_TrackSequence(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks, "SEQ")
-    {
-    }
-
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
-    {
-        if (state->playing) {
-            strcat(display->text, " >ON");
-        } else {
-            strcat(display->text, " OFF");
-        }
-    }
-
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
-    {
-
-        newState.togglePlay();
-        if (newState.playing) {
-            // Get the first playing track and sync it to the new started track
-            App_Audio_Track* track = NULL;
-            for (uint8_t i = 0; i < TRACK_COUNT; i++) {
-                if (tracks->tracks[i]->looper.state.playing) {
-                    track = tracks->tracks[i];
-                    break;
-                }
-            }
-            if (track != NULL) {
-                newState.currentStepSync = &track->looper.currentStep;
-            }
-        }
-        return VIEW_CHANGED;
-    }
-};
-
-class App_View_TrackPattern : public App_View_TrackRow {
-public:
-    App_View_TrackPattern(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks, "PAT")
-    {
-    }
-
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
-    {
-        sprintf(display->text + strlen(display->text), "  %02X", state->pattern->id + 1);
-    }
-
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
-    {
-        int8_t direction = 0;
-        if (keys->Right) {
-            direction = 1;
-        } else if (keys->Left) {
-            direction = -1;
-        } else if (keys->Up) {
-            direction = 16;
-        } else if (keys->Down) {
-            direction = -16;
-        }
-        uint16_t id = newState.pattern->id ? newState.pattern->id : PATTERN_COUNT;
-        newState.pattern = &tracks->patterns->patterns[(id + direction) % PATTERN_COUNT];
-        return VIEW_CHANGED;
-    }
-};
-
-class App_View_TrackDetune : public App_View_TrackRow {
-public:
-    App_View_TrackDetune(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks, "DET")
-    {
-    }
-
-    void renderValue(App_Display* display, uint8_t trackId, App_Audio_Track* track, Zic_Seq_LoopState* state)
-    {
-        sprintf(display->text + strlen(display->text), " %c%02d", state->detune < 0 ? '-' : '+', abs(state->detune));
-    }
-
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
-    {
-        if (keys->Right) {
-            newState.set(newState.detune + 1);
-        } else if (keys->Up) {
-            newState.set(newState.detune + 12);
-        } else if (keys->Left) {
-            newState.set(newState.detune - 1);
-        } else if (keys->Down) {
-            newState.set(newState.detune - 12);
-        }
-        return VIEW_CHANGED;
-    }
-};
-
 class App_View_TrackMasterField : public App_View_TrackRow {
 public:
     App_View_TrackMasterField(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks, "VOL")
+        : App_View_TrackRow(_tracks, "VOLUME")
     {
     }
 
@@ -187,7 +93,7 @@ public:
 class App_View_TrackDelayEnabled : public App_View_TrackRow {
 public:
     App_View_TrackDelayEnabled(App_Tracks* _tracks)
-        : App_View_TrackRow(_tracks, "DLY")
+        : App_View_TrackRow(_tracks, "DELAY ")
     {
     }
 
@@ -214,18 +120,12 @@ protected:
     App_Tracks* tracks;
 
     App_View_TrackHeader fieldHeader;
-    App_View_TrackSequence sequenceField;
-    App_View_TrackPattern patternField;
-    App_View_TrackDetune detuneField;
     App_View_TrackMasterField masterField;
     App_View_TrackDelayEnabled delayField;
 
     App_View_TableField* fields[VIEW_TRACK_ROW * VIEW_TRACK_COL] = {
         // clang-format off
         &fieldHeader, &fieldHeader, &fieldHeader, &fieldHeader, &fieldHeader,
-        &sequenceField, &sequenceField, &sequenceField, &sequenceField, &sequenceField,
-        &patternField, &patternField, &patternField, &patternField, &patternField,
-        &detuneField, &detuneField, &detuneField, &detuneField, &detuneField,
         &masterField, &masterField, &masterField, &masterField, &masterField,
         &delayField, &delayField, &delayField, &delayField, &delayField,
         // clang-format on
@@ -236,9 +136,6 @@ public:
         : App_View_Table(fields, VIEW_TRACK_ROW, VIEW_TRACK_COL)
         , tracks(_tracks)
         , fieldHeader(_tracks)
-        , sequenceField(_tracks)
-        , patternField(_tracks)
-        , detuneField(_tracks)
         , masterField(_tracks)
         , delayField(_tracks)
     {
