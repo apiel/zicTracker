@@ -8,10 +8,12 @@
 #define VIEW_TRACK_SEQUENCER_ROW 5
 #define VIEW_TRACK_SEQUENCER_COL TRACK_COUNT * 3
 
+// TODO use the same concept as track view, where while  edit button is not release change are not applied
+
 class App_View_TrackSequencerHeader : public App_View_TableField {
 public:
     // TODO action on header would be to start/stop sequencer
-    
+
     void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         // sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == trackId ? '*' : ' ', trackId + 1);

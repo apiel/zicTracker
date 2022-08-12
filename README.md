@@ -1,5 +1,7 @@
 ## TODO
 
+- rename key from A/B to edit/menu 
+
 - !NEXT! use https://waveeditonline.com/ to load morphable wavetables
     - make wavetable morphable
     - download wavetable zip when newer available https://waveeditonline.com/wav-files.zip
