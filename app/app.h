@@ -57,7 +57,7 @@ public:
         , instrumentView(&tracks)
         , patternView(patterns)
         , trackDelayView(&tracks)
-        , projectView(&tempo)
+        , projectView(&tempo, &tracks)
         , menuView(&menu[0], APP_MENU_SIZE)
     {
     }
@@ -99,9 +99,7 @@ public:
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
         if (keys.Menu && keys.Edit) {
-            for (uint8_t i = 0; i < TRACK_COUNT; i++) {
-                tracks.tracks[i]->looper.togglePlay();
-            }
+            tracks.togglePlay();
         } else if (menuView.update(&keys, display) != VIEW_NONE) {
             render();
         } else if (menuView.getView()->update(&keys, display) != VIEW_NONE) {
