@@ -94,11 +94,15 @@ public:
         keys.Down = (keysBin >> UI_KEY_DOWN) & 1;
         keys.Left = (keysBin >> UI_KEY_LEFT) & 1;
         keys.Right = (keysBin >> UI_KEY_RIGHT) & 1;
-        keys.A = (keysBin >> UI_KEY_A) & 1;
-        keys.B = (keysBin >> UI_KEY_B) & 1;
+        keys.Edit = (keysBin >> UI_KEY_EDIT) & 1;
+        keys.Menu = (keysBin >> UI_KEY_MENU) & 1;
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
-        if (menuView.update(&keys, display) != VIEW_NONE) {
+        if (keys.Menu && keys.Edit) {
+            for (uint8_t i = 0; i < TRACK_COUNT; i++) {
+                tracks.tracks[i]->looper.togglePlay();
+            }
+        } else if (menuView.update(&keys, display) != VIEW_NONE) {
             render();
         } else if (menuView.getView()->update(&keys, display) != VIEW_NONE) {
             render();

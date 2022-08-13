@@ -58,10 +58,10 @@ bool handleKeyboard(SDL_KeyboardEvent* event)
         bit = UI_KEY_RIGHT;
         break;
     case KEY_A:
-        bit = UI_KEY_A;
+        bit = UI_KEY_EDIT;
         break;
     case KEY_B: // Should be configurable!
-        bit = UI_KEY_B;
+        bit = UI_KEY_MENU;
         break;
     case KEY_MENU:
         return false;
@@ -100,10 +100,10 @@ bool handleController(SDL_ControllerButtonEvent* event)
         bit = UI_KEY_RIGHT;
         break;
     case 0:
-        bit = UI_KEY_A;
+        bit = UI_KEY_EDIT;
         break;
     case 1: // Should be configurable!
-        bit = UI_KEY_B;
+        bit = UI_KEY_MENU;
         break;
     case 9:
         return false;

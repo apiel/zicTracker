@@ -72,7 +72,7 @@ public:
 
     App_View* getView()
     {
-        if (keys && keys->B) {
+        if (keys && keys->Menu) {
             // return Menu view
             return this;
         }
@@ -99,7 +99,7 @@ public:
     uint8_t update(UiKeys* _keys, App_Display* display)
     {
         keys = _keys;
-        if (keys->B) {
+        if (keys->Menu) {
             if (keys->Right) {
                 menuPlus();
             } else if (keys->Left) {

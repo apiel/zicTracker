@@ -184,7 +184,7 @@ public:
     uint8_t update(UiKeys* keys, App_Display* display)
     {
         uint8_t res = VIEW_CHANGED;
-        if (keys->A) {
+        if (keys->Edit) {
             if (!updating) {
                 getSelectedField()->updateStart();
                 updating = true;
