@@ -4,8 +4,10 @@
 #include <stdint.h>
 #include <cstring>
 
-#define MAX_DISPLAY_TEXT 176 // 21*8 + 8\n
-                             // but should actually be 20*8 to fit console
+// #define MAX_DISPLAY_TEXT 176 // 21*8 + 8\n
+//                              // but should actually be 20*8 to fit console
+
+#define MAX_DISPLAY_TEXT 512
 
 class App_Display_Base {
 public:

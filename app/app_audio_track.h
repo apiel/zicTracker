@@ -8,7 +8,7 @@
 #include <zic_effect_delay.h>
 #include <zic_seq_loopMaster.h>
 
-#define PATTERN_COMPONENT_COUNT 5
+#define PATTERN_COMPONENT_COUNT 9
 
 class App_Audio_Track {
 public:
