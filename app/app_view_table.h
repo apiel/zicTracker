@@ -17,11 +17,11 @@ public:
         return VIEW_NONE;
     }
 
-    virtual void updateEnd()
+    virtual void updateEnd(uint8_t row, uint8_t col)
     {
     }
 
-    virtual void updateStart()
+    virtual void updateStart(uint8_t row, uint8_t col)
     {
     }
 
@@ -186,13 +186,13 @@ public:
         uint8_t res = VIEW_CHANGED;
         if (keys->Edit) {
             if (!updating) {
-                getSelectedField()->updateStart();
+                getSelectedField()->updateStart(selectedRow, selectedCol);
                 updating = true;
             }
             res = getSelectedField()->update(keys, display, selectedRow, selectedCol);
         } else {
             if (updating) {
-                getSelectedField()->updateEnd();
+                getSelectedField()->updateEnd(selectedRow, selectedCol);
                 updating = false;
             }
             if (keys->Up) {

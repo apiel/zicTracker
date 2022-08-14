@@ -22,6 +22,8 @@ public:
 class App_View_TrackSequencerPat : public App_View_TableField {
 protected:
     App_Tracks* tracks;
+    Zic_Seq_PatternComponent newComponent;
+    bool updating = false;
 
 public:
     App_View_TrackSequencerPat(App_Tracks* _tracks)
@@ -41,6 +43,9 @@ public:
 
         if (selectedRow == row && selectedCol == col) {
             display->setCursor(2, col % 3 == 0 ? 1 : 0);
+            if (updating) {
+                component = &newComponent;
+            }
         }
         if (col % 3 == 0) {
             strcat(display->text,
@@ -62,11 +67,26 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    Zic_Seq_PatternComponent* getComponent(uint8_t row, uint8_t col)
     {
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        Zic_Seq_PatternComponent* component = &track->components[(row - 1) % PATTERN_COMPONENT_COUNT];
+        return &track->components[(row - 1) % PATTERN_COMPONENT_COUNT];
+    }
 
+    void updateStart(uint8_t row, uint8_t col)
+    {
+        newComponent.set(getComponent(row, col));
+        updating = true;
+    }
+
+    void updateEnd(uint8_t row, uint8_t col)
+    {
+        getComponent(row, col)->set(&newComponent);
+        updating = false;
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    {
         int8_t directions[] = { 16, 12, 1 };
         int8_t direction = 0;
         if (keys->Right) {
@@ -81,17 +101,17 @@ public:
 
         switch (col % 3) {
         case 0: {
-            int16_t id = component->pattern == NULL ? -1 : component->pattern->id;
+            int16_t id = newComponent.pattern == NULL ? -1 : newComponent.pattern->id;
             id = (id + direction) % PATTERN_COUNT;
-            component->pattern = id < 0 ? NULL : &tracks->patterns->patterns[id];
+            newComponent.pattern = id < 0 ? NULL : &tracks->patterns->patterns[id];
             break;
         }
         case 1: {
-            component->setDetune(component->detune + direction);
+            newComponent.setDetune(newComponent.detune + direction);
             break;
         }
         case 2:
-            component->setCondition(component->condition + direction);
+            newComponent.setCondition(newComponent.condition + direction);
             break;
         }
         return VIEW_CHANGED;
