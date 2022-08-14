@@ -1,6 +1,6 @@
 ## TODO
 
-- in project play / pause / stop
+- doc!!
 
 - !NEXT! use https://waveeditonline.com/ to load morphable wavetables
     - make wavetable morphable
@@ -9,9 +9,9 @@
     - should the morphable wavetable be in a separate folder
     - or should we try to had some header in the wavetable to know the samples size 256 * 64
 
-- Should we use audio block processing instead of indiviual sample processing?? maybe :p
+- Use audio block processing instead of indiviual sample processing?? maybe :p
 
-- Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
+- Fix / Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
 
 - // FIXME modulo, dont use motulo but comparison
 
@@ -23,6 +23,19 @@
 
 - be able to save project / pat / samples on github repo
 
+- step component (conditional step)
+
+- assignable modulation to (1 or more? -> polyphony) track or instrument for selectable param:
+    - 10? envelop 
+    - 5? LFO
+
+- make graph using https://en.wikipedia.org/wiki/Braille_ASCII but then need to update font...
+
+- sampler:
+    - should be able to record sound from tracks into a new sample
+    - should be able to record sound from input channel (using usb-c sound card)
+    - we could edit sample (set start/end) of selected sample
+
 ## Project
 
 - name
@@ -32,41 +45,25 @@ If click save, create new state that can be restored...
 
 ## Pattern
 
-TODO
-
-A pattern, 32 - 64? step note for any of the 16 instrument
-conditional steps / step modification of time
+TBD.
 
 ## Tracks
 
-TODO
-
-Tracks can be synched together to make polyphonic instument, so one track is a copy of the other, just notes differ.
-Keyboard can also be link to multiple track at once, to play some harmonic.
-
+TBD.
 ## Instrument
 
-TODO
+TBD.
 
 Sample and waveform are both using wav file from the SD card.
 
 - Wavetable
 - Sample (only one pitch for the moment)
-- Multi-samples (would allow to have multiples sound in one sample, each sound correspond to a note, either the same sound with different pitch or a sound kit e.g. drumkit)
+- Multi-samples (would allow to have multiples sound in one sample, each sound correspond to a note, either the same sound with different pitch or a sound kit e.g. drumkit) (maybe with soundfont)
+- morphable wavetables
 
-## Notes/todo
+## Sampler
 
-- track table view should have header
-- 1 volumn per track
-- 1 filter per track
-- multiple track can be assigned to master keyboard
-- 1 filter per instrument
-- 1 envelop per instrument
-- assignable modulation to (1 or more? -> polyphony) track or instrument for selectable param:
-    - 10? envelop 
-    - 5? LFO
-
-- make graph using https://en.wikipedia.org/wiki/Braille_ASCII but then need to update font...
+TBD.
 
 ## Toolchain
 ### anbernic rg 280v

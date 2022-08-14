@@ -7,7 +7,7 @@
 #include "./app_view_table.h"
 
 #define VIEW_PROJECT_ROW 2
-#define VIEW_PROJECT_COL 2
+#define VIEW_PROJECT_COL 3
 
 class App_View_ProjectBpm : public App_View_TableLabeledRow {
 protected:
@@ -53,17 +53,24 @@ public:
 
     void renderValue(App_Display* display, uint8_t col)
     {
-        if (tracks->isPlaying()) {
-            strcat(display->text, ">PLAY");
+        if (col == 1) {
+            if (tracks->isPlaying()) {
+                strcat(display->text, ">PLAY ");
+            } else {
+                strcat(display->text, "PAUSE ");
+            }
         } else {
-            strcat(display->text, "PAUSE");
+            strcat(display->text, "RESET");
         }
-        // TODO implement STOP that would reset all tracks
     }
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
     {
-        tracks->togglePlay();
+        if (col == 1) {
+            tracks->togglePlay();
+        } else {
+            tracks->reset();
+        }
         return VIEW_CHANGED;
     }
 };
@@ -75,8 +82,8 @@ protected:
 
     App_View_TableField* fields[VIEW_PROJECT_ROW * VIEW_PROJECT_COL] = {
         // clang-format off
-        &bpmField, &bpmField,
-        &playField, &playField,
+        &bpmField, &bpmField, NULL,
+        &playField, &playField, &playField,
         // clang-format on
     };
 
