@@ -5,11 +5,8 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
-#define VIEW_TRACK_SEQUENCER_ROW 5
+#define VIEW_TRACK_SEQUENCER_ROW (1 + PATTERN_COMPONENT_COUNT)
 #define VIEW_TRACK_SEQUENCER_COL TRACK_COUNT * 3
-
-// TODO TODO TODO !!
-// TODO use the same concept as track view, where while  edit button is not release change are not applied
 
 class App_View_TrackSequencerHeader : public App_View_TableField {
 public:
@@ -130,6 +127,14 @@ protected:
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
+        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
+
+        // &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
+        // &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
+        // &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
+        // &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
+        // &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
+
         // clang-format on
     };
 
