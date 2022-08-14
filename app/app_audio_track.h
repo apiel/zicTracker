@@ -40,12 +40,6 @@ public:
         id = _id;
         // TODO load pattern from last state saved in project status file
         synth1.set("kick.wav", false)->open();
-
-        // delay0.set(0.5, 0.8, 1.0);
-        // delay1.set(1.0, 0.4, 1.0);
-        // delay2.set(1.5, 0.3, 1.0);
-        // delay3.set(2.0, 0.2, 1.0);
-        // delay4.set(2.5, 0.1, 1.0);
     }
 
     void next()
@@ -63,17 +57,10 @@ public:
         }
         if (stepOn) {
             synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
-            // printf("Note %d instrument %d\n", stepOn->note, stepOn->instrument % INSTRUMENT_COUNT);
 
             synth->wave.reset();
             synth->wave.setNote(stepOn->note);
-
-            // static int count = 0;
-            // printf("%d Freq %.3f Time %.3f Amp %d\n",
-            //        count++,
-            //        synth->wave.getFrequency(),
-            //        synth->wave.getTime(),
-            //        synth->wave.getAmplitude());
+            synth->wave.setVelocity(stepOn->velocity);
 
             if (looper.wasSlide()) {
                 synth->asr.slide();
