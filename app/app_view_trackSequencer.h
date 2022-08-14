@@ -43,7 +43,9 @@ public:
             display->setCursor(2, col % 3 == 0 ? 1 : 0);
         }
         if (col % 3 == 0) {
-            strcat(display->text, track->looper.isComponentPlaying(row - 1) ? ">" : (track->looper.isCurrentComponent(row - 1) ? "." : " "));
+            strcat(display->text,
+                track->looper.isComponentPlaying(row - 1) ? ">"
+                                                          : (track->looper.isCurrentComponent(row - 1) ? "*" : " "));
             if (component->pattern == NULL) {
                 strcat(display->text, "--");
             } else {
