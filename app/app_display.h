@@ -20,11 +20,14 @@
 #define UI_COLOR_LABEL 150, 150, 150
 #define UI_COLOR_HEADER 100, 100, 100
 #define UI_COLOR_PLAY 122, 255, 0
+// #define UI_COLOR_STAR 255, 128, 0
 #define UI_COLOR_STAR 255, 255, 0
 #define UI_COLOR_CURSOR 0, 128, 255
 // #define UI_COLOR_SIGN 0, 255, 255
 // #define UI_COLOR_SIGN 255, 128, 0
 #define UI_COLOR_SIGN 190, 190, 190
+// #define UI_COLOR_DOT 255, 128, 0
+#define UI_COLOR_DOT 255, 255, 0
 
 class App_Display : public App_Display_Base {
 protected:
@@ -98,6 +101,8 @@ public:
                     setColor(UI_COLOR_STAR);
                 } else if (*txt == '+' || *txt == '-') {
                     setColor(UI_COLOR_SIGN);
+                } else if (*txt == '.') {
+                    setColor(UI_COLOR_DOT);
                 } else if (*txt == ' ' || *txt == '\n') {
                     resetColor(y);
                 }
