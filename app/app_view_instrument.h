@@ -5,7 +5,7 @@
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
-#define VIEW_INSTR_ROW 7
+#define VIEW_INSTR_ROW 8
 #define VIEW_INSTR_COL 3
 #define VIEW_INSTR_LABELS 7
 
@@ -262,6 +262,30 @@ public:
     }
 };
 
+// TODO if sample, then select start end
+class App_View_InstrumentWavetable : public App_View_InstrumentRow {
+public:
+    App_View_InstrumentWavetable(App_Tracks* _tracks, uint8_t* _instrument)
+        : App_View_InstrumentRow(_tracks, _instrument, "Wavtbl ", 3)
+    {
+    }
+
+    bool isSelectable(uint8_t row, uint8_t col) override
+    {
+        return col == 1;
+    }
+
+    void renderValue(App_Display* display, uint8_t col)
+    {
+        // could remove leading 0
+        if (col == 1) {
+            sprintf(display->text + strlen(display->text), "%.1f ", 1.0);
+        } else {
+            sprintf(display->text + strlen(display->text), "of %d", getSynth()->wave.audioFile.wavetableCount);
+        }
+    }
+};
+
 class App_View_Instrument : public App_View_Table {
 protected:
     // App_Tracks* tracks;
@@ -275,6 +299,7 @@ protected:
     App_View_InstrumentLevel levelField;
     App_View_InstrumentEnv envField;
     App_View_InstrumentFilter filterField;
+    App_View_InstrumentWavetable wavetableField;
     App_View_TableField* fields[VIEW_INSTR_ROW * VIEW_INSTR_COL] = {
         // clang-format off
         &trackField, &trackField, NULL,
@@ -284,6 +309,7 @@ protected:
         &levelField, &levelField, &levelField,
         &envField, &envField, &envField,
         &filterField, &filterField, &filterField,
+        &wavetableField, &wavetableField, &wavetableField,
         // clang-format on
     };
 
@@ -298,6 +324,7 @@ public:
         , levelField(_tracks, &instrument)
         , envField(_tracks, &instrument)
         , filterField(_tracks, &instrument)
+        , wavetableField(_tracks, &instrument)
     {
         initSelection();
     }
