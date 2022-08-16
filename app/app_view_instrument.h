@@ -16,7 +16,7 @@ protected:
 
 public:
     App_View_InstrumentRow(App_Tracks* _tracks, uint8_t* _instrument, const char* _label, uint8_t _cursorLen = 5)
-        : App_View_TableLabeledRow(_label, _cursorLen) 
+        : App_View_TableLabeledRow(_label, _cursorLen)
         , tracks(_tracks)
         , instrument(_instrument)
     {
@@ -277,12 +277,29 @@ public:
 
     void renderValue(App_Display* display, uint8_t col)
     {
-        // could remove leading 0
         if (col == 1) {
-            sprintf(display->text + strlen(display->text), "%.1f ", 1.0);
+            sprintf(display->text + strlen(display->text), "%.1f ", getSynth()->wave.getMorph() + 1.0f);
         } else {
             sprintf(display->text + strlen(display->text), "of %d", getSynth()->wave.audioFile.wavetableCount);
         }
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
+    {
+        App_Instrument* synth = getSynth();
+        if (col == 1) {
+            float value = synth->wave.getMorph();
+            if (keys->Right) {
+                synth->wave.morph(value + 0.1f);
+            } else if (keys->Up) {
+                synth->wave.morph(value + 1.0f);
+            } else if (keys->Left) {
+                synth->wave.morph(value - 0.1f);
+            } else if (keys->Down) {
+                synth->wave.morph(value - 1.0f);
+            }
+        }
+        return VIEW_CHANGED;
     }
 };
 
