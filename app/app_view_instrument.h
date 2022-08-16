@@ -266,7 +266,7 @@ public:
 class App_View_InstrumentWavetable : public App_View_InstrumentRow {
 public:
     App_View_InstrumentWavetable(App_Tracks* _tracks, uint8_t* _instrument)
-        : App_View_InstrumentRow(_tracks, _instrument, "Wavtbl ", 3)
+        : App_View_InstrumentRow(_tracks, _instrument, "Wavtbl ", 4)
     {
     }
 
@@ -278,7 +278,7 @@ public:
     void renderValue(App_Display* display, uint8_t col)
     {
         if (col == 1) {
-            sprintf(display->text + strlen(display->text), "%.1f ", getSynth()->wave.getMorph() + 1.0f);
+            sprintf(display->text + strlen(display->text), "%-4.1f ", getSynth()->wave.getMorph() + 1.0f);
         } else {
             sprintf(display->text + strlen(display->text), "of %d", getSynth()->wave.audioFile.wavetableCount);
         }
