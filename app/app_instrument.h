@@ -11,12 +11,14 @@ protected:
 
 public:
     uint8_t id = 0;
-    char filename[256] = "1.wav";
+    // char filename[256] = "1.wav";
     // char filename[256] = "59.wav";
     // char filename[256] = {'5','9','.','w', 'a', 'v','\0'};
     // char filename[256] = "000testyo.wav";
     // char filename[256] = "000GRAV-A1.WAV";
+    char filename[256] = "303.WAV";
     // char filename[256] = "111.WAV";
+    // char filename[256] = "ZAP.WAV";
     bool isWavetable = true;
 
     App_Instrument(uint8_t _id = 0)
