@@ -2,21 +2,22 @@
 
 - doc!!
 
-- !NEXT! use https://waveeditonline.com/ to load morphable wavetables
-    - make wavetable morphable
-    - download wavetable zip when newer available https://waveeditonline.com/wav-files.zip
-    - ultimately would be great to be able to create new wavetable and upload it...
-    - should the morphable wavetable be in a separate folder
-    - or should we try to had some header in the wavetable to know the samples size 256 * 64
-
-- Use audio block processing instead of indiviual sample processing?? maybe :p
+- effect: distortion, bitcrusher... waveshaper: overdrive, distortion, fuzz, clipping, expo converters, phase inversion
+    - https://books.google.at/books?id=v0ulUYdhgXYC&pg=PA497&lpg=PA497&dq=Waveshaper+c%2B%2B+example&source=bl&ots=WVmstQmof2&sig=ACfU3U0LdpOVCUCtMP_zlnzEaXAZkCI-Qg&hl=en&sa=X&ved=2ahUKEwi31rmXisz5AhVW_bsIHRkhDM8Q6AF6BAgiEAM#v=onepage&q=Waveshaper%20c%2B%2B%20example&f=false
+    
 
 - Fix / Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
 
-- // FIXME modulo, dont use motulo but comparison
-
 - Use soundfont as alternative synth engine to wav table/sample
             Maybe even use https://github.com/schellingb/TinySoundFont/blob/master/examples/example1.c
+
+- save project!!!
+
+- sampler
+
+- App_View_InstrumentWavetable select end start if sample
+
+- Use audio block processing instead of indiviual sample processing?? maybe :p
 
 - fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
     At least be able to map midi controller!

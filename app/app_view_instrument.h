@@ -262,6 +262,7 @@ public:
     }
 };
 
+// FIXME
 // TODO if sample, then select start end
 class App_View_InstrumentWavetable : public App_View_InstrumentRow {
 public:
