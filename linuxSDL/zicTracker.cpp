@@ -252,6 +252,8 @@ int main(int argc, char* args[])
     }
 
     Zic_File_Soundfont soundfont("soundfonts/florestan-subset.sf2");
+    // printf("soundfont 2\n\n");
+    // Zic_File_Soundfont soundfont2("soundfonts/default-GM.sf2");
 
 #if ZIC_SDL_MIXER
     if (Mix_OpenAudio(SAMPLE_RATE, APP_AUDIO_FORMAT, CHANNELS, APP_AUDIO_CHUNK) < 0) {
