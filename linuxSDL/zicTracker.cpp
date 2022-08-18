@@ -27,6 +27,9 @@
 #include "../app/app_patterns.h"
 #include "zicKeyMap.h"
 
+// FIXME to be removed, just for testing
+#include <zic_file_soundfont.h>
+
 UI_Display display;
 App_Patterns patterns;
 App app(&patterns, &display);
@@ -239,7 +242,7 @@ int main(int argc, char* args[])
     SDL_Log(">>>>>>> Start Zic Tracker\n");
     // // patterns.debug(SDL_Log);
     // patterns.debug(SDL_Log, 1);
-    patterns.debug(SDL_Log, 6);
+    // patterns.debug(SDL_Log, 6);
     // patterns.debug(SDL_Log, 5);
     // patterns.debug(SDL_Log, 199);
 
@@ -247,6 +250,8 @@ int main(int argc, char* args[])
         fprintf(stderr, "Could not initialize SDL: %s\n", SDL_GetError());
         return 1;
     }
+
+    Zic_File_Soundfont soundfont("soundfonts/florestan-subset.sf2");
 
 #if ZIC_SDL_MIXER
     if (Mix_OpenAudio(SAMPLE_RATE, APP_AUDIO_FORMAT, CHANNELS, APP_AUDIO_CHUNK) < 0) {
