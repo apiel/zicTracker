@@ -1,41 +1,12 @@
-## TODO
+# Zic Tracker
 
-- doc!!
+Zic Tracker is a groovebox engine base on samples and wavetables. It is intended to work on handheld linux console like anbernic rg351p (work as well on Linux desktop for development purpose). The user interface is using SDL2, inspired by some existing trackers like LSDJ, LittleGPTracker or M8.
 
-- effect: distortion, bitcrusher... waveshaper: overdrive, distortion, fuzz, clipping, expo converters, phase inversion
-    - https://books.google.at/books?id=v0ulUYdhgXYC&pg=PA497&lpg=PA497&dq=Waveshaper+c%2B%2B+example&source=bl&ots=WVmstQmof2&sig=ACfU3U0LdpOVCUCtMP_zlnzEaXAZkCI-Qg&hl=en&sa=X&ved=2ahUKEwi31rmXisz5AhVW_bsIHRkhDM8Q6AF6BAgiEAM#v=onepage&q=Waveshaper%20c%2B%2B%20example&f=false
-    
+## Navigation
 
-- Fix / Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
-
-- Use soundfont as alternative synth engine to wav table/sample
-            Maybe even use https://github.com/schellingb/TinySoundFont/blob/master/examples/example1.c
-
-- save project!!!
-
-- sampler
-
-- App_View_InstrumentWavetable select end start if sample
-
-- Use audio block processing instead of indiviual sample processing?? maybe :p
-
-- fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
-    At least be able to map midi controller!
-
-- be able to save project / pat / samples on github repo
-
-- step component (conditional step)
-
-- assignable modulation to (1 or more? -> polyphony) track or instrument for selectable param:
-    - 10? envelop 
-    - 5? LFO
-
-- make graph using https://en.wikipedia.org/wiki/Braille_ASCII but then need to update font...
-
-- sampler:
-    - should be able to record sound from tracks into a new sample
-    - should be able to record sound from input channel (using usb-c sound card)
-    - we could edit sample (set start/end) of selected sample
+Menu button (B), is used to display the menu tree.
+Edit button (A), is used to change the selected value.
+Menu + Edit button (A + B), is to play/pause the sequencer.
 
 ## Project
 
@@ -67,13 +38,6 @@ Sample and waveform are both using wav file from the SD card.
 TBD.
 
 ## Toolchain
-### anbernic rg 280v
-
-Might need to install gcc-multilib, gcc-multilib and maybe some other stuff for x64 bit computer
-Install toolchain opendingux-gcw0-toolchain.2014-08-20
-maybe there: http://www.gcw-zero.com/develop
-or somewhere there: http://od.abstraction.se/opendingux/
-                    http://od.abstraction.se/opendingux/toolchain/
 
 ### anbernic rg351
 
@@ -108,3 +72,13 @@ apt -y install build-essential git wget libdrm-dev python3 python3-pip python3-s
 ```
 
 or using docker https://github.com/mica-angeli/retrooz_dev_docker
+
+### anbernic rg280v
+
+(rg280v seem to not be powerful enough to run Zic Tracker)
+
+Might need to install gcc-multilib, gcc-multilib and maybe some other stuff for x64 bit computer
+Install toolchain opendingux-gcw0-toolchain.2014-08-20
+maybe there: http://www.gcw-zero.com/develop
+or somewhere there: http://od.abstraction.se/opendingux/
+                    http://od.abstraction.se/opendingux/toolchain/
