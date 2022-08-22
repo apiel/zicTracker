@@ -37,6 +37,17 @@ Sample and waveform are both using wav file from the SD card.
 
 TBD.
 
+## Linux Installation
+
+```sh
+apt-get install libsdl2-dev
+# in the same folder clone both repo
+git clone https://github.com/apiel/zic.git
+git clone https://github.com/apiel/zicTracker.git
+cd zicTracker/linuxSDL
+make
+```
+
 ## Toolchain
 
 ### anbernic rg351
