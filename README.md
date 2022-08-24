@@ -29,9 +29,9 @@ TBD.
 Sample and waveform are both using wav file from the SD card.
 
 - Wavetable
-- Sample (only one pitch for the moment)
-- Multi-samples (would allow to have multiples sound in one sample, each sound correspond to a note, either the same sound with different pitch or a sound kit e.g. drumkit) (maybe with soundfont)
-- morphable wavetables
+- Morphable wavetables using https://waveeditonline.com/ and https://synthtech.com/waveedit
+- Sample (only one pitch)
+- Multi-samples with soundfont (sf2)
 
 ## Sampler
 
