@@ -17,19 +17,27 @@
 
 - Fix / Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
 
-- Use soundfont as alternative synth engine to wav table/sample
-            Maybe even use https://github.com/schellingb/TinySoundFont/blob/master/examples/example1.c
-
-- sampler
-
 - think about clip system like mc-101 to play track more in a live way... :-)
     should this be combine to the track sequencer, directly usable within it
     or should it be another screen, where either using one or the other?? ^^
     -> maybe there should be one more button to force to jump to next pattern in seq
 
+- in sequencer, give possibility to return to -1 -2 -3 -4 -5 pattern, jump back to previous pattern
+
 - drum/kick engine
 
-- in sequencer, give possibility to return to -1 -2 -3 -4 -5 pattern, jump back to previous pattern
+- Use soundfont as alternative synth engine to wav table/sample
+    - sf2 is work in progress in zic_file_soundfont.h. However still have a lot to do, see comment in top of the file
+    - sf2 is too complexe, maybe we can think about a more simple alternative: 
+        a big wav file with one chunk per note (a bit like the morphable wavetable)
+        ZICK 0060 268945
+        ZICK 0062 368945
+        ...
+        or ZKC4 268945
+           ZKD4 368945
+
+- sampler
+
 
 - App_View_InstrumentWavetable select end start if sample
 
