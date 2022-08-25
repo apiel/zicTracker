@@ -3,6 +3,11 @@
 - doc!!
 
 - save project!!!
+    - name
+    - save & restore
+    make a copy of last state and keep auto "saving". Every change are saved in temp state, if click restore, restore to saved state.
+    If click save, create new state that can be restored...
+
 
 - create a pcb keyboard
     - give possibility to edit sound of the 4 tracks at the same time

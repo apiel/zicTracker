@@ -12,22 +12,37 @@ Menu + Edit button (A + B), is to play/pause the sequencer.
 
 ![sequencer](https://github.com/apiel/zicTracker/blob/main/screenshot/seq.png?raw=true)
 
+The sequencer view is used to chain pattern. It has 4 columns, 1 for each tracks. Each field is a combination of 3 elements, the first 2 char represent the pattern, the seconds 2 char represent the detune value (+0), the third 2 char represent the action to do for this given filed. If ">" is in front of the field, it mean that it is currently playing. If "\*" is front of the field, it mean that the sequencer is paused on this element.
+
+### Detune
+
+Detune, will allow to increase or decrease all the notes of the pattern by semitone. It goes from -Z to +0 to +Z, where +Z correspond to +35 semitone as we used letter in order to use less space on the screen (+1, +2,..., +9, +A, +B,..., +Y, +Z).
+
+### Actions
+
+- x0 will repeat the pattern for ever
+- x1 will play the pattern only once and then go to the next row
+- x2 will play the pattern twice and then go to the next row
+- x3 will play the pattern 3 times and then go to the next row
+- x4 will play the pattern 4 times and then go to the next row
+- x5 will play the pattern 5 times and then go to the next row
+- ! will stop after playing the pattern
+- __ stop the pattern without to play it
+
 ## Project
 
-- name
-- save & restore
-make a copy of last state and keep auto "saving". Every change are saved in temp state, if click restore, restore to saved state.
-If click save, create new state that can be restored...
+TBD.
 
 ## Pattern
 
 ![sequencer](https://github.com/apiel/zicTracker/blob/main/screenshot/pat.png?raw=true)
 
-TBD.
+There is 255 patterns per project from 01 to FF (using hexadecimal number to represent the ID of the pattern). A pattern can be up of 64 steps. Each step can be assigned to any of the 4 instruments available within the track.
 
 ## Tracks
 
 TBD.
+
 ## Instrument
 
 ![sequencer](https://github.com/apiel/zicTracker/blob/main/screenshot/inst.png?raw=true)
@@ -78,11 +93,12 @@ sudo qemu-debootstrap --arch arm64 buster /mnt/data/arm64 http://deb.debian.org/
 Get into chroots:
 
 For 64 bit Arm environment:
+
 ```sh
 sudo chroot /mnt/data/arm64/
 ```
-or create a Arm64 shortcut on the desktop gui and click on Arm64 shortcut on desktop
 
+or create a Arm64 shortcut on the desktop gui and click on Arm64 shortcut on desktop
 
 Helpful tools to install in both environments for RK3326 app builds
 
@@ -100,4 +116,4 @@ Might need to install gcc-multilib, gcc-multilib and maybe some other stuff for 
 Install toolchain opendingux-gcw0-toolchain.2014-08-20
 maybe there: http://www.gcw-zero.com/develop
 or somewhere there: http://od.abstraction.se/opendingux/
-                    http://od.abstraction.se/opendingux/toolchain/
+http://od.abstraction.se/opendingux/toolchain/
