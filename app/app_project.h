@@ -7,13 +7,11 @@
 #include <zic_seq_pattern.h>
 
 #include "./app_def.h"
-#include "./app_file.h"
+#include "./app_file_pattern.h"
 
 #define STEP_DATA_LEN 9
 #define PATTERN_DATA_LEN STEP_DATA_LEN * MAX_STEPS_IN_PATTERN
 #define SAME_INSTRUMENT_SYMBOL '_'
-
-#define PATTERN_FILE_FORMAT "projects/%d/patterns/%02X.pat", project, pos + 1
 
 class App_Patterns {
 protected:
@@ -37,7 +35,7 @@ public:
         for (uint16_t i = 0; i < PATTERN_DATA_LEN; i++) {
             data[i] = '\0';
         }
-        if (loadFileContent(data, PATTERN_DATA_LEN, PATTERN_FILE_FORMAT)) {
+        if (loadFilePattern(project, pos + 1, data, PATTERN_DATA_LEN)) {
             Zic_Seq_Step* step = patterns[pos].steps;
             uint8_t prevInstrument = 255;
             uint8_t count = 0;
@@ -75,7 +73,7 @@ public:
                 snprintf(data + strlen(data), STEP_DATA_LEN, "%c --- %c\n", instrument, step->slide ? '1' : '0');
             }
         }
-        saveFileContent(data, strlen(data), PATTERN_FILE_FORMAT);
+        saveFilePattern(project, pos + 1, data, strlen(data));
     }
 
     void debug(void (*log)(const char* fmt, ...))
