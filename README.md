@@ -8,6 +8,10 @@ Menu button (B), is used to display the menu tree.
 Edit button (A), is used to change the selected value.
 Menu + Edit button (A + B), is to play/pause the sequencer.
 
+## Sequencer
+
+![sequencer](file://./screenshot/seq.png)
+
 ## Project
 
 - name
