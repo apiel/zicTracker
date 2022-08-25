@@ -6,24 +6,16 @@
 
 #include "./app_file.h"
 
-#define MAX_PATTERN_FILENAME 100
-char projectFilepath[MAX_PATTERN_FILENAME];
+#define PROJECT_FILE_FORMAT "projects/%d/project.config", project
 
-void setProjectFilename(uint8_t project)
+uint8_t loadFileProject(uint8_t project, char* content, uint16_t len)
 {
-    snprintf(projectFilepath, MAX_PATTERN_FILENAME, "projects/%d/project.config", project);
+    return loadFileContent(content, len, PROJECT_FILE_FORMAT);
 }
 
-uint8_t loadFileProject(uint8_t project, uint8_t pos, char* content, uint16_t len)
+uint8_t saveFileProject(uint8_t project, char* content, uint16_t len)
 {
-    setProjectFilename(project);
-    return loadFileContent(projectFilepath, content, len);
-}
-
-uint8_t saveFileProject(uint8_t project, uint8_t pos, char* content, uint16_t len)
-{
-    setProjectFilename(project);
-    return saveFileContent(projectFilepath, content, len);
+    return saveFileContent(content, len, PROJECT_FILE_FORMAT);
 }
 
 #endif
