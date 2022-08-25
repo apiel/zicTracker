@@ -10,7 +10,7 @@ Menu + Edit button (A + B), is to play/pause the sequencer.
 
 ## Sequencer
 
-![sequencer](file://./screenshot/seq.png)
+![sequencer](https://github.com/apiel/zicTracker/blob/main/screenshot/seq.png?raw=true)
 
 ## Project
 
@@ -21,12 +21,16 @@ If click save, create new state that can be restored...
 
 ## Pattern
 
+![sequencer](https://github.com/apiel/zicTracker/blob/main/screenshot/pat.png?raw=true)
+
 TBD.
 
 ## Tracks
 
 TBD.
 ## Instrument
+
+![sequencer](https://github.com/apiel/zicTracker/blob/main/screenshot/inst.png?raw=true)
 
 TBD.
 
