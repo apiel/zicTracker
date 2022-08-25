@@ -51,4 +51,32 @@ void nextFile(char* filename, const char* folder, const char* current, int8_t di
     strncpy(filename, "Empty folder", 256);
 }
 
+enum {
+    FILE_NONE,
+    FILE_SUCCESS,
+};
+
+uint8_t loadFileContent(const char* filename, char* content, uint16_t len)
+{
+    Zic_File file(filename, "r");
+    if (file.isOpen()) {
+        file.read(content, len);
+        file.close();
+        return FILE_SUCCESS;
+    }
+    return FILE_NONE;
+}
+
+uint8_t saveFileContent(const char* filename, char* content, uint16_t len)
+{
+    Zic_File file(filename, "w");
+    if (file.isOpen()) {
+        file.seekFromStart(0);
+        file.write(content, len);
+        file.close();
+        return FILE_SUCCESS;
+    }
+    return FILE_NONE;
+}
+
 #endif

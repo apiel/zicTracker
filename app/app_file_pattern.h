@@ -4,17 +4,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include <zic_file.h>
-
-enum {
-    PAT_LOAD_NONE,
-    PAT_LOAD_SUCCESS,
-};
-
-enum {
-    PAT_SAVE_NONE,
-    PAT_SAVE_SUCCESS,
-};
+#include "./app_file.h"
 
 #define MAX_PATTERN_FILENAME 100
 char patternFilepath[MAX_PATTERN_FILENAME];
@@ -27,26 +17,13 @@ void setPatternFilename(uint8_t project, uint8_t pos)
 uint8_t loadFilePattern(uint8_t project, uint8_t pos, char* content, uint16_t len)
 {
     setPatternFilename(project, pos);
-    Zic_File file(patternFilepath, "r");
-    if (file.isOpen()) {
-        file.read(content, len);
-        file.close();
-        return PAT_LOAD_SUCCESS;
-    }
-    return PAT_LOAD_NONE;
+    return loadFileContent(patternFilepath, content, len);
 }
 
 uint8_t saveFilePattern(uint8_t project, uint8_t pos, char* content, uint16_t len)
 {
-    printf("data to write: %s\n", content);
     setPatternFilename(project, pos);
-    Zic_File file(patternFilepath, "w");
-    if (file.isOpen()) {
-        file.seekFromStart(0);
-        file.write(content, len);
-        file.close();
-        return PAT_SAVE_SUCCESS;
-    }
-    return PAT_SAVE_NONE;
+    return saveFileContent(patternFilepath, content, len);
 }
+
 #endif
