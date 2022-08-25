@@ -56,19 +56,30 @@ enum {
     FILE_SUCCESS,
 };
 
-uint8_t loadFileContent(const char* filename, char* content, uint16_t len)
+#define MAX_FILENAME 100
+
+template <typename... Args>
+uint8_t loadFileContent(char* content, uint16_t len, const char* fmt, Args... args)
 {
+    char filename[MAX_FILENAME];
+    snprintf(filename, MAX_FILENAME, fmt, args...);
+
     Zic_File file(filename, "r");
     if (file.isOpen()) {
         file.read(content, len);
         file.close();
         return FILE_SUCCESS;
     }
+
     return FILE_NONE;
 }
 
-uint8_t saveFileContent(const char* filename, char* content, uint16_t len)
+template <typename... Args>
+uint8_t saveFileContent(char* content, uint16_t len, const char* fmt, Args... args)
 {
+    char filename[MAX_FILENAME];
+    snprintf(filename, MAX_FILENAME, fmt, args...);
+
     Zic_File file(filename, "w");
     if (file.isOpen()) {
         file.seekFromStart(0);
