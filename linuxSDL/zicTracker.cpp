@@ -299,6 +299,7 @@ int main(int argc, char* args[])
             SDL_UpdateWindowSurface(window);
         }
     }
+    app.quit();
 
     SDL_DestroyWindow(window);
 

@@ -101,10 +101,14 @@ public:
             tracks.togglePlay();
         } else if (menuView.update(&keys, display) != VIEW_NONE) {
             render();
-            // project.autoSave();
         } else if (menuView.getView()->update(&keys, display) != VIEW_NONE) {
             render();
         }
+    }
+
+    void quit()
+    {
+        project.autoSave();
     }
 };
 
