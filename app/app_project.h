@@ -39,6 +39,7 @@ public:
             strncpy(project.name, "New project", PROJECT_NAME_LEN);
             project.bpm = 120;
         }
+        // printf("Loaded project %d: %s (bpm %d)\n", project.id, project.name, project.bpm);
     }
 
     void autoSave()

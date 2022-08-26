@@ -53,6 +53,7 @@ public:
 
     App(App_Patterns* patterns, App_Display* _display)
         : tracks(patterns)
+        , tempo(project.project.bpm)
         , display(_display)
         , trackView(&tracks)
         , trackSeqView(&tracks)
@@ -62,8 +63,6 @@ public:
         , projectView(&tempo, &tracks, &project)
         , menuView(&menu[0], APP_MENU_SIZE)
     {
-        // tempo.set(project.project.bpm);
-        // tempo.set(120);
     }
 
     void start()
@@ -77,7 +76,8 @@ public:
         if (tempo.next()) {
             tracks.next();
             if (menuView.getView()->renderOn(EVENT_VIEW_ON_TEMPO)) {
-                render();
+                // FIXME
+                // render();
             }
         }
         return tracks.sample();
