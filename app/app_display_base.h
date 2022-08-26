@@ -29,6 +29,11 @@ public:
         useColoredHeader(-1, -1);
     }
 
+    virtual bool ready()
+    {
+        return true;
+    }
+
     void setCursor(uint8_t len, int8_t start = 0)
     {
         cursorPos = text + strlen(text) + start;

@@ -252,20 +252,6 @@ int main(int argc, char* args[])
 
     // Zic_File_Soundfont soundfont("soundfonts/florestan-subset.sf2");
 
-#if ZIC_SDL_MIXER
-    if (Mix_OpenAudio(SAMPLE_RATE, APP_AUDIO_FORMAT, CHANNELS, APP_AUDIO_CHUNK) < 0) {
-        fprintf(stderr, "Open audio mixer error: %s\n", SDL_GetError());
-    } else {
-        SDL_Log("Open audio mixer success\n");
-    }
-    Mix_HookMusic(audioCallBack, NULL);
-#else
-    SDL_AudioDeviceID audioDevice = initAudio();
-    if (SDL_getenv("ZIC_SKIP_AUDIO") == NULL && !audioDevice) {
-        return 1;
-    }
-#endif
-
     char fileFound[256];
     nextFile(fileFound, "samples", "kick.wav", -1);
     SDL_Log("Next file: %s\n", fileFound);
@@ -281,9 +267,22 @@ int main(int argc, char* args[])
         return 1;
     }
     SDL_Surface* screenSurface = SDL_GetWindowSurface(window);
-
     display.init(screenSurface);
-    app.start();
+
+#if ZIC_SDL_MIXER
+    if (Mix_OpenAudio(SAMPLE_RATE, APP_AUDIO_FORMAT, CHANNELS, APP_AUDIO_CHUNK) < 0) {
+        fprintf(stderr, "Open audio mixer error: %s\n", SDL_GetError());
+    } else {
+        SDL_Log("Open audio mixer success\n");
+    }
+    Mix_HookMusic(audioCallBack, NULL);
+#else
+    SDL_AudioDeviceID audioDevice = initAudio();
+    if (SDL_getenv("ZIC_SKIP_AUDIO") == NULL && !audioDevice) {
+        return 1;
+    }
+#endif
+
     app.render();
     SDL_UpdateWindowSurface(window);
 

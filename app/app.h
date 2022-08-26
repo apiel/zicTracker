@@ -65,19 +65,12 @@ public:
     {
     }
 
-    void start()
-    {
-        // tracks.looper->setLoopMode(true);
-        // tracks.looper->on(60);
-    }
-
     int16_t sample()
     {
         if (tempo.next()) {
             tracks.next();
             if (menuView.getView()->renderOn(EVENT_VIEW_ON_TEMPO)) {
-                // FIXME
-                // render();
+                render();
             }
         }
         return tracks.sample();
@@ -85,11 +78,13 @@ public:
 
     void render()
     {
-        // TODO find a better place way to reset cursor
-        display->reset();
-        menuView.getView()->render(display);
-        display->drawText();
-        rendered = true;
+        if (display->ready()) {
+            // TODO find a better place way to reset cursor
+            display->reset();
+            menuView.getView()->render(display);
+            display->drawText();
+            rendered = true;
+        }
     }
 
     void handleUi(uint8_t keysBin)

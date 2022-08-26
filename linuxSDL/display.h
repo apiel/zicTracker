@@ -20,7 +20,7 @@
 
 class UI_Display : public App_Display {
 protected:
-    SDL_Surface* surface;
+    SDL_Surface* surface = NULL;
 
     Uint32 fontColor = 0;
 
@@ -30,9 +30,9 @@ protected:
             return;
         }
 
-// #if FONT_SIZE == 1
-// should tryy to just draw a pixel....
-// #else
+        // #if FONT_SIZE == 1
+        // should tryy to just draw a pixel....
+        // #else
         SDL_Rect r = { x * FONT_SIZE, y * FONT_SIZE, FONT_SIZE, FONT_SIZE };
         SDL_FillRect(surface, &r, fontColor);
     }
@@ -69,6 +69,11 @@ public:
     void clearScreen()
     {
         SDL_FillRect(surface, NULL, rgb(UI_COLOR_BG));
+    }
+
+    bool ready() override
+    {
+        return surface != NULL;
     }
 };
 
