@@ -74,6 +74,11 @@ uint8_t loadFileContent(char* content, uint16_t len, const char* fmt, Args... ar
     return FILE_NONE;
 }
 
+uint8_t loadFileContent(char* content, uint16_t len, const char* fmt)
+{
+    return loadFileContent(content, len, fmt, NULL);
+}
+
 template <typename... Args>
 uint8_t saveFileContent(char* content, uint16_t len, const char* fmt, Args... args)
 {

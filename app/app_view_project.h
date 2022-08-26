@@ -5,8 +5,9 @@
 
 #include "./app_display.h"
 #include "./app_view_table.h"
+#include "./app_project.h"
 
-#define VIEW_PROJECT_ROW 2
+#define VIEW_PROJECT_ROW 3
 #define VIEW_PROJECT_COL 3
 
 class App_View_ProjectBpm : public App_View_TableLabeledRow {
@@ -75,23 +76,57 @@ public:
     }
 };
 
+class App_View_ProjectName : public App_View_TableLabeledRow {
+protected:
+    App_Project* project;
+
+public:
+    App_View_ProjectName(App_Project* _project)
+        : App_View_TableLabeledRow("Name ", PROJECT_NAME_LEN)
+        , project(_project)
+    {
+    }
+
+    void renderValue(App_Display* display, uint8_t col)
+    {
+        sprintf(display->text + strlen(display->text), "%-*s", PROJECT_NAME_LEN, project->project.name);
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
+    {
+        // if (keys->Right) {
+        //     tempo->set(tempo->getBpm() + 1);
+        // } else if (keys->Up) {
+        //     tempo->set(tempo->getBpm() + 10);
+        // } else if (keys->Left) {
+        //     tempo->set(tempo->getBpm() - 1);
+        // } else if (keys->Down) {
+        //     tempo->set(tempo->getBpm() - 10);
+        // }
+        return VIEW_CHANGED;
+    }
+};
+
 class App_View_Project : public App_View_Table {
 protected:
     App_View_ProjectBpm bpmField;
     App_View_ProjectPlay playField;
+    App_View_ProjectName nameField;
 
     App_View_TableField* fields[VIEW_PROJECT_ROW * VIEW_PROJECT_COL] = {
         // clang-format off
+        &nameField, &nameField, NULL,
         &bpmField, &bpmField, NULL,
         &playField, &playField, &playField,
         // clang-format on
     };
 
 public:
-    App_View_Project(Zic_Seq_Tempo<>* tempo, App_Tracks* tracks)
+    App_View_Project(Zic_Seq_Tempo<>* tempo, App_Tracks* tracks, App_Project* project)
         : App_View_Table(fields, VIEW_PROJECT_ROW, VIEW_PROJECT_COL)
         , bpmField(tempo)
         , playField(tracks)
+        , nameField(project)
     {
         initSelection();
     }

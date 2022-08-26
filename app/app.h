@@ -4,6 +4,7 @@
 #include "./app_def.h"
 #include "./app_display.h"
 #include "./app_patterns.h"
+#include "./app_project.h"
 #include "./app_tracks.h"
 #include "./app_view_instrument.h"
 #include "./app_view_menu.h"
@@ -16,8 +17,9 @@
 
 class App {
 public:
-    Zic_Seq_Tempo<> tempo;
     App_Tracks tracks;
+    App_Project project;
+    Zic_Seq_Tempo<> tempo;
 
     App_Display* display;
     UiKeys keys;
@@ -57,7 +59,7 @@ public:
         , instrumentView(&tracks)
         , patternView(patterns)
         , trackDelayView(&tracks)
-        , projectView(&tempo, &tracks)
+        , projectView(&tempo, &tracks, &project)
         , menuView(&menu[0], APP_MENU_SIZE)
     {
     }

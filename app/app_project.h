@@ -7,29 +7,41 @@
 #include "./app_def.h"
 #include "./app_file.h"
 
-#define STEP_DATA_LEN 9
-#define PATTERN_DATA_LEN STEP_DATA_LEN * MAX_STEPS_IN_PATTERN
-#define SAME_INSTRUMENT_SYMBOL '_'
-
+#define PROJECT_NAME_LEN 22
 #define PROJECT_FILE_FORMAT "projects/%d/project.config", project
-#define CURRENT_PROJECT_FILE_FORMAT "projects/current_project.config", project
+#define CURRENT_PROJECT_FILE_FORMAT "projects/current_project.config"
 
 class App_Project {
 protected:
-    uint8_t project = 0;
+    typedef struct Project {
+        uint16_t id;
+        char name[PROJECT_NAME_LEN];
+        uint8_t bpm;
+
+        // Sequencer
+        // Tracks settings
+        // Instrument settings
+
+    } Project;
 
 public:
+    Project project;
 
     App_Project()
     {
-
+        load();
     }
 
-    void load(uint8_t pos)
+    void load()
     {
+        if (!loadFileContent((char* )&project, sizeof(Project), CURRENT_PROJECT_FILE_FORMAT)) {
+            project.id = 0;
+            strncpy(project.name, "New project", PROJECT_NAME_LEN);
+            project.bpm = 120;
+        }
     }
 
-    void save(uint8_t pos)
+    void autoSave()
     {
     }
 };
