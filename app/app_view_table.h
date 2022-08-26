@@ -213,7 +213,7 @@ public:
                 display->startRow = selectedRow;
             }
         }
-        if (res == VIEW_CHANGED) {
+        if (res != VIEW_NONE) {
             render(display);
         }
         return res;

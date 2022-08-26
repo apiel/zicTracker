@@ -18,8 +18,8 @@
 class App {
 public:
     App_Tracks tracks;
-    App_Project project;
     Zic_Seq_Tempo<> tempo;
+    App_Project project;
 
     App_Display* display;
     UiKeys keys;
@@ -53,7 +53,7 @@ public:
 
     App(App_Patterns* patterns, App_Display* _display)
         : tracks(patterns)
-        , tempo(project.project.bpm)
+        , project(&tracks, &tempo)
         , display(_display)
         , trackView(&tracks)
         , trackSeqView(&tracks)
@@ -101,6 +101,7 @@ public:
             tracks.togglePlay();
         } else if (menuView.update(&keys, display) != VIEW_NONE) {
             render();
+            // project.autoSave();
         } else if (menuView.getView()->update(&keys, display) != VIEW_NONE) {
             render();
         }

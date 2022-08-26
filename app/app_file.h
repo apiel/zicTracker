@@ -95,4 +95,9 @@ uint8_t saveFileContent(char* content, uint16_t len, const char* fmt, Args... ar
     return FILE_NONE;
 }
 
+uint8_t saveFileContent(char* content, uint16_t len, const char* fmt)
+{
+    return saveFileContent(content, len, fmt, NULL);
+}
+
 #endif
