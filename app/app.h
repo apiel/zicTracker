@@ -62,6 +62,8 @@ public:
         , projectView(&tempo, &tracks, &project)
         , menuView(&menu[0], APP_MENU_SIZE)
     {
+        // tempo.set(project.project.bpm);
+        // tempo.set(120);
     }
 
     void start()
