@@ -23,6 +23,7 @@ public:
 
     virtual void reset()
     {
+        firstLetter = false;
         cursorPos = NULL;
         cursorLen = 0;
         coloredLabel = 255;
