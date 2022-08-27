@@ -10,6 +10,7 @@
 #include "./app_view_menu.h"
 #include "./app_view_pattern.h"
 #include "./app_view_project.h"
+#include "./app_view_projectEditName.h"
 #include "./app_view_track.h"
 #include "./app_view_trackDelay.h"
 #include "./app_view_trackSequencer.h"
@@ -30,6 +31,7 @@ public:
     App_View_Pattern patternView;
     App_View_TrackDelay trackDelayView;
     App_View_Project projectView;
+    App_View_ProjectEditName projectEditNameView;
 
     App_View_Menu menuView;
 
@@ -61,6 +63,7 @@ public:
         , patternView(patterns)
         , trackDelayView(&tracks)
         , projectView(&tempo, &tracks, &project)
+        , projectEditNameView(&project)
         , menuView(&menu[0], APP_MENU_SIZE)
     {
     }
