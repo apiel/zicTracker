@@ -37,18 +37,18 @@ public:
 
 #define APP_MENU_SIZE 8
     Menu menu[APP_MENU_SIZE] = {
-        (Menu) { "Tracks sequencer", 'S', &trackSeqView, 'T', true },
-        (Menu) { "Tracks", 'T', &trackView, 'T', false },
-        (Menu) { "Track delay", 'D', &trackDelayView, 'T', false },
-        (Menu) { "Instruments", 'I', &instrumentView, 'I', true },
-        (Menu) { "Instruments kit", 'K', NULL, 'I', false }, // this is how to save a kit
+        (Menu) { "Tracks sequencer", "Sequencer", 'S', &trackSeqView, 'T', true },
+        (Menu) { "Tracks", "Tracks", 'T', &trackView, 'T', false },
+        (Menu) { "Track delay", "Delay", 'D', &trackDelayView, 'T', false },
+        (Menu) { "Instruments", "Instruments", 'I', &instrumentView, 'I', true },
+        (Menu) { "Instruments kit", "Kit", 'K', NULL, 'I', false }, // this is how to save a kit
         // 4 LFO -> can be assigned to any changeable values and can be use for multiple instrument at the same time
         // 4 Extra Envelop -> same as LFO
         // IFX: reverb, distortion...
         // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
-        (Menu) { "Pattern", 'P', &patternView, 'P', true },
-        (Menu) { "Sampler", 'S', NULL, 'S', true }, // Record all track to sample and edit sample
-        (Menu) { "Project", 'P', &projectView, 'P', true }, // Select project
+        (Menu) { "Pattern", "Pattern", 'P', &patternView, 'P', true },
+        (Menu) { "Sampler", "Sampler", 'S', NULL, 'S', true }, // Record all track to sample and edit sample
+        (Menu) { "Project", "Project", 'P', &projectView, 'P', true }, // Select project
     };
 
     App(App_Patterns* patterns, App_Display* _display)

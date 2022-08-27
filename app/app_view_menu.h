@@ -6,6 +6,7 @@
 
 typedef struct {
     const char* name;
+    const char* shortName;
     char key;
     App_View* view;
     char group;
@@ -83,6 +84,7 @@ public:
 
     void render(App_Display* display)
     {
+        display->useFirstLetterHilighted();
         strcpy(display->text, "");
         for (uint8_t i = 0; i < menuSize; i++) {
             if (i != 0 && menu[i].group != menu[i - 1].group) {
@@ -91,7 +93,7 @@ public:
             if (i == currentMenu) {
                 display->setCursor(1, 1);
             }
-            sprintf(display->text + strlen(display->text), " %c", menu[i].key);
+            sprintf(display->text + strlen(display->text), " %s", menu[i].shortName);
         }
         sprintf(display->text + strlen(display->text), "\n\n %s", menu[currentMenu].name);
     }

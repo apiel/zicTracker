@@ -1,8 +1,8 @@
 #ifndef APP_DISPLAY_BASE_H_
 #define APP_DISPLAY_BASE_H_
 
-#include <stdint.h>
 #include <cstring>
+#include <stdint.h>
 
 // #define MAX_DISPLAY_TEXT 176 // 21*8 + 8\n
 //                              // but should actually be 20*8 to fit console
@@ -17,6 +17,7 @@ public:
     uint8_t coloredLabel = 255;
     uint8_t coloredLabelFrom = 0;
     int8_t coloredHeader[2] = { -1, -1 };
+    bool firstLetter = false;
 
     uint8_t startRow = 0;
 
@@ -65,6 +66,11 @@ public:
     {
         coloredHeader[0] = row1;
         coloredHeader[1] = row2;
+    }
+
+    void useFirstLetterHilighted()
+    {
+        firstLetter = true;
     }
 };
 

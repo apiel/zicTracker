@@ -31,6 +31,7 @@ class App_Display : public App_Display_Base {
 protected:
     uint16_t xScreen = 0;
     uint16_t yScreen = 0;
+    uint8_t charCount = 0;
 
     // Could be boolean and use it to draw char process...
     virtual void drawPixel(int16_t x, int16_t y) = 0;
@@ -63,6 +64,7 @@ protected:
         } else {
             setColor(UI_COLOR_FONT);
         }
+        charCount = 0;
     }
 
 public:
@@ -101,6 +103,11 @@ public:
                     setColor(UI_COLOR_SIGN);
                 } else if (*txt == ' ' || *txt == '\n') {
                     resetColor(y);
+                } else if (firstLetter) {
+                    if (charCount > 0) {
+                        setColor(UI_COLOR_LABEL);
+                    }
+                    charCount++;
                 }
 
                 if (cursorLen && txt >= cursorPos && txt < cursorPos + cursorLen) {
