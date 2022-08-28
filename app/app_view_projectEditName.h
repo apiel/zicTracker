@@ -5,7 +5,7 @@
 #include "./app_project.h"
 #include "./app_view_table.h"
 
-#define VIEW_PROJECT_EDIT_NAME_ROW 9
+#define VIEW_PROJECT_EDIT_NAME_ROW 10
 #define VIEW_PROJECT_EDIT_NAME_COL 10
 
 class App_View_EditedProjectName : public App_View_TableLabeledRow {
@@ -53,10 +53,35 @@ public:
     }
 };
 
+class App_View_EditProjectAction : public App_View_TableField {
+public:
+    bool isSelectable(uint8_t row, uint8_t col) override
+    {
+        return true;
+    }
+
+    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+        bool selected = selectedRow == row && selectedCol == col;
+        if (col == 0) {
+            if (selected) {
+                display->setCursor(9, 5);
+            }
+            strcat(display->text, "     Backspace");
+        } else {
+            if (selected) {
+                display->setCursor(5, 1);
+            }
+            strcat(display->text, " Done");
+        }
+    }
+};
+
 class App_View_ProjectEditName : public App_View_Table {
 protected:
     App_View_EditedProjectName nameField;
     App_View_EditProjectKeyboard kbField;
+    App_View_EditProjectAction actionField;
 
     App_View_TableField* fields[VIEW_PROJECT_EDIT_NAME_ROW * VIEW_PROJECT_EDIT_NAME_COL] = {
         // clang-format off
@@ -69,6 +94,7 @@ protected:
         &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField,
         &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField,
         &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField, &kbField,
+        &actionField, NULL, NULL, NULL, NULL, &actionField, NULL, NULL, NULL, NULL,
         // clang-format on
     };
 
