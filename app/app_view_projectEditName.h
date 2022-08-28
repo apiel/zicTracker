@@ -3,6 +3,7 @@
 
 #include "./app_display.h"
 #include "./app_project.h"
+#include "./app_view_menu.h"
 #include "./app_view_table.h"
 
 #define VIEW_PROJECT_EDIT_NAME_ROW 10
@@ -74,10 +75,12 @@ public:
 class App_View_EditProjectAction : public App_View_TableField {
 protected:
     App_Project* project;
+    App_View_Menu* menu;
 
 public:
-    App_View_EditProjectAction(App_Project* _project)
+    App_View_EditProjectAction(App_Project* _project, App_View_Menu* _menu)
         : project(_project)
+        , menu(_menu)
     {
     }
 
@@ -105,9 +108,10 @@ public:
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
         if (col == 0) {
-            project->project.name[strlen(project->project.name)-1] = '\0';
+            project->project.name[strlen(project->project.name) - 1] = '\0';
             return VIEW_CHANGED;
         } else {
+            menu->setView('J', 'J');
             return VIEW_CHANGED;
         }
         return VIEW_NONE;
@@ -136,11 +140,11 @@ protected:
     };
 
 public:
-    App_View_ProjectEditName(App_Project* project)
+    App_View_ProjectEditName(App_Project* project, App_View_Menu* menu)
         : App_View_Table(fields, VIEW_PROJECT_EDIT_NAME_ROW, VIEW_PROJECT_EDIT_NAME_COL)
         , nameField(project)
         , kbField(project)
-        , actionField(project)
+        , actionField(project, menu)
     {
         initSelection();
     }

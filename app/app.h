@@ -64,7 +64,7 @@ public:
         , patternView(patterns)
         , trackDelayView(&tracks)
         , projectView(&tempo, &tracks, &project, &menuView)
-        , projectEditNameView(&project)
+        , projectEditNameView(&project, &menuView)
         , menuView(&menu[0], APP_MENU_SIZE)
     {
     }
