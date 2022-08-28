@@ -37,7 +37,7 @@ public:
 
     bool rendered = false;
 
-#define APP_MENU_SIZE 8
+#define APP_MENU_SIZE 9
     Menu menu[APP_MENU_SIZE] = {
         (Menu) { "Tracks sequencer", "Sequencer", 'S', &trackSeqView, 'T', true },
         (Menu) { "Tracks", "Tracks", 'T', &trackView, 'T', false },
@@ -50,7 +50,8 @@ public:
         // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
         (Menu) { "Pattern", "Pattern", 'P', &patternView, 'P', true },
         (Menu) { "Sampler", "Sampler", 'S', NULL, 'S', true }, // Record all track to sample and edit sample
-        (Menu) { "Project", "Project", 'P', &projectView, 'P', true }, // Select project
+        (Menu) { "Project", "Project", 'J', &projectView, 'J', true }, // Select project
+        (Menu) { "Edit project name", "Name", 'N', &projectEditNameView, 'J', false }, // Select project
     };
 
     App(App_Patterns* patterns, App_Display* _display)
@@ -62,7 +63,7 @@ public:
         , instrumentView(&tracks)
         , patternView(patterns)
         , trackDelayView(&tracks)
-        , projectView(&tempo, &tracks, &project)
+        , projectView(&tempo, &tracks, &project, &menuView)
         , projectEditNameView(&project)
         , menuView(&menu[0], APP_MENU_SIZE)
     {

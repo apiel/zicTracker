@@ -6,6 +6,7 @@
 #include "./app_display.h"
 #include "./app_view_table.h"
 #include "./app_project.h"
+#include "./app_view_menu.h"
 
 #define VIEW_PROJECT_ROW 3
 #define VIEW_PROJECT_COL 3
@@ -79,11 +80,13 @@ public:
 class App_View_ProjectName : public App_View_TableLabeledRow {
 protected:
     App_Project* project;
+    App_View_Menu * menu;
 
 public:
-    App_View_ProjectName(App_Project* _project)
+    App_View_ProjectName(App_Project* _project, App_View_Menu * _menu)
         : App_View_TableLabeledRow("Name ", PROJECT_NAME_LEN)
         , project(_project)
+        , menu(_menu)
     {
     }
 
@@ -94,15 +97,7 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
     {
-        // if (keys->Right) {
-        //     tempo->set(tempo->getBpm() + 1);
-        // } else if (keys->Up) {
-        //     tempo->set(tempo->getBpm() + 10);
-        // } else if (keys->Left) {
-        //     tempo->set(tempo->getBpm() - 1);
-        // } else if (keys->Down) {
-        //     tempo->set(tempo->getBpm() - 10);
-        // }
+        menu->setView('J', 'N');
         return VIEW_CHANGED;
     }
 };
@@ -122,11 +117,11 @@ protected:
     };
 
 public:
-    App_View_Project(Zic_Seq_Tempo<>* tempo, App_Tracks* tracks, App_Project* project)
+    App_View_Project(Zic_Seq_Tempo<>* tempo, App_Tracks* tracks, App_Project* project, App_View_Menu * menu)
         : App_View_Table(fields, VIEW_PROJECT_ROW, VIEW_PROJECT_COL)
         , bpmField(tempo)
         , playField(tracks)
-        , nameField(project)
+        , nameField(project, menu)
     {
         initSelection();
     }

@@ -115,6 +115,16 @@ public:
         }
         return VIEW_NONE;
     }
+
+    void setView(char group, char key)
+    {
+        for (uint8_t i = 0; i < menuSize; i++) {
+            if (menu[i].group == group && menu[i].key == key) {
+                currentMenu = i;
+                break;
+            }
+        }
+    }
 };
 
 #endif
