@@ -95,7 +95,7 @@ public:
             }
             sprintf(display->text + strlen(display->text), " %s", menu[i].shortName);
         }
-        sprintf(display->text + strlen(display->text), "\n\n %s", menu[currentMenu].name);
+        sprintf(display->text + strlen(display->text), "\n\n >> %s", menu[currentMenu].name);
     }
 
     uint8_t update(UiKeys* _keys, App_Display* display)
