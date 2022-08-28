@@ -33,8 +33,18 @@ public:
 class App_View_EditProjectKeyboard : public App_View_TableField {
 protected:
     const char* alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-.!@$+&";
+    App_Project* project;
+
+    char getChar(uint8_t row, uint8_t col)
+    {
+        return alphanum[col + (row - 2) * VIEW_PROJECT_EDIT_NAME_COL];
+    }
 
 public:
+    App_View_EditProjectKeyboard(App_Project* _project)
+        : project(_project)
+    {
+    }
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return true;
@@ -48,8 +58,13 @@ public:
         if (col == 0) {
             strcat(display->text, "    ");
         }
-        // strcat(display->text, " A");
-        sprintf(display->text + strlen(display->text), " %c", alphanum[col + (row - 2) * VIEW_PROJECT_EDIT_NAME_COL]);
+        sprintf(display->text + strlen(display->text), " %c", getChar(row, col));
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    {
+        sprintf(project->project.name + strlen(project->project.name), "%c", getChar(row, col));
+        return VIEW_CHANGED;
     }
 };
 
@@ -102,6 +117,7 @@ public:
     App_View_ProjectEditName(App_Project* project)
         : App_View_Table(fields, VIEW_PROJECT_EDIT_NAME_ROW, VIEW_PROJECT_EDIT_NAME_COL)
         , nameField(project)
+        , kbField(project)
     {
         initSelection();
     }
