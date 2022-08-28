@@ -63,13 +63,24 @@ public:
 
     uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
     {
-        sprintf(project->project.name + strlen(project->project.name), "%c", getChar(row, col));
-        return VIEW_CHANGED;
+        if (strlen(project->project.name) < PROJECT_NAME_LEN - 1) {
+            sprintf(project->project.name + strlen(project->project.name), "%c", getChar(row, col));
+            return VIEW_CHANGED;
+        }
+        return VIEW_NONE;
     }
 };
 
 class App_View_EditProjectAction : public App_View_TableField {
+protected:
+    App_Project* project;
+
 public:
+    App_View_EditProjectAction(App_Project* _project)
+        : project(_project)
+    {
+    }
+
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return true;
@@ -89,6 +100,17 @@ public:
             }
             strcat(display->text, " Done");
         }
+    }
+
+    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    {
+        if (col == 0) {
+            project->project.name[strlen(project->project.name)-1] = '\0';
+            return VIEW_CHANGED;
+        } else {
+            return VIEW_CHANGED;
+        }
+        return VIEW_NONE;
     }
 };
 
@@ -118,6 +140,7 @@ public:
         : App_View_Table(fields, VIEW_PROJECT_EDIT_NAME_ROW, VIEW_PROJECT_EDIT_NAME_COL)
         , nameField(project)
         , kbField(project)
+        , actionField(project)
     {
         initSelection();
     }
