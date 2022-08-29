@@ -40,6 +40,7 @@
         ...
         or ZKC4 268945
            ZKD4 368945
+        it might a way to also define looping point
 
 - sampler
 
