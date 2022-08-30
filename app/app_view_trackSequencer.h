@@ -155,6 +155,12 @@ public:
         renderer->useColoredHeader();
         App_View_Table::initDisplay(renderer);
     }
+
+    void snapshot(App_Renderer* renderer) override
+    {
+        render(renderer);
+        saveFileContent(renderer->text, strlen(renderer->text), "projects/current/sequencer.zic");
+    }
 };
 
 #endif

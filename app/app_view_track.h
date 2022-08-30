@@ -146,6 +146,12 @@ public:
         }
         return App_View_Table::update(keys, renderer);
     }
+
+    void snapshot(App_Renderer* renderer) override
+    {
+        render(renderer);
+        saveFileContent(renderer->text, strlen(renderer->text), "projects/current/tracks.zic");
+    }
 };
 
 #endif

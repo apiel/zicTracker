@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <sys/stat.h> // mkdir
+#include <sys/types.h> // mkdir
+
 struct dirent* myReaddir(DIR* x)
 {
     struct dirent* directory;
@@ -83,8 +86,12 @@ template <typename... Args>
 uint8_t saveFileContent(char* content, uint16_t len, const char* fmt, Args... args)
 {
     char filename[MAX_FILENAME];
+    
     snprintf(filename, MAX_FILENAME, fmt, args...);
+    strrchr(filename, '/')[0] = '\0';
+    mkdir(filename, 0777);
 
+    snprintf(filename, MAX_FILENAME, fmt, args...);
     Zic_File file(filename, "w");
     if (file.isOpen()) {
         file.seekFromStart(0);

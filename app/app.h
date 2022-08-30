@@ -5,7 +5,7 @@
 #include "./app_display.h"
 #include "./app_patterns.h"
 #include "./app_project.h"
-#include "./app_snapshot.h"
+#include "./app_renderer.h"
 #include "./app_tracks.h"
 #include "./app_view_instrument.h"
 #include "./app_view_menu.h"
@@ -115,10 +115,10 @@ public:
     {
         project.autoSave();
 
-        App_Snapshot snapshotRenderer;
+        App_Renderer renderer;
         for (uint8_t i; i < APP_MENU_SIZE; i++) {
             if (menu[i].view) {
-                menu[i].view->snapshot(&snapshotRenderer);
+                menu[i].view->snapshot(&renderer);
             }
         }
     }
