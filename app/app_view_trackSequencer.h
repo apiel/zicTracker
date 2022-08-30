@@ -10,9 +10,9 @@
 
 class App_View_TrackSequencerHeader : public App_View_TableField {
 public:
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        sprintf(display->text + strlen(display->text), " TRACK%d", col + 1);
+        sprintf(renderer->text + strlen(renderer->text), " TRACK%d", col + 1);
     }
 };
 
@@ -33,34 +33,34 @@ public:
         return true;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
         Zic_Seq_PatternComponent* component = &track->components[(row - 1) % PATTERN_COMPONENT_COUNT];
 
         if (selectedRow == row && selectedCol == col) {
-            display->setCursor(2, col % 3 == 0 ? 1 : 0);
+            renderer->setCursor(2, col % 3 == 0 ? 1 : 0);
             if (updating) {
                 component = &newComponent;
             }
         }
         if (col % 3 == 0) {
-            strcat(display->text,
+            strcat(renderer->text,
                 track->looper.isComponentPlaying(row - 1) ? ">"
                                                           : (track->looper.isCurrentComponent(row - 1) ? "*" : " "));
             if (component->pattern == NULL) {
-                strcat(display->text, "--");
+                strcat(renderer->text, "--");
             } else {
-                sprintf(display->text + strlen(display->text), "%02X", component->pattern->id + 1);
+                sprintf(renderer->text + strlen(renderer->text), "%02X", component->pattern->id + 1);
             }
         } else if (col % 3 == 1) {
             if (component->detune < 0) {
-                sprintf(display->text + strlen(display->text), "-%c", alphanum[-component->detune]);
+                sprintf(renderer->text + strlen(renderer->text), "-%c", alphanum[-component->detune]);
             } else {
-                sprintf(display->text + strlen(display->text), "+%c", alphanum[component->detune]);
+                sprintf(renderer->text + strlen(renderer->text), "+%c", alphanum[component->detune]);
             }
         } else {
-            strcat(display->text, SEQ_CONDITIONS_NAMES[component->condition]);
+            strcat(renderer->text, SEQ_CONDITIONS_NAMES[component->condition]);
         }
     }
 
@@ -82,7 +82,7 @@ public:
         updating = false;
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         int8_t directions[] = { 16, 12, 1 };
         int8_t direction = 0;
@@ -150,10 +150,10 @@ public:
         return true;
     }
 
-    void initDisplay(App_Renderer* display)
+    void initDisplay(App_Renderer* renderer)
     {
-        display->useColoredHeader();
-        App_View_Table::initDisplay(display);
+        renderer->useColoredHeader();
+        App_View_Table::initDisplay(renderer);
     }
 };
 

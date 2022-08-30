@@ -22,12 +22,12 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(display->text + strlen(display->text), "%-3d", tempo->getBpm());
+        sprintf(renderer->text + strlen(renderer->text), "%-3d", tempo->getBpm());
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         if (keys->Right) {
             tempo->set(tempo->getBpm() + 1);
@@ -53,20 +53,20 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
         if (col == 1) {
             if (tracks->isPlaying()) {
-                strcat(display->text, ">PLAY ");
+                strcat(renderer->text, ">PLAY ");
             } else {
-                strcat(display->text, "PAUSE ");
+                strcat(renderer->text, "PAUSE ");
             }
         } else {
-            strcat(display->text, "RESET");
+            strcat(renderer->text, "RESET");
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         if (col == 1) {
             tracks->togglePlay();
@@ -90,12 +90,12 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(display->text + strlen(display->text), "%-*s", PROJECT_NAME_LEN, project->project.name);
+        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, project->project.name);
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         menu->setView('J', 'N');
         return VIEW_CHANGED;
@@ -126,10 +126,10 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Renderer* display)
+    void initDisplay(App_Renderer* renderer)
     {
-        display->useColoredLabel();
-        App_View_Table::initDisplay(display);
+        renderer->useColoredLabel();
+        App_View_Table::initDisplay(renderer);
     }
 };
 

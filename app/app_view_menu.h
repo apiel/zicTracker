@@ -82,23 +82,23 @@ public:
         return view ? view : this;
     }
 
-    void render(App_Renderer* display)
+    void render(App_Renderer* renderer)
     {
-        display->useFirstLetterHilighted();
-        strcpy(display->text, "");
+        renderer->useFirstLetterHilighted();
+        strcpy(renderer->text, "");
         for (uint8_t i = 0; i < menuSize; i++) {
             if (i != 0 && menu[i].group != menu[i - 1].group) {
-                strcat(display->text, "\n");
+                strcat(renderer->text, "\n");
             }
             if (i == currentMenu) {
-                display->setCursor(1, 1);
+                renderer->setCursor(1, 1);
             }
-            sprintf(display->text + strlen(display->text), " %s", menu[i].shortName);
+            sprintf(renderer->text + strlen(renderer->text), " %s", menu[i].shortName);
         }
-        sprintf(display->text + strlen(display->text), "\n\n >> %s", menu[currentMenu].name);
+        sprintf(renderer->text + strlen(renderer->text), "\n\n >> %s", menu[currentMenu].name);
     }
 
-    uint8_t update(UiKeys* _keys, App_Renderer* display)
+    uint8_t update(UiKeys* _keys, App_Renderer* renderer)
     {
         keys = _keys;
         if (keys->Menu) {

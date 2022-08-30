@@ -10,9 +10,9 @@
 
 class App_View_TableField {
 public:
-    virtual void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol) = 0;
+    virtual void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol) = 0;
 
-    virtual uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
+    virtual uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         return VIEW_NONE;
     }
@@ -41,20 +41,20 @@ public:
     {
     }
 
-    virtual void renderValue(App_Renderer* display, uint8_t col) = 0;
+    virtual void renderValue(App_Renderer* renderer, uint8_t col) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return true;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (selectedRow == row && selectedCol == col) {
-            display->setCursor(cursorLen);
+            renderer->setCursor(cursorLen);
         }
 
-        renderValue(display, col);
+        renderValue(renderer, col);
     }
 };
 
@@ -69,19 +69,19 @@ public:
     {
     }
 
-    // virtual void renderValue(App_Renderer* display, uint8_t col) = 0;
+    // virtual void renderValue(App_Renderer* renderer, uint8_t col) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return col != 0;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (col == 0) {
-            strcat(display->text, label);
+            strcat(renderer->text, label);
         } else {
-            App_View_TableFieldCursor::render(display, row, col, selectedRow, selectedCol);
+            App_View_TableFieldCursor::render(renderer, row, col, selectedRow, selectedCol);
         }
     }
 };
@@ -155,33 +155,33 @@ public:
         lastRow = _lastRow > ROW_COUNT ? ROW_COUNT : _lastRow;
     }
 
-    virtual void initDisplay(App_Renderer* display)
+    virtual void initDisplay(App_Renderer* renderer)
     {
-        strcpy(display->text, "");
+        strcpy(renderer->text, "");
     }
 
-    virtual void endRow(App_Renderer* display, uint16_t row)
+    virtual void endRow(App_Renderer* renderer, uint16_t row)
     {
-        strcat(display->text, "\n");
+        strcat(renderer->text, "\n");
     }
 
-    void render(App_Renderer* display)
+    void render(App_Renderer* renderer)
     {
-        initDisplay(display);
-        for (uint8_t row = display->startRow; row < lastRow && row - display->startRow < TABLE_VISIBLE_ROWS; row++) {
+        initDisplay(renderer);
+        for (uint8_t row = renderer->startRow; row < lastRow && row - renderer->startRow < TABLE_VISIBLE_ROWS; row++) {
             // here would come if visible row
             for (uint8_t col = 0; col < COL_COUNT; col++) {
                 // here would come if visible col
                 App_View_TableField* field = fields[row * COL_COUNT + col];
                 if (field != NULL) {
-                    field->render(display, row, col, selectedRow, selectedCol);
+                    field->render(renderer, row, col, selectedRow, selectedCol);
                 }
             }
-            endRow(display, row);
+            endRow(renderer, row);
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer)
     {
         uint8_t res = VIEW_CHANGED;
         if (keys->Edit) {
@@ -189,7 +189,7 @@ public:
                 getSelectedField()->updateStart(selectedRow, selectedCol);
                 updating = true;
             }
-            res = getSelectedField()->update(keys, display, selectedRow, selectedCol);
+            res = getSelectedField()->update(keys, renderer, selectedRow, selectedCol);
         } else {
             if (updating) {
                 getSelectedField()->updateEnd(selectedRow, selectedCol);
@@ -206,15 +206,15 @@ public:
             }
 
             if (selectedRow < TABLE_VISIBLE_ROWS * 0.5) {
-                display->startRow = 0;
-            } else if (selectedRow > display->startRow + TABLE_VISIBLE_ROWS - 1) {
-                display->startRow = selectedRow - TABLE_VISIBLE_ROWS + 1;
-            } else if (selectedRow < display->startRow) {
-                display->startRow = selectedRow;
+                renderer->startRow = 0;
+            } else if (selectedRow > renderer->startRow + TABLE_VISIBLE_ROWS - 1) {
+                renderer->startRow = selectedRow - TABLE_VISIBLE_ROWS + 1;
+            } else if (selectedRow < renderer->startRow) {
+                renderer->startRow = selectedRow;
             }
         }
         if (res != VIEW_NONE) {
-            render(display);
+            render(renderer);
         }
         return res;
     }

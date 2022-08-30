@@ -20,9 +20,9 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(display->text + strlen(display->text), "%-*s", PROJECT_NAME_LEN, project->project.name);
+        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, project->project.name);
     }
 
     bool isSelectable(uint8_t row, uint8_t col) override
@@ -51,18 +51,18 @@ public:
         return true;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (selectedRow == row && selectedCol == col) {
-            display->setCursor(1, col == 0 ? 5 : 1);
+            renderer->setCursor(1, col == 0 ? 5 : 1);
         }
         if (col == 0) {
-            strcat(display->text, "    ");
+            strcat(renderer->text, "    ");
         }
-        sprintf(display->text + strlen(display->text), " %c", getChar(row, col));
+        sprintf(renderer->text + strlen(renderer->text), " %c", getChar(row, col));
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         if (strlen(project->project.name) < PROJECT_NAME_LEN - 1) {
             sprintf(project->project.name + strlen(project->project.name), "%c", getChar(row, col));
@@ -89,23 +89,23 @@ public:
         return true;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         bool selected = selectedRow == row && selectedCol == col;
         if (col == 0) {
             if (selected) {
-                display->setCursor(9, 5);
+                renderer->setCursor(9, 5);
             }
-            strcat(display->text, "     Backspace");
+            strcat(renderer->text, "     Backspace");
         } else {
             if (selected) {
-                display->setCursor(5, 1);
+                renderer->setCursor(5, 1);
             }
-            strcat(display->text, " Done");
+            strcat(renderer->text, " Done");
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         if (col == 0) {
             project->project.name[strlen(project->project.name) - 1] = '\0';
@@ -149,10 +149,10 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Renderer* display)
+    void initDisplay(App_Renderer* renderer)
     {
-        display->useColoredLabel();
-        App_View_Table::initDisplay(display);
+        renderer->useColoredLabel();
+        App_View_Table::initDisplay(renderer);
     }
 };
 

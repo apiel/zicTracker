@@ -22,35 +22,35 @@ public:
     {
     }
 
-    virtual void renderValue(App_Renderer* display, uint8_t trackId, App_Audio_Track* track) = 0;
+    virtual void renderValue(App_Renderer* renderer, uint8_t trackId, App_Audio_Track* track) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return col != 0 && row != 0;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (col == 0) {
-            strcat(display->text, label);
+            strcat(renderer->text, label);
         } else {
             if (selectedRow == row && selectedCol == col) {
-                display->setCursor(3, 1);
+                renderer->setCursor(3, 1);
             }
             uint8_t trackId = col - 1;
             App_Audio_Track* track = tracks->tracks[trackId];
-            renderValue(display, trackId, track);
+            renderValue(renderer, trackId, track);
         }
     }
 
-    virtual uint8_t update(UiKeys* keys, App_Renderer* display, App_Audio_Track* track)
+    virtual uint8_t update(UiKeys* keys, App_Renderer* renderer, App_Audio_Track* track)
     {
         return VIEW_NONE;
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        return update(keys, display, tracks->tracks[col - 1]);
+        return update(keys, renderer, tracks->tracks[col - 1]);
     }
 };
 
@@ -61,9 +61,9 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t trackId, App_Audio_Track* track)
+    void renderValue(App_Renderer* renderer, uint8_t trackId, App_Audio_Track* track)
     {
-        sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == trackId ? '*' : ' ', trackId + 1);
+        sprintf(renderer->text + strlen(renderer->text), "%cTR%d", tracks->trackId == trackId ? '*' : ' ', trackId + 1);
     }
 };
 
@@ -74,10 +74,10 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t trackId, App_Audio_Track* track)
+    void renderValue(App_Renderer* renderer, uint8_t trackId, App_Audio_Track* track)
     {
         // TBD. to be linked
-        strcat(display->text, " ---");
+        strcat(renderer->text, " ---");
     }
 };
 
@@ -88,16 +88,16 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t trackId, App_Audio_Track* track)
+    void renderValue(App_Renderer* renderer, uint8_t trackId, App_Audio_Track* track)
     {
         if (track->delayEnabled) {
-            strcat(display->text, " ON ");
+            strcat(renderer->text, " ON ");
         } else {
-            strcat(display->text, " OFF");
+            strcat(renderer->text, " OFF");
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, App_Audio_Track* track)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, App_Audio_Track* track)
     {
         track->toggleDelay();
         return VIEW_CHANGED;
@@ -131,20 +131,20 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Renderer* display)
+    void initDisplay(App_Renderer* renderer)
     {
-        display->useColoredHeader();
-        display->useColoredLabel();
-        App_View_Table::initDisplay(display);
+        renderer->useColoredHeader();
+        renderer->useColoredLabel();
+        App_View_Table::initDisplay(renderer);
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer)
     {
         int8_t trackId = selectedCol - 1;
         if (trackId != tracks->trackId) {
             tracks->select(trackId);
         }
-        return App_View_Table::update(keys, display);
+        return App_View_Table::update(keys, renderer);
     }
 };
 

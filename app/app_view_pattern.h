@@ -16,9 +16,9 @@ protected:
 
     const char* headers[2] = { "PAT ", "LEN" };
 
-    void renderHeader(App_Renderer* display, uint8_t col)
+    void renderHeader(App_Renderer* renderer, uint8_t col)
     {
-        strcat(display->text, headers[col]);
+        strcat(renderer->text, headers[col]);
     }
 
 public:
@@ -39,34 +39,34 @@ public:
         return row != 0;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (row == 0) {
-            renderHeader(display, col);
+            renderHeader(renderer, col);
         } else {
             uint8_t cursorLen[] = { 3, 3, 4, 1 };
             if (selectedRow == row && selectedCol == col) {
-                display->setCursor(cursorLen[col]);
+                renderer->setCursor(cursorLen[col]);
             }
             switch (col) {
             case 0:
-                sprintf(display->text + strlen(display->text), " %02X ", *currentPatternId + 1);
+                sprintf(renderer->text + strlen(renderer->text), " %02X ", *currentPatternId + 1);
                 break;
 
             case 1:
-                sprintf(display->text + strlen(display->text), "%3d ", patterns->patterns[*currentPatternId].stepCount);
+                sprintf(renderer->text + strlen(renderer->text), "%3d ", patterns->patterns[*currentPatternId].stepCount);
                 break;
             case 2:
-                strcat(display->text, "SAVE ");
+                strcat(renderer->text, "SAVE ");
                 break;
             case 3:
-                strcat(display->text, "X ");
+                strcat(renderer->text, "X ");
                 break;
             }
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         if (col == 0) {
             int8_t direction = 0;
@@ -116,9 +116,9 @@ protected:
     const char* headers[5] = { "STP ", "I ", "NOT ", "VEL ", "SLID" };
 
 public:
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        strcat(display->text, headers[col]);
+        strcat(renderer->text, headers[col]);
     }
 };
 
@@ -139,42 +139,42 @@ public:
         return col != 0;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         uint8_t cursorLen[VIEW_PATTERN_COL] = { 0, 1, 3, 3, 3 };
         if (selectedRow == row && selectedCol == col) {
-            display->setCursor(cursorLen[col]);
+            renderer->setCursor(cursorLen[col]);
         }
         uint8_t stepPos = row - VIEW_PATTERN_ROW_HEADERS;
         Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[stepPos];
         switch (col) {
         case 0:
-            sprintf(display->text + strlen(display->text), " %02d ", stepPos + 1);
+            sprintf(renderer->text + strlen(renderer->text), " %02d ", stepPos + 1);
             break;
 
         case 1:
-            sprintf(display->text + strlen(display->text), "%c ", step->instrument + 'A');
+            sprintf(renderer->text + strlen(renderer->text), "%c ", step->instrument + 'A');
             break;
 
         case 2:
             if (step->note == 0) {
-                strcat(display->text, "--- ");
+                strcat(renderer->text, "--- ");
             } else {
-                sprintf(display->text + strlen(display->text), "%2s%d ", Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note));
+                sprintf(renderer->text + strlen(renderer->text), "%2s%d ", Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note));
             }
             break;
 
         case 3:
-            sprintf(display->text + strlen(display->text), "%3d ", step->velocity);
+            sprintf(renderer->text + strlen(renderer->text), "%3d ", step->velocity);
             break;
 
         case 4:
-            sprintf(display->text + strlen(display->text), "%s", step->slide ? "ON " : "OFF");
+            sprintf(renderer->text + strlen(renderer->text), "%s", step->slide ? "ON " : "OFF");
             break;
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[row - VIEW_PATTERN_ROW_HEADERS];
         if (col == 4) {
@@ -302,16 +302,16 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Renderer* display)
+    void initDisplay(App_Renderer* renderer)
     {
-        display->useColoredLabel(1, 4);
-        display->useColoredHeader(0, 3);
-        App_View_Table::initDisplay(display);
+        renderer->useColoredLabel(1, 4);
+        renderer->useColoredHeader(0, 3);
+        App_View_Table::initDisplay(renderer);
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer) override
     {
-        uint8_t ret = App_View_Table::update(keys, display);
+        uint8_t ret = App_View_Table::update(keys, renderer);
         setLastRow(patterns->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
         return ret;
     }

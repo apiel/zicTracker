@@ -35,12 +35,12 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(display->text + strlen(display->text), "%-2d", tracks->trackId + 1);
+        sprintf(renderer->text + strlen(renderer->text), "%-2d", tracks->trackId + 1);
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         if (keys->Right || keys->Up) {
             tracks->select(tracks->trackId + 1);
@@ -58,12 +58,12 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(display->text + strlen(display->text), "%-2c", *instrument + 'A');
+        sprintf(renderer->text + strlen(renderer->text), "%-2c", *instrument + 'A');
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         uint8_t direction = 0;
         if (keys->Right || keys->Up) {
@@ -83,16 +83,16 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
         if (getSynth()->isWavetable) {
-            strcat(display->text, "Wavetable   ");
+            strcat(renderer->text, "Wavetable   ");
         } else {
-            strcat(display->text, "Sample      ");
+            strcat(renderer->text, "Sample      ");
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         if (keys->Right || keys->Up) {
             getSynth()->isWavetable = true;
@@ -111,14 +111,14 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
         char filename[12];
         strncpy(filename, getSynth()->filename, 12);
-        sprintf(display->text + strlen(display->text), "%-12s", filename);
+        sprintf(renderer->text + strlen(renderer->text), "%-12s", filename);
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         if (keys->Right || keys->Up) {
             getSynth()->setNext(+1);
@@ -136,20 +136,20 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
         if (col == 1) {
-            sprintf(display->text + strlen(display->text), "%-3d%%  ", getSynth()->wave.getAmplitude());
+            sprintf(renderer->text + strlen(renderer->text), "%-3d%%  ", getSynth()->wave.getAmplitude());
         } else {
             if (getSynth()->wave.isMuted()) {
-                strcat(display->text, "Muted");
+                strcat(renderer->text, "Muted");
             } else {
-                strcat(display->text, ">ON  ");
+                strcat(renderer->text, ">ON  ");
             }
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         App_Instrument* synth = getSynth();
         if (col == 1) {
@@ -180,16 +180,16 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
         if (col == 1) {
-            sprintf(display->text + strlen(display->text), "%-5d ", getSynth()->asr.getAttack());
+            sprintf(renderer->text + strlen(renderer->text), "%-5d ", getSynth()->asr.getAttack());
         } else {
-            sprintf(display->text + strlen(display->text), "%-5d", getSynth()->asr.getRelease());
+            sprintf(renderer->text + strlen(renderer->text), "%-5d", getSynth()->asr.getRelease());
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         App_Instrument* synth = getSynth();
         if (col == 1) {
@@ -224,17 +224,17 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
         // could remove leading 0
         if (col == 1) {
-            sprintf(display->text + strlen(display->text), "%.3f ", getSynth()->filter.cutoff);
+            sprintf(renderer->text + strlen(renderer->text), "%.3f ", getSynth()->filter.cutoff);
         } else {
-            sprintf(display->text + strlen(display->text), "%.3f", getSynth()->filter.resonance);
+            sprintf(renderer->text + strlen(renderer->text), "%.3f", getSynth()->filter.resonance);
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         App_Instrument* synth = getSynth();
         if (col == 1) {
@@ -276,16 +276,16 @@ public:
         return col == 1;
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
         if (col == 1) {
-            sprintf(display->text + strlen(display->text), "%-4.1f ", getSynth()->wave.getMorph() + 1.0f);
+            sprintf(renderer->text + strlen(renderer->text), "%-4.1f ", getSynth()->wave.getMorph() + 1.0f);
         } else {
-            sprintf(display->text + strlen(display->text), "of %d", getSynth()->wave.audioFile.wavetableCount);
+            sprintf(renderer->text + strlen(renderer->text), "of %d", getSynth()->wave.audioFile.wavetableCount);
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         App_Instrument* synth = getSynth();
         if (col == 1) {
@@ -347,10 +347,10 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Renderer* display)
+    void initDisplay(App_Renderer* renderer)
     {
-        display->useColoredLabel();
-        App_View_Table::initDisplay(display);
+        renderer->useColoredLabel();
+        App_View_Table::initDisplay(renderer);
     }
 };
 

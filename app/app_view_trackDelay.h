@@ -28,12 +28,12 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(display->text + strlen(display->text), "%-2d", tracks->trackId + 1);
+        sprintf(renderer->text + strlen(renderer->text), "%-2d", tracks->trackId + 1);
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         if (keys->Right || keys->Up) {
             tracks->select(tracks->trackId + 1);
@@ -55,16 +55,16 @@ public:
     {
     }
 
-    void renderValue(App_Renderer* display, uint8_t col)
+    void renderValue(App_Renderer* renderer, uint8_t col)
     {
         if (tracks->track->delayEnabled) {
-            strcat(display->text, "ON ");
+            strcat(renderer->text, "ON ");
         } else {
-            strcat(display->text, "OFF");
+            strcat(renderer->text, "OFF");
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         tracks->track->toggleDelay();
         return VIEW_CHANGED;
@@ -81,9 +81,9 @@ public:
         return false;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        strcat(display->text, headers[col]);
+        strcat(renderer->text, headers[col]);
     }
 };
 
@@ -102,42 +102,42 @@ public:
         return col != 0;
     }
 
-    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         uint8_t cursorLen[VIEW_TRACK_DELAY_COL] = { 0, 4, 3, 3 };
         if (selectedRow == row && selectedCol == col) {
-            display->setCursor(cursorLen[col]);
+            renderer->setCursor(cursorLen[col]);
         }
         uint8_t delayPos = row - VIEW_TRACK_DELAY_ROW_HEADERS;
         Zic_Effect_Delay* delay = tracks->track->delays[delayPos];
         switch (col) {
         case 0:
-            sprintf(display->text + strlen(display->text), "%d ", delayPos + 1);
+            sprintf(renderer->text + strlen(renderer->text), "%d ", delayPos + 1);
             break;
 
         case 1:
-            sprintf(display->text + strlen(display->text), "%.2f ", delay->sec);
+            sprintf(renderer->text + strlen(renderer->text), "%.2f ", delay->sec);
             break;
 
         case 2:
             if (delay->amplitude == 1.0f) {
-                strcat(display->text, "1.0 ");
+                strcat(renderer->text, "1.0 ");
             } else {
-                sprintf(display->text + strlen(display->text), ".%02d ", (uint8_t)(delay->amplitude * 100));
+                sprintf(renderer->text + strlen(renderer->text), ".%02d ", (uint8_t)(delay->amplitude * 100));
             }
             break;
 
         case 3:
             if (delay->feedback == 1.0f) {
-                strcat(display->text, "1.0 ");
+                strcat(renderer->text, "1.0 ");
             } else {
-                sprintf(display->text + strlen(display->text), ".%02d ", (uint8_t)(delay->feedback * 100));
+                sprintf(renderer->text + strlen(renderer->text), ".%02d ", (uint8_t)(delay->feedback * 100));
             }
             break;
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         Zic_Effect_Delay* delay = tracks->track->delays[row - VIEW_TRACK_DELAY_ROW_HEADERS];
 
@@ -200,11 +200,11 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Renderer* display)
+    void initDisplay(App_Renderer* renderer)
     {
-        display->useColoredLabel();
-        display->useColoredHeader(2);
-        App_View_Table::initDisplay(display);
+        renderer->useColoredLabel();
+        renderer->useColoredHeader(2);
+        App_View_Table::initDisplay(renderer);
     }
 };
 
