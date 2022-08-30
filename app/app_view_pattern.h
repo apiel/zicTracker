@@ -1,7 +1,7 @@
 #ifndef APP_VIEW_PATTERN_H_
 #define APP_VIEW_PATTERN_H_
 
-#include "./app_display_base.h"
+#include "./app_renderer.h"
 #include "./app_view.h"
 
 #define VIEW_PATTERN_ROW_HEADERS 4
@@ -16,7 +16,7 @@ protected:
 
     const char* headers[2] = { "PAT ", "LEN" };
 
-    void renderHeader(App_Display_Base* display, uint8_t col)
+    void renderHeader(App_Renderer* display, uint8_t col)
     {
         strcat(display->text, headers[col]);
     }
@@ -39,7 +39,7 @@ public:
         return row != 0;
     }
 
-    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (row == 0) {
             renderHeader(display, col);
@@ -66,7 +66,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
     {
         if (col == 0) {
             int8_t direction = 0;
@@ -116,7 +116,7 @@ protected:
     const char* headers[5] = { "STP ", "I ", "NOT ", "VEL ", "SLID" };
 
 public:
-    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         strcat(display->text, headers[col]);
     }
@@ -139,7 +139,7 @@ public:
         return col != 0;
     }
 
-    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         uint8_t cursorLen[VIEW_PATTERN_COL] = { 0, 1, 3, 3, 3 };
         if (selectedRow == row && selectedCol == col) {
@@ -174,7 +174,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
     {
         Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[row - VIEW_PATTERN_ROW_HEADERS];
         if (col == 4) {
@@ -302,14 +302,14 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Display_Base* display)
+    void initDisplay(App_Renderer* display)
     {
         display->useColoredLabel(1, 4);
         display->useColoredHeader(0, 3);
         App_View_Table::initDisplay(display);
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display) override
+    uint8_t update(UiKeys* keys, App_Renderer* display) override
     {
         uint8_t ret = App_View_Table::update(keys, display);
         setLastRow(patterns->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);

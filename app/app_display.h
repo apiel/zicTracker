@@ -1,7 +1,7 @@
 #ifndef APP_DISPLAY_H_
 #define APP_DISPLAY_H_
 
-#include "./app_display_base.h"
+#include "./app_renderer.h"
 
 #ifdef FONT_FILE
 #include FONT_FILE
@@ -27,7 +27,7 @@
 // #define UI_COLOR_SIGN 255, 128, 0
 #define UI_COLOR_SIGN 190, 190, 190
 
-class App_Display : public App_Display_Base {
+class App_Display : public App_Renderer {
 protected:
     uint16_t xScreen = 0;
     uint16_t yScreen = 0;
@@ -73,7 +73,7 @@ public:
     void reset() override
     {
         clearScreen();
-        App_Display_Base::reset();
+        App_Renderer::reset();
     }
 
     virtual void drawText()

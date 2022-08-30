@@ -9,7 +9,7 @@
 
 #define MAX_DISPLAY_TEXT 512
 
-class App_Display_Base {
+class App_Renderer {
 public:
     char text[MAX_DISPLAY_TEXT] = "";
     char* cursorPos = NULL;

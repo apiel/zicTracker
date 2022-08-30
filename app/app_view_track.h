@@ -1,7 +1,7 @@
 #ifndef APP_VIEW_TRACK_H_
 #define APP_VIEW_TRACK_H_
 
-#include "./app_display_base.h"
+#include "./app_renderer.h"
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
@@ -22,14 +22,14 @@ public:
     {
     }
 
-    virtual void renderValue(App_Display_Base* display, uint8_t trackId, App_Audio_Track* track) = 0;
+    virtual void renderValue(App_Renderer* display, uint8_t trackId, App_Audio_Track* track) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return col != 0 && row != 0;
     }
 
-    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (col == 0) {
             strcat(display->text, label);
@@ -43,12 +43,12 @@ public:
         }
     }
 
-    virtual uint8_t update(UiKeys* keys, App_Display_Base* display, App_Audio_Track* track)
+    virtual uint8_t update(UiKeys* keys, App_Renderer* display, App_Audio_Track* track)
     {
         return VIEW_NONE;
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
     {
         return update(keys, display, tracks->tracks[col - 1]);
     }
@@ -61,7 +61,7 @@ public:
     {
     }
 
-    void renderValue(App_Display_Base* display, uint8_t trackId, App_Audio_Track* track)
+    void renderValue(App_Renderer* display, uint8_t trackId, App_Audio_Track* track)
     {
         sprintf(display->text + strlen(display->text), "%cTR%d", tracks->trackId == trackId ? '*' : ' ', trackId + 1);
     }
@@ -74,7 +74,7 @@ public:
     {
     }
 
-    void renderValue(App_Display_Base* display, uint8_t trackId, App_Audio_Track* track)
+    void renderValue(App_Renderer* display, uint8_t trackId, App_Audio_Track* track)
     {
         // TBD. to be linked
         strcat(display->text, " ---");
@@ -88,7 +88,7 @@ public:
     {
     }
 
-    void renderValue(App_Display_Base* display, uint8_t trackId, App_Audio_Track* track)
+    void renderValue(App_Renderer* display, uint8_t trackId, App_Audio_Track* track)
     {
         if (track->delayEnabled) {
             strcat(display->text, " ON ");
@@ -97,7 +97,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display, App_Audio_Track* track)
+    uint8_t update(UiKeys* keys, App_Renderer* display, App_Audio_Track* track)
     {
         track->toggleDelay();
         return VIEW_CHANGED;
@@ -131,14 +131,14 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Display_Base* display)
+    void initDisplay(App_Renderer* display)
     {
         display->useColoredHeader();
         display->useColoredLabel();
         App_View_Table::initDisplay(display);
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display)
+    uint8_t update(UiKeys* keys, App_Renderer* display)
     {
         int8_t trackId = selectedCol - 1;
         if (trackId != tracks->trackId) {

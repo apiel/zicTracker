@@ -3,7 +3,7 @@
 
 #include <zic_seq_tempo.h>
 
-#include "./app_display_base.h"
+#include "./app_renderer.h"
 #include "./app_view_table.h"
 #include "./app_project.h"
 #include "./app_view_menu.h"
@@ -22,12 +22,12 @@ public:
     {
     }
 
-    void renderValue(App_Display_Base* display, uint8_t col)
+    void renderValue(App_Renderer* display, uint8_t col)
     {
         sprintf(display->text + strlen(display->text), "%-3d", tempo->getBpm());
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
     {
         if (keys->Right) {
             tempo->set(tempo->getBpm() + 1);
@@ -53,7 +53,7 @@ public:
     {
     }
 
-    void renderValue(App_Display_Base* display, uint8_t col)
+    void renderValue(App_Renderer* display, uint8_t col)
     {
         if (col == 1) {
             if (tracks->isPlaying()) {
@@ -66,7 +66,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
     {
         if (col == 1) {
             tracks->togglePlay();
@@ -90,12 +90,12 @@ public:
     {
     }
 
-    void renderValue(App_Display_Base* display, uint8_t col)
+    void renderValue(App_Renderer* display, uint8_t col)
     {
         sprintf(display->text + strlen(display->text), "%-*s", PROJECT_NAME_LEN, project->project.name);
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col) override
     {
         menu->setView('J', 'N');
         return VIEW_CHANGED;
@@ -126,7 +126,7 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Display_Base* display)
+    void initDisplay(App_Renderer* display)
     {
         display->useColoredLabel();
         App_View_Table::initDisplay(display);

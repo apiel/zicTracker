@@ -1,7 +1,7 @@
 #ifndef APP_VIEW_TABLE_H_
 #define APP_VIEW_TABLE_H_
 
-#include "./app_display_base.h"
+#include "./app_renderer.h"
 #include "./app_view.h"
 
 #ifndef TABLE_VISIBLE_ROWS
@@ -10,9 +10,9 @@
 
 class App_View_TableField {
 public:
-    virtual void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol) = 0;
+    virtual void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol) = 0;
 
-    virtual uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col)
+    virtual uint8_t update(UiKeys* keys, App_Renderer* display, uint8_t row, uint8_t col)
     {
         return VIEW_NONE;
     }
@@ -41,14 +41,14 @@ public:
     {
     }
 
-    virtual void renderValue(App_Display_Base* display, uint8_t col) = 0;
+    virtual void renderValue(App_Renderer* display, uint8_t col) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return true;
     }
 
-    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (selectedRow == row && selectedCol == col) {
             display->setCursor(cursorLen);
@@ -69,14 +69,14 @@ public:
     {
     }
 
-    // virtual void renderValue(App_Display_Base* display, uint8_t col) = 0;
+    // virtual void renderValue(App_Renderer* display, uint8_t col) = 0;
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
         return col != 0;
     }
 
-    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Renderer* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (col == 0) {
             strcat(display->text, label);
@@ -155,17 +155,17 @@ public:
         lastRow = _lastRow > ROW_COUNT ? ROW_COUNT : _lastRow;
     }
 
-    virtual void initDisplay(App_Display_Base* display)
+    virtual void initDisplay(App_Renderer* display)
     {
         strcpy(display->text, "");
     }
 
-    virtual void endRow(App_Display_Base* display, uint16_t row)
+    virtual void endRow(App_Renderer* display, uint16_t row)
     {
         strcat(display->text, "\n");
     }
 
-    void render(App_Display_Base* display)
+    void render(App_Renderer* display)
     {
         initDisplay(display);
         for (uint8_t row = display->startRow; row < lastRow && row - display->startRow < TABLE_VISIBLE_ROWS; row++) {
@@ -181,7 +181,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display_Base* display)
+    uint8_t update(UiKeys* keys, App_Renderer* display)
     {
         uint8_t res = VIEW_CHANGED;
         if (keys->Edit) {
