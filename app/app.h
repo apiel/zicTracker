@@ -5,6 +5,7 @@
 #include "./app_display.h"
 #include "./app_patterns.h"
 #include "./app_project.h"
+#include "./app_snapshot.h"
 #include "./app_tracks.h"
 #include "./app_view_instrument.h"
 #include "./app_view_menu.h"
@@ -113,6 +114,13 @@ public:
     void quit()
     {
         project.autoSave();
+
+        App_Snapshot snapshotRenderer;
+        for (uint8_t i; i < APP_MENU_SIZE; i++) {
+            if (menu[i].view) {
+                menu[i].view->snapshot(&snapshotRenderer);
+            }
+        }
     }
 };
 
