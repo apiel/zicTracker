@@ -1,7 +1,7 @@
 #ifndef APP_VIEW_PROJECT_EDIT_NAME_H_
 #define APP_VIEW_PROJECT_EDIT_NAME_H_
 
-#include "./app_display.h"
+#include "./app_display_base.h"
 #include "./app_project.h"
 #include "./app_view_menu.h"
 #include "./app_view_table.h"
@@ -20,7 +20,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col)
+    void renderValue(App_Display_Base* display, uint8_t col)
     {
         sprintf(display->text + strlen(display->text), "%-*s", PROJECT_NAME_LEN, project->project.name);
     }
@@ -51,7 +51,7 @@ public:
         return true;
     }
 
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (selectedRow == row && selectedCol == col) {
             display->setCursor(1, col == 0 ? 5 : 1);
@@ -62,7 +62,7 @@ public:
         sprintf(display->text + strlen(display->text), " %c", getChar(row, col));
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col)
     {
         if (strlen(project->project.name) < PROJECT_NAME_LEN - 1) {
             sprintf(project->project.name + strlen(project->project.name), "%c", getChar(row, col));
@@ -89,7 +89,7 @@ public:
         return true;
     }
 
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         bool selected = selectedRow == row && selectedCol == col;
         if (col == 0) {
@@ -105,7 +105,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col)
     {
         if (col == 0) {
             project->project.name[strlen(project->project.name) - 1] = '\0';
@@ -149,7 +149,7 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Display* display)
+    void initDisplay(App_Display_Base* display)
     {
         display->useColoredLabel();
         App_View_Table::initDisplay(display);

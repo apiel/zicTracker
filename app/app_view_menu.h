@@ -1,7 +1,7 @@
 #ifndef APP_VIEW_MENU_H_
 #define APP_VIEW_MENU_H_
 
-#include "./app_display.h"
+#include "./app_display_base.h"
 #include "./app_view.h"
 
 typedef struct {
@@ -82,7 +82,7 @@ public:
         return view ? view : this;
     }
 
-    void render(App_Display* display)
+    void render(App_Display_Base* display)
     {
         display->useFirstLetterHilighted();
         strcpy(display->text, "");
@@ -98,7 +98,7 @@ public:
         sprintf(display->text + strlen(display->text), "\n\n >> %s", menu[currentMenu].name);
     }
 
-    uint8_t update(UiKeys* _keys, App_Display* display)
+    uint8_t update(UiKeys* _keys, App_Display_Base* display)
     {
         keys = _keys;
         if (keys->Menu) {

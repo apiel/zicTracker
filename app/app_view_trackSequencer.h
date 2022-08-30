@@ -1,7 +1,7 @@
 #ifndef APP_VIEW_TRACK_SEQUENCER_H_
 #define APP_VIEW_TRACK_SEQUENCER_H_
 
-#include "./app_display.h"
+#include "./app_display_base.h"
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
@@ -10,7 +10,7 @@
 
 class App_View_TrackSequencerHeader : public App_View_TableField {
 public:
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         sprintf(display->text + strlen(display->text), " TRACK%d", col + 1);
     }
@@ -33,7 +33,7 @@ public:
         return true;
     }
 
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
         Zic_Seq_PatternComponent* component = &track->components[(row - 1) % PATTERN_COMPONENT_COUNT];
@@ -82,7 +82,7 @@ public:
         updating = false;
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col)
     {
         int8_t directions[] = { 16, 12, 1 };
         int8_t direction = 0;
@@ -150,7 +150,7 @@ public:
         return true;
     }
 
-    void initDisplay(App_Display* display)
+    void initDisplay(App_Display_Base* display)
     {
         display->useColoredHeader();
         App_View_Table::initDisplay(display);

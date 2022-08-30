@@ -1,7 +1,7 @@
 #ifndef APP_VIEW_TRACK_DELAY_H_
 #define APP_VIEW_TRACK_DELAY_H_
 
-#include "./app_display.h"
+#include "./app_display_base.h"
 #include "./app_tracks.h"
 #include "./app_view_table.h"
 
@@ -28,12 +28,12 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col)
+    void renderValue(App_Display_Base* display, uint8_t col)
     {
         sprintf(display->text + strlen(display->text), "%-2d", tracks->trackId + 1);
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col) override
     {
         if (keys->Right || keys->Up) {
             tracks->select(tracks->trackId + 1);
@@ -55,7 +55,7 @@ public:
     {
     }
 
-    void renderValue(App_Display* display, uint8_t col)
+    void renderValue(App_Display_Base* display, uint8_t col)
     {
         if (tracks->track->delayEnabled) {
             strcat(display->text, "ON ");
@@ -64,7 +64,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col) override
+    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col) override
     {
         tracks->track->toggleDelay();
         return VIEW_CHANGED;
@@ -81,7 +81,7 @@ public:
         return false;
     }
 
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         strcat(display->text, headers[col]);
     }
@@ -102,7 +102,7 @@ public:
         return col != 0;
     }
 
-    void render(App_Display* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void render(App_Display_Base* display, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         uint8_t cursorLen[VIEW_TRACK_DELAY_COL] = { 0, 4, 3, 3 };
         if (selectedRow == row && selectedCol == col) {
@@ -137,7 +137,7 @@ public:
         }
     }
 
-    uint8_t update(UiKeys* keys, App_Display* display, uint8_t row, uint8_t col)
+    uint8_t update(UiKeys* keys, App_Display_Base* display, uint8_t row, uint8_t col)
     {
         Zic_Effect_Delay* delay = tracks->track->delays[row - VIEW_TRACK_DELAY_ROW_HEADERS];
 
@@ -200,7 +200,7 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Display* display)
+    void initDisplay(App_Display_Base* display)
     {
         display->useColoredLabel();
         display->useColoredHeader(2);
