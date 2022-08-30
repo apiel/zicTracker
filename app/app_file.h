@@ -83,18 +83,17 @@ uint8_t loadFileContent(char* content, uint16_t len, const char* fmt)
 }
 
 template <typename... Args>
-uint8_t saveFileContent(char* content, uint16_t len, const char* fmt, Args... args)
+uint8_t saveFileContent(const char* mode, char* content, uint16_t len, const char* fmt, Args... args)
 {
     char filename[MAX_FILENAME];
-    
+
     snprintf(filename, MAX_FILENAME, fmt, args...);
     strrchr(filename, '/')[0] = '\0';
     mkdir(filename, 0777);
 
     snprintf(filename, MAX_FILENAME, fmt, args...);
-    Zic_File file(filename, "w");
+    Zic_File file(filename, mode);
     if (file.isOpen()) {
-        file.seekFromStart(0);
         file.write(content, len);
         file.close();
         return FILE_SUCCESS;
@@ -102,9 +101,20 @@ uint8_t saveFileContent(char* content, uint16_t len, const char* fmt, Args... ar
     return FILE_NONE;
 }
 
+template <typename... Args>
+uint8_t saveFileContent(char* content, uint16_t len, const char* fmt, Args... args)
+{
+    return saveFileContent("w", content, len, fmt, args...);
+}
+
 uint8_t saveFileContent(char* content, uint16_t len, const char* fmt)
 {
     return saveFileContent(content, len, fmt, NULL);
+}
+
+uint8_t saveFileContent(const char* mode, char* content, uint16_t len, const char* fmt)
+{
+    return saveFileContent(mode, content, len, fmt, NULL);
 }
 
 #endif
