@@ -320,10 +320,13 @@ public:
     {
         uint8_t id = currentPatternId;
         for (currentPatternId = 0; currentPatternId < PATTERN_COUNT; currentPatternId++) {
+            renderer->startRow = 0;
             setLastRow(patterns->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
-            render(renderer);
-            saveFileContent(renderer->text, strlen(renderer->text),
-                "projects/current/patterns/pattern%02X.zic", currentPatternId + 1);
+            for (uint8_t row = 0; row < lastRow; row += TABLE_VISIBLE_ROWS, renderer->startRow += TABLE_VISIBLE_ROWS) {
+                render(renderer);
+                saveFileContent(row == 0 ? "w" : "a", renderer->text, strlen(renderer->text),
+                    "projects/current/patterns/pattern%02X.zic", currentPatternId + 1);
+            }
         }
         currentPatternId = id;
     }
