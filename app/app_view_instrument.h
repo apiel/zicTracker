@@ -306,7 +306,7 @@ public:
 
 class App_View_Instrument : public App_View_Table {
 protected:
-    // App_Tracks* tracks;
+    App_Tracks* tracks;
 
     uint8_t instrument = 0;
 
@@ -334,7 +334,7 @@ protected:
 public:
     App_View_Instrument(App_Tracks* _tracks)
         : App_View_Table(fields, VIEW_INSTR_ROW, VIEW_INSTR_COL)
-        // , tracks(_tracks)
+        , tracks(_tracks)
         , trackField(_tracks, &instrument)
         , instrField(_tracks, &instrument)
         , typeField(_tracks, &instrument)
@@ -351,6 +351,20 @@ public:
     {
         renderer->useColoredLabel();
         App_View_Table::initDisplay(renderer);
+    }
+
+    void snapshot(App_Renderer* renderer) override
+    {
+        uint8_t inst = instrument;
+        for (uint8_t t = 0; t < TRACK_COUNT; t++) {
+            tracks->select(t);
+            for (instrument = 0; instrument < INSTRUMENT_COUNT; instrument++) {
+                render(renderer);
+                saveFileContent(renderer->text, strlen(renderer->text),
+                    "projects/current/instruments/track%d-inst_%c.zic", t + 1, 'A' + instrument);
+            }
+        }
+        instrument = inst;
     }
 };
 

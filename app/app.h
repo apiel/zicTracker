@@ -44,7 +44,7 @@ public:
         (Menu) { "Tracks", "Tracks", 'T', &trackView, 'T', false },
         (Menu) { "Track delay", "Delay", 'D', &trackDelayView, 'T', false },
         (Menu) { "Instruments", "Instruments", 'I', &instrumentView, 'I', true },
-        (Menu) { "Instruments kit", "Kit", 'K', NULL, 'I', false }, // this is how to save a kit
+        (Menu) { "Instruments kit", "Kit", 'K', NULL, 'I', false }, // this is how to save a kit // should it be called presets?
         // 4 LFO -> can be assigned to any changeable values and can be use for multiple instrument at the same time
         // 4 Extra Envelop -> same as LFO
         // IFX: reverb, distortion...
