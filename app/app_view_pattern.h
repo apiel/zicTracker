@@ -315,6 +315,18 @@ public:
         setLastRow(patterns->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
         return ret;
     }
+
+    void snapshot(App_Renderer* renderer) override
+    {
+        uint8_t id = currentPatternId;
+        for (currentPatternId = 0; currentPatternId < PATTERN_COUNT; currentPatternId++) {
+            setLastRow(patterns->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
+            render(renderer);
+            saveFileContent(renderer->text, strlen(renderer->text),
+                "projects/current/patterns/pattern%02X.zic", currentPatternId + 1);
+        }
+        currentPatternId = id;
+    }
 };
 
 #endif
