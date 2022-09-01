@@ -20,6 +20,10 @@ public:
     virtual void snapshot(App_Renderer* renderer)
     {
     }
+
+    virtual void loadSnapshot()
+    {
+    }
 };
 
 #endif

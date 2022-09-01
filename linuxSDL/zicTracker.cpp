@@ -283,6 +283,7 @@ int main(int argc, char* args[])
     }
 #endif
 
+    app.start();
     app.render();
     SDL_UpdateWindowSurface(window);
 

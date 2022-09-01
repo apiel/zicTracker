@@ -2,6 +2,8 @@
 #define APP_VIEW_PATTERN_H_
 
 #include "./app_renderer.h"
+#include "./app_view_table.h"
+#include "./app_patterns.h"
 #include "./app_view.h"
 
 #define VIEW_PATTERN_ROW_HEADERS 4

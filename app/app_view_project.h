@@ -132,10 +132,19 @@ public:
         App_View_Table::initDisplay(renderer);
     }
 
+    const char * snapshotPath = "projects/current/project.zic";
+
     void snapshot(App_Renderer* renderer) override
     {
         render(renderer);
-        saveFileContent(renderer->text, strlen(renderer->text), "projects/current/project.zic");
+        // printf("Saving snapshot to %s", renderer->text);
+        saveFileContent(renderer->text, strlen(renderer->text), snapshotPath);
+    }
+
+    void loadSnapshot() override
+    {
+        // Zic_File file(filename, "r");
+        // 
     }
 };
 

@@ -113,12 +113,22 @@ public:
 
     void quit()
     {
+        // to be removed
         project.autoSave();
 
         App_Renderer renderer;
         for (uint8_t i; i < APP_MENU_SIZE; i++) {
             if (menu[i].view) {
                 menu[i].view->snapshot(&renderer);
+            }
+        }
+    }
+
+    void start()
+    {
+        for (uint8_t i; i < APP_MENU_SIZE; i++) {
+            if (menu[i].view) {
+                menu[i].view->loadSnapshot();
             }
         }
     }
