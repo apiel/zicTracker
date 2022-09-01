@@ -325,7 +325,7 @@ public:
             for (uint8_t row = 0; row < lastRow; row += TABLE_VISIBLE_ROWS, renderer->startRow += TABLE_VISIBLE_ROWS) {
                 render(renderer);
                 saveFileContent(row == 0 ? "w" : "a", renderer->text, strlen(renderer->text),
-                    "projects/current/patterns/pattern%02X.zic", currentPatternId + 1);
+                    "projects/current/patterns/pattern%03d_%02X.zic", currentPatternId + 1, currentPatternId + 1);
             }
         }
         currentPatternId = id;
