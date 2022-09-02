@@ -119,6 +119,8 @@ public:
         App_Renderer renderer;
         for (uint8_t i; i < APP_MENU_SIZE; i++) {
             if (menu[i].view) {
+                renderer.reset();
+                renderer.startRow = 0;
                 menu[i].view->snapshot(&renderer);
             }
         }

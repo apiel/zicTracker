@@ -137,7 +137,7 @@ public:
     void snapshot(App_Renderer* renderer) override
     {
         render(renderer);
-        // printf("Saving snapshot to %s", renderer->text);
+        // printf("Saving snapshot:\n%s", renderer->text);
         saveFileContent(renderer->text, strlen(renderer->text), snapshotPath);
     }
 
