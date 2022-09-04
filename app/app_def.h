@@ -5,8 +5,6 @@
 
 #define PATTERN_COUNT 255 // uint8 -> 2 hex
 
-const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
 enum {
     VIEW_NONE,
     VIEW_CHANGED,

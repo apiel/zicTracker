@@ -3,6 +3,22 @@
 
 #include <string.h>
 
+const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+uint8_t alphanumToInt(char c)
+{
+    // for (uint8_t i = 0; i < sizeof(alphanum); i++) {
+    //     if (alphanum[i] == c) {
+    //         return i;
+    //     }
+    // }
+    if (c >= '0' && c <= '9')
+        return c - '0';
+    if (c >= 'A' && c <= 'Z')
+        return c - 'A' + 10;
+    return 0;
+}
+
 void trimToNumeric(char* str)
 {
     char* p = str;

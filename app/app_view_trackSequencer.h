@@ -3,6 +3,7 @@
 
 #include "./app_renderer.h"
 #include "./app_tracks.h"
+#include "./app_util.h"
 #include "./app_view_table.h"
 
 #define VIEW_TRACK_SEQUENCER_ROW (1 + PATTERN_COMPONENT_COUNT)
@@ -119,6 +120,7 @@ class App_View_TrackSequencer : public App_View_Table {
 protected:
     App_View_TrackSequencerHeader header;
     App_View_TrackSequencerPat patField;
+    App_Tracks* tracks;
 
     App_View_TableField* fields[VIEW_TRACK_SEQUENCER_ROW * VIEW_TRACK_SEQUENCER_COL] = {
         // clang-format off
@@ -141,6 +143,7 @@ public:
     App_View_TrackSequencer(App_Tracks* _tracks)
         : App_View_Table(fields, VIEW_TRACK_SEQUENCER_ROW, VIEW_TRACK_SEQUENCER_COL)
         , patField(_tracks)
+        , tracks(_tracks)
     {
         initSelection();
     }
@@ -175,22 +178,21 @@ public:
                 char pat[3];
                 file.read(pat, 2);
                 pat[2] = '\0';
-                char detune[3];
+                char detune[2];
                 file.read(detune, 2);
-                detune[2] = '\0';
-                char condition[3];
+                char condition[2];
                 file.read(condition, 2);
-                condition[2] = '\0';
 
-                printf("trk%d(%d) pat: %s, detune: %s, condition: %s\n",
+                printf("trk%d(%d) pat: %s (%d), detune: %s, condition: %s\n",
                     (i % TRACK_COUNT) + 1, i / TRACK_COUNT,
-                    pat, detune, condition);
+                    pat, pat[0] == '-' ? -1 : (int)strtol(pat, NULL, 16) - 1,
+                    detune, condition);
 
-                // App_Audio_Track* track = tracks->tracks[i % TRACK_COUNT];
-                // Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
-                // component->pattern = &tracks->patterns->patterns[atoi(pat)];
-                // component->setDetune(atoi(detune));
-                // component->setCondition(atoi(condition));
+                App_Audio_Track* track = tracks->tracks[i % TRACK_COUNT];
+                Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
+                component->pattern = pat[0] == '-' ? NULL : &tracks->patterns->patterns[strtol(pat, NULL, 16) - 1];
+                component->setDetune((detune[0] == '-' ? -1 : 1) * alphanumToInt(detune[1]));
+                component->setCondition(condition);
             }
 
             file.close();
