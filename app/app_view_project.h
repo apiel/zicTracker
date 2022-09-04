@@ -7,6 +7,7 @@
 #include "./app_renderer.h"
 #include "./app_view_menu.h"
 #include "./app_view_table.h"
+#include "./app_util.h"
 
 #define VIEW_PROJECT_ROW 3
 #define VIEW_PROJECT_COL 3
@@ -155,12 +156,7 @@ public:
             file.seekFromCurrent(5);
             char bpm[3];
             file.read(bpm, 3);
-            for(uint8_t i = 0; i < 3; i++) {
-                if (bpm[i] < '0' || bpm[i] > '9') {
-                    bpm[i] = '\0';
-                    break;
-                }
-            }
+            trimToNumeric(bpm);
             tempo->set(atoi(bpm));
 
             file.close();
