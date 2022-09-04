@@ -3,10 +3,10 @@
 
 #include <zic_seq_tempo.h>
 
-#include "./app_renderer.h"
-#include "./app_view_table.h"
 #include "./app_project.h"
+#include "./app_renderer.h"
 #include "./app_view_menu.h"
+#include "./app_view_table.h"
 
 #define VIEW_PROJECT_ROW 3
 #define VIEW_PROJECT_COL 3
@@ -80,10 +80,10 @@ public:
 class App_View_ProjectName : public App_View_TableLabeledRow {
 protected:
     App_Project* project;
-    App_View_Menu * menu;
+    App_View_Menu* menu;
 
 public:
-    App_View_ProjectName(App_Project* _project, App_View_Menu * _menu)
+    App_View_ProjectName(App_Project* _project, App_View_Menu* _menu)
         : App_View_TableLabeledRow("Name ", PROJECT_NAME_LEN)
         , project(_project)
         , menu(_menu)
@@ -92,7 +92,7 @@ public:
 
     void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, project->project.name);
+        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, project->name);
     }
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
@@ -107,6 +107,8 @@ protected:
     App_View_ProjectBpm bpmField;
     App_View_ProjectPlay playField;
     App_View_ProjectName nameField;
+    App_Project* project;
+    Zic_Seq_Tempo<>* tempo;
 
     App_View_TableField* fields[VIEW_PROJECT_ROW * VIEW_PROJECT_COL] = {
         // clang-format off
@@ -117,11 +119,13 @@ protected:
     };
 
 public:
-    App_View_Project(Zic_Seq_Tempo<>* tempo, App_Tracks* tracks, App_Project* project, App_View_Menu * menu)
+    App_View_Project(Zic_Seq_Tempo<>* _tempo, App_Tracks* tracks, App_Project* _project, App_View_Menu* menu)
         : App_View_Table(fields, VIEW_PROJECT_ROW, VIEW_PROJECT_COL)
-        , bpmField(tempo)
+        , bpmField(_tempo)
         , playField(tracks)
-        , nameField(project, menu)
+        , nameField(_project, menu)
+        , project(_project)
+        , tempo(_tempo)
     {
         initSelection();
     }
@@ -132,7 +136,7 @@ public:
         App_View_Table::initDisplay(renderer);
     }
 
-    const char * snapshotPath = "projects/current/project.zic";
+    const char* snapshotPath = "projects/current/project.zic";
 
     void snapshot(App_Renderer* renderer) override
     {
@@ -143,8 +147,24 @@ public:
 
     void loadSnapshot() override
     {
-        // Zic_File file(filename, "r");
-        // 
+        Zic_File file(snapshotPath, "r");
+        if (file.isOpen()) {
+            file.seekFromStart(5);
+            file.read(project->name, PROJECT_NAME_LEN);
+            project->name[PROJECT_NAME_LEN - 1] = '\0';
+            file.seekFromCurrent(5);
+            char bpm[3];
+            file.read(bpm, 3);
+            for(uint8_t i = 0; i < 3; i++) {
+                if (bpm[i] < '0' || bpm[i] > '9') {
+                    bpm[i] = '\0';
+                    break;
+                }
+            }
+            tempo->set(atoi(bpm));
+
+            file.close();
+        }
     }
 };
 

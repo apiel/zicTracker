@@ -57,7 +57,6 @@ public:
 
     App(App_Patterns* patterns, App_Display* _display)
         : tracks(patterns)
-        , project(&tracks, &tempo)
         , display(_display)
         , trackView(&tracks)
         , trackSeqView(&tracks)
@@ -113,9 +112,6 @@ public:
 
     void quit()
     {
-        // to be removed
-        project.autoSave();
-
         App_Renderer renderer;
         for (uint8_t i; i < APP_MENU_SIZE; i++) {
             if (menu[i].view) {

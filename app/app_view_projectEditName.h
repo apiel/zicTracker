@@ -22,7 +22,7 @@ public:
 
     void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, project->project.name);
+        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, project->name);
     }
 
     bool isSelectable(uint8_t row, uint8_t col) override
@@ -64,8 +64,8 @@ public:
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        if (strlen(project->project.name) < PROJECT_NAME_LEN - 1) {
-            sprintf(project->project.name + strlen(project->project.name), "%c", getChar(row, col));
+        if (strlen(project->name) < PROJECT_NAME_LEN - 1) {
+            sprintf(project->name + strlen(project->name), "%c", getChar(row, col));
             return VIEW_CHANGED;
         }
         return VIEW_NONE;
@@ -108,7 +108,7 @@ public:
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         if (col == 0) {
-            project->project.name[strlen(project->project.name) - 1] = '\0';
+            project->name[strlen(project->name) - 1] = '\0';
             return VIEW_CHANGED;
         } else {
             menu->setView('J', 'J');
