@@ -44,6 +44,12 @@
 
 - sampler
 
+- polyphony
+    - should allow to play 3 notes at once
+    - in sample mode, it should allow to play 3 different samples at once?
+    - could we even think so mixup sample and wavetable?
+    - maybe the list of instrument should not be specific per track and then we could assign the instrument to the notes...
+
 
 - App_View_InstrumentWavetable select end start if sample
 
