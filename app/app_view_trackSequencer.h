@@ -156,10 +156,45 @@ public:
         App_View_Table::initDisplay(renderer);
     }
 
+    const char* snapshotPath = "projects/current/sequencer.zic";
+
     void snapshot(App_Renderer* renderer) override
     {
         render(renderer);
-        saveFileContent(renderer->text, strlen(renderer->text), "projects/current/sequencer.zic");
+        saveFileContent(renderer->text, strlen(renderer->text), snapshotPath);
+    }
+
+    void loadSnapshot() override
+    {
+        Zic_File file(snapshotPath, "r");
+        if (file.isOpen()) {
+            file.seekFromStart(28);
+
+            for (uint8_t i = 0; i < PATTERN_COMPONENT_COUNT * TRACK_COUNT; i++) {
+                file.seekFromCurrent(i % TRACK_COUNT == 0 ? 2 : 1);
+                char pat[3];
+                file.read(pat, 2);
+                pat[2] = '\0';
+                char detune[3];
+                file.read(detune, 2);
+                detune[2] = '\0';
+                char condition[3];
+                file.read(condition, 2);
+                condition[2] = '\0';
+
+                printf("trk%d(%d) pat: %s, detune: %s, condition: %s\n",
+                    (i % TRACK_COUNT) + 1, i / TRACK_COUNT,
+                    pat, detune, condition);
+
+                // App_Audio_Track* track = tracks->tracks[i % TRACK_COUNT];
+                // Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
+                // component->pattern = &tracks->patterns->patterns[atoi(pat)];
+                // component->setDetune(atoi(detune));
+                // component->setCondition(atoi(condition));
+            }
+
+            file.close();
+        }
     }
 };
 
