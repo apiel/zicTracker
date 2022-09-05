@@ -68,3 +68,25 @@
     - should be able to record sound from tracks into a new sample
     - should be able to record sound from input channel (using usb-c sound card)
     - we could edit sample (set start/end) of selected sample
+
+
+
+
+
+
+Mockup
+
+PAT LEN
+ 01   4
+
+InstA  InstB  InstC  InstD
+C#3.F1 C-4~E1 C-4.E% ------
+------ C-4.E1 ------ ------
+C#3.F1 ------ ------ ------
+------ D-4.E1 ------ ------
+
+STP I NOT VEL SLID
+ 01 B  C3 127 OFF
+ 02 A  E3 127 OFF
+ 03 A  F3 127 OFF
+ 04 A  C3 127 OFF
