@@ -45,27 +45,27 @@ public:
     void next()
     {
         looper.next();
-        Zic_Seq_Step* stepOff = looper.getNoteOff();
-        Zic_Seq_Step* stepOn = looper.getNoteOn();
         // FIXME there is no clear note OFF
         // maybe trigger note off earlier???
-        if (stepOff) {
-            if (synth) {
-                synth->asr.off();
-                synth = NULL;
-            }
+        Zic_Seq_Step* stepOff = looper.stepOff == 255 ? NULL : &looper.state.pattern->steps[looper.stepOff];
+        if (stepOff && !stepOff->slide && synth) {
+            synth->asr.off();
+            synth = NULL;
         }
-        if (stepOn) {
-            synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
+        if (looper.state.playing && looper.stepOn != 255) {
+            Zic_Seq_Step* stepOn = &looper.state.pattern->steps[looper.stepOn];
+            if (stepOn->note > 0) {
+                synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
 
-            synth->wave.reset();
-            synth->wave.setNote(stepOn->note);
-            synth->wave.setVelocity(stepOn->velocity);
+                synth->wave.reset();
+                synth->wave.setNote(stepOn->note + looper.state.detune);
+                synth->wave.setVelocity(stepOn->velocity);
 
-            if (looper.wasSlide()) {
-                synth->asr.slide();
-            } else {
-                synth->asr.on();
+                if (stepOff && stepOff->slide) {
+                    synth->asr.slide();
+                } else {
+                    synth->asr.on();
+                }
             }
         }
     }
