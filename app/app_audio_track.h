@@ -73,7 +73,8 @@ public:
     int16_t sample()
     {
         int16_t s = synth ? synth->next() : 0;
-        return delayHistory.sample(s)
+        delayHistory.sample(s);
+        return s
             + (delayEnabled ? delay0.sample() + delay1.sample() + delay2.sample() + delay3.sample() + delay4.sample() : 0);
     }
 
