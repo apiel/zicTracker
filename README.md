@@ -27,7 +27,7 @@ Detune, will allow to increase or decrease all the notes of the pattern by semit
 - x4 will play the pattern 4 times and then go to the next row
 - x5 will play the pattern 5 times and then go to the next row
 - ! will stop after playing the pattern
-- __ stop the pattern without to play it
+- << go back to start
 
 ## Project
 
