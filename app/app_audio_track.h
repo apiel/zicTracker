@@ -47,13 +47,13 @@ public:
         looper.next();
         // FIXME there is no clear note OFF
         // maybe trigger note off earlier???
-        Zic_Seq_Step* stepOff = looper.stepOff == 255 ? NULL : &looper.state.pattern->steps[looper.stepOff];
+        Zic_Seq_Step* stepOff = looper.stepOff == 255 ? NULL : &looper.state.pattern->steps[0][looper.stepOff];
         if (stepOff && !stepOff->slide && synth) {
             synth->asr.off();
             synth = NULL;
         }
         if (looper.state.playing && looper.stepOn != 255) {
-            Zic_Seq_Step* stepOn = &looper.state.pattern->steps[looper.stepOn];
+            Zic_Seq_Step* stepOn = &looper.state.pattern->steps[0][looper.stepOn];
             if (stepOn->note > 0) {
                 synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
 

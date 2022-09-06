@@ -38,7 +38,7 @@ public:
             data[i] = '\0';
         }
         if (loadFileContent(data, PATTERN_DATA_LEN, PATTERN_FILE_FORMAT)) {
-            Zic_Seq_Step* step = patterns[pos].steps;
+            Zic_Seq_Step* step = patterns[pos].steps[0];
             uint8_t prevInstrument = 255;
             uint8_t count = 0;
             for (uint16_t d = 0; d < PATTERN_DATA_LEN; d += STEP_DATA_LEN - 1, step++, count++) {
@@ -64,7 +64,7 @@ public:
         uint8_t prevInstrument = 255;
         strcpy(data, "");
         for (uint8_t s = 0; s < pattern->stepCount; s++) {
-            Zic_Seq_Step* step = &pattern->steps[s];
+            Zic_Seq_Step* step = &pattern->steps[0][s];
             char instrument = prevInstrument == step->instrument ? SAME_INSTRUMENT_SYMBOL : step->instrument + 'A';
             prevInstrument = step->instrument;
             if (step->note) {
@@ -90,7 +90,7 @@ public:
         pos--;
         log("[%d] Pattern %d (%d steps):", patterns[pos].id, pos + 1, patterns[pos].stepCount);
         for (uint8_t s = 0; s < patterns[pos].stepCount; s++) {
-            Zic_Seq_Step* step = &patterns[pos].steps[s];
+            Zic_Seq_Step* step = &patterns[pos].steps[0][s];
             if (step->note) {
                 log(" [%d,%s%d (%d)%s]", step->instrument,
                     Zic::getNoteDash(step->note), Zic::getNoteOctave(step->note), step->note, step->slide ? ",slide" : "");

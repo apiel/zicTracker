@@ -148,7 +148,7 @@ public:
             renderer->setCursor(cursorLen[col]);
         }
         uint8_t stepPos = row - VIEW_PATTERN_ROW_HEADERS;
-        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[stepPos];
+        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[0][stepPos];
         switch (col) {
         case 0:
             sprintf(renderer->text + strlen(renderer->text), " %02d ", stepPos + 1);
@@ -178,7 +178,7 @@ public:
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[row - VIEW_PATTERN_ROW_HEADERS];
+        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[0][row - VIEW_PATTERN_ROW_HEADERS];
         if (col == 4) {
             step->slide = !step->slide;
         } else {
