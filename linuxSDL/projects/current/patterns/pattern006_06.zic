@@ -2,7 +2,7 @@ PAT LEN
  06   4 RESET CLEAR 
 
 Inst.A Inst.B Inst.C Inst.D 
-C_4-L1 C_4-L1 C_4-L1 C_4-L1 
-C_4-L1 C_4-L1 C_4-L1 C_4-L1 
-C_4.L1 C_4.L1 C_4.L1 C_4.L1 
-C_4.L1 C_4.L1 C_4.L1 C_4.L1 
+C_4-L1 ---.L1 ---.L1 ---.L1 
+C_4-L1 ---.L1 ---.L1 ---.L1 
+C_4.L1 ---.L1 ---.L1 ---.L1 
+C_4.L1 ---.L1 ---.L1 ---.L1 

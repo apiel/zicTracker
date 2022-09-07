@@ -143,11 +143,12 @@ public:
 
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
+        uint8_t inst = col / 4;
         if (selectedRow == row && selectedCol == col) {
             renderer->setCursor(col % 4 == 0 ? 3 : 1);
         }
         uint8_t stepPos = row - VIEW_PATTERN_ROW_HEADERS;
-        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[0][stepPos];
+        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[inst][stepPos];
         switch (col % 4) {
         case 0:
             if (step->note == 0) {
@@ -177,7 +178,8 @@ public:
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[0][row - VIEW_PATTERN_ROW_HEADERS];
+        uint8_t inst = col / 4;
+        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[inst][row - VIEW_PATTERN_ROW_HEADERS];
         col %= 4;
         if (col == 1) {
             step->slide = !step->slide;
