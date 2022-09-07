@@ -1,8 +1,8 @@
 PAT LEN
- 05   4 SAVE X 
+ 05   4 RESET CLEAR 
 
-STP I NOT VEL SLID
- 01 A  C4 127 ON 
- 02 A  C4 127 OFF
- 03 A --- 127 OFF
- 04 A  C4 127 ON 
+Inst.A Inst.B Inst.C Inst.D 
+C_4-L1 C_4-L1 C_4-L1 C_4-L1 
+C_4.L1 C_4.L1 C_4.L1 C_4.L1 
+---.L1 ---.L1 ---.L1 ---.L1 
+C_4-L1 C_4-L1 C_4-L1 C_4-L1 

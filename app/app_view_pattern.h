@@ -1,15 +1,16 @@
 #ifndef APP_VIEW_PATTERN_H_
 #define APP_VIEW_PATTERN_H_
 
-#include "./app_renderer.h"
-#include "./app_view_table.h"
 #include "./app_patterns.h"
+#include "./app_renderer.h"
+#include "./app_util.h"
 #include "./app_view.h"
+#include "./app_view_table.h"
 
 #define VIEW_PATTERN_ROW_HEADERS 4
 #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + MAX_STEPS_IN_PATTERN)
 // #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + 6)
-#define VIEW_PATTERN_COL 5
+#define VIEW_PATTERN_COL 4 * INSTRUMENT_COUNT
 
 class App_View_PatternHeader : public App_View_TableField {
 protected:
@@ -46,7 +47,7 @@ public:
         if (row == 0) {
             renderHeader(renderer, col);
         } else {
-            uint8_t cursorLen[] = { 3, 3, 4, 1 };
+            uint8_t cursorLen[] = { 3, 3, 5, 5 };
             if (selectedRow == row && selectedCol == col) {
                 renderer->setCursor(cursorLen[col]);
             }
@@ -59,10 +60,10 @@ public:
                 sprintf(renderer->text + strlen(renderer->text), "%3d ", patterns->patterns[*currentPatternId].stepCount);
                 break;
             case 2:
-                strcat(renderer->text, "SAVE ");
+                strcat(renderer->text, "RESET ");
                 break;
             case 3:
-                strcat(renderer->text, "X ");
+                strcat(renderer->text, "CLEAR ");
                 break;
             }
         }
@@ -105,9 +106,7 @@ public:
                 }
             }
         } else if (col == 2) {
-            patterns->save(*currentPatternId);
-        } else if (col == 3) {
-            patterns->load(*currentPatternId);
+            // TODO restore pattern
         }
         return VIEW_CHANGED;
     }
@@ -115,12 +114,13 @@ public:
 
 class App_View_PatternStepHeader : public App_View_TableField {
 protected:
-    const char* headers[5] = { "STP ", "I ", "NOT ", "VEL ", "SLID" };
+    // const char* headers[5] = { "STP ", "I ", "NOT ", "VEL ", "SLID" };
 
 public:
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        strcat(renderer->text, headers[col]);
+        // strcat(renderer->text, headers[col]);
+        sprintf(renderer->text + strlen(renderer->text), "Inst.%c ", col + 'A');
     }
 };
 
@@ -138,40 +138,39 @@ public:
 
     bool isSelectable(uint8_t row, uint8_t col) override
     {
-        return col != 0;
+        return true;
     }
 
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        uint8_t cursorLen[VIEW_PATTERN_COL] = { 0, 1, 3, 3, 3 };
         if (selectedRow == row && selectedCol == col) {
-            renderer->setCursor(cursorLen[col]);
+            renderer->setCursor(col % 4 == 0 ? 3 : 1);
         }
         uint8_t stepPos = row - VIEW_PATTERN_ROW_HEADERS;
         Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[0][stepPos];
-        switch (col) {
+        switch (col % 4) {
         case 0:
-            sprintf(renderer->text + strlen(renderer->text), " %02d ", stepPos + 1);
-            break;
-
-        case 1:
-            sprintf(renderer->text + strlen(renderer->text), "%c ", step->instrument + 'A');
-            break;
-
-        case 2:
             if (step->note == 0) {
-                strcat(renderer->text, "--- ");
+                strcat(renderer->text, "---");
             } else {
-                sprintf(renderer->text + strlen(renderer->text), "%2s%d ", Zic::getNoteStr(step->note), Zic::getNoteOctave(step->note));
+                sprintf(renderer->text + strlen(renderer->text), "%2s%d", Zic::getNoteUnderscore(step->note), Zic::getNoteOctave(step->note));
             }
             break;
 
-        case 3:
-            sprintf(renderer->text + strlen(renderer->text), "%3d ", step->velocity);
+        case 1:
+            if (step->slide) {
+                strcat(renderer->text, "-");
+            } else {
+                strcat(renderer->text, ".");
+            }
             break;
 
-        case 4:
-            sprintf(renderer->text + strlen(renderer->text), "%s", step->slide ? "ON " : "OFF");
+        case 2:
+            sprintf(renderer->text + strlen(renderer->text), "%c", 'A' + (uint8_t)(12.0f / 127.0f * (step->velocity - 7)));
+            break;
+
+        case 3:
+            sprintf(renderer->text + strlen(renderer->text), "%d ", step->condition);
             break;
         }
     }
@@ -179,10 +178,11 @@ public:
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[0][row - VIEW_PATTERN_ROW_HEADERS];
-        if (col == 4) {
+        col %= 4;
+        if (col == 1) {
             step->slide = !step->slide;
         } else {
-            int8_t directions[] = { 0, 1, 12, 10 };
+            int8_t directions[] = { 12, 0, 12, 1 };
             int8_t direction = 0;
             if (keys->Right) {
                 direction = 1;
@@ -194,16 +194,17 @@ public:
                 direction = -directions[col];
             }
             switch (col) {
-            case 1:
-                step->instrument = (step->instrument + INSTRUMENT_COUNT + direction) % INSTRUMENT_COUNT;
-                break;
-            case 2: {
+            case 0: {
                 uint8_t note = range(step->note + direction, Zic::_NOTE_START - 1, Zic::_NOTE_END);
                 step->note = range(note, Zic::_NOTE_START, Zic::_NOTE_END) != note ? 0 : note;
                 break;
             }
+            case 2: {
+                step->velocity = range(step->velocity + direction, 7, 127);
+                break;
+            }
             case 3:
-                step->velocity = range(step->velocity + direction, 0, 127);
+                step->condition = range(step->condition + direction, 1, 9);
                 break;
             }
         }
@@ -222,75 +223,75 @@ protected:
 
     App_View_TableField* fields[VIEW_PATTERN_ROW * VIEW_PATTERN_COL] = {
         // clang-format off
-        &headerField, &headerField, NULL, NULL, NULL,
-        &headerField, &headerField, &headerField, &headerField, NULL,
-        NULL, NULL, NULL, NULL, NULL,
-        &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
+        &headerField, &headerField, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        &headerField, &headerField, &headerField, &headerField, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
 
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
-        &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
+        &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
         // clang-format on
     };
 
@@ -306,7 +307,7 @@ public:
 
     void initDisplay(App_Renderer* renderer)
     {
-        renderer->useColoredLabel(1, 4);
+        // renderer->useColoredLabel(1, 4);
         renderer->useColoredHeader(0, 3);
         App_View_Table::initDisplay(renderer);
     }

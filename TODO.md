@@ -19,6 +19,8 @@
 - assignable modulation to (1 or more? -> polyphony) track or instrument for selectable param:
     - 10? envelop 
     - 5? LFO
+    - we could create wavetable to apply either on 1 or n steps
+    - maybe there would be a way to make no difference between envelop and LFO, just need to find a good way to apply a modulation for a specific phase
 
 - Fix / Implement more filter https://www.youtube.com/watch?v=XVOdqJy-Rfg
 
@@ -69,8 +71,13 @@
     - should be able to record sound from input channel (using usb-c sound card)
     - we could edit sample (set start/end) of selected sample
 
+- amsynth
+  can we do something with `AMSYNTH_NO_GUI=true amsynth` or `amsynth -x`
+  then connect keyboard with `aconnect 'MPK mini':0 'amsynth':0`
+  however we could send midi command from zictracker or maybe even use amsynth as a plugin...
+  https://github.com/amsynth/amsynth/wiki/FAQs#can-i-run-amsynth-without-the-gui
 
-
+- helm what s about https://github.com/mtytel/helm ? `helm --headless`
 
 
 
