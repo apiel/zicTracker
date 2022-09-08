@@ -129,6 +129,19 @@ protected:
     App_Patterns* patterns;
     uint8_t* currentPatternId;
 
+    uint8_t velocity[6] = { 50, 70, 85, 100, 110, 127 };
+
+    uint8_t getVel(Zic_Seq_Step* step)
+    {
+        uint8_t vel = 0;
+        for (; vel < 6; vel++) {
+            if (step->velocity <= velocity[vel]) {
+                return vel;
+            }
+        }
+        return vel;
+    }
+
 public:
     App_View_PatternStep(App_Patterns* _patterns, uint8_t* _currentPatternId)
         : patterns(_patterns)
@@ -158,16 +171,16 @@ public:
             }
             break;
 
-        case 1:
-            if (step->slide) {
-                strcat(renderer->text, "-");
-            } else {
-                strcat(renderer->text, ".");
-            }
+        case 1: 
+            strcat(renderer->text, charLevel(getVel(step) + 1));
             break;
 
         case 2:
-            sprintf(renderer->text + strlen(renderer->text), "%c", 'A' + (uint8_t)(12.0f / 127.0f * (step->velocity - 7)));
+            if (step->slide) {
+                strcat(renderer->text, "-");
+            } else {
+                strcat(renderer->text, " ");
+            }
             break;
 
         case 3:
@@ -181,10 +194,10 @@ public:
         uint8_t inst = col / 4;
         Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[inst][row - VIEW_PATTERN_ROW_HEADERS];
         col %= 4;
-        if (col == 1) {
+        if (col == 2) {
             step->slide = !step->slide;
         } else {
-            int8_t directions[] = { 12, 0, 12, 1 };
+            int8_t directions[] = { 12, 1, 0, 1 };
             int8_t direction = 0;
             if (keys->Right) {
                 direction = 1;
@@ -201,8 +214,9 @@ public:
                 step->note = range(note, Zic::_NOTE_START, Zic::_NOTE_END) != note ? 0 : note;
                 break;
             }
-            case 2: {
-                step->velocity = range(step->velocity + direction, 7, 127);
+            case 1: {
+                uint8_t vel = range(getVel(step) + direction, 0, 5);
+                step->velocity = velocity[vel];
                 break;
             }
             case 3:
