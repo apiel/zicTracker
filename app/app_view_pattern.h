@@ -210,6 +210,8 @@ public:
             }
             switch (col) {
             case 0: {
+                // FIXME from no note (0) to C0 need to fix right key
+                // TODO when no note, reuse the last inserted note from previous step 
                 uint8_t note = range(step->note + direction, Zic::_NOTE_START - 1, Zic::_NOTE_END);
                 step->note = range(note, Zic::_NOTE_START, Zic::_NOTE_END) != note ? 0 : note;
                 break;
