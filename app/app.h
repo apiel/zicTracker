@@ -124,6 +124,9 @@ public:
 
     void start()
     {
+        // const char * yo = "⠿";
+        // const char * yo2 = "⠾";
+        // printf("App start %c -> %d %d %d\n", yo[0], yo[0], *(uint16_t*)(yo+1), *(uint16_t*)("⠿"+1));
         for (uint8_t i; i < APP_MENU_SIZE; i++) {
             if (menu[i].view) {
                 menu[i].view->loadSnapshot();

@@ -51,6 +51,68 @@ protected:
         }
     }
 
+    uint16_t levelSpecialChar[6] = {
+        *(uint16_t*)("⠠" + 1),
+        *(uint16_t*)("⠤" + 1),
+        *(uint16_t*)("⠴" + 1),
+        *(uint16_t*)("⠶" + 1),
+        *(uint16_t*)("⠾" + 1),
+        *(uint16_t*)("⠿" + 1),
+    };
+
+    virtual void drawSpecialChar(uint16_t val, uint16_t x, uint16_t y)
+    {
+        uint8_t level = 0;
+        for (; level < 6; level++) {
+            if (val == levelSpecialChar[level]) {
+                break;
+            }
+        }
+
+        setColor(UI_COLOR_HEADER);
+        if (level >= 5) {
+            drawPixel(x + 5, y);
+            drawPixel(x + 6, y);
+            drawPixel(x + 5, y + 1);
+            drawPixel(x + 6, y + 1);
+        }
+
+        if (level >= 4) {
+            drawPixel(x + 2, y);
+            drawPixel(x + 3, y);
+            drawPixel(x + 2, y + 1);
+            drawPixel(x + 3, y + 1);
+        }
+
+        if (level >= 3) {
+
+            drawPixel(x + 5, y + 4);
+            drawPixel(x + 6, y + 4);
+            drawPixel(x + 5, y + 3);
+            drawPixel(x + 6, y + 3);
+        }
+
+        if (level >= 2) {
+            drawPixel(x + 2, y + 3);
+            drawPixel(x + 3, y + 3);
+            drawPixel(x + 2, y + 4);
+            drawPixel(x + 3, y + 4);
+        }
+
+        if (level >= 1) {
+            drawPixel(x + 5, y + 7);
+            drawPixel(x + 6, y + 7);
+            drawPixel(x + 5, y + 6);
+            drawPixel(x + 6, y + 6);
+        }
+
+        drawPixel(x + 2, y + 6);
+        drawPixel(x + 3, y + 6);
+        drawPixel(x + 2, y + 7);
+        drawPixel(x + 3, y + 7);
+        setColor(UI_COLOR_FONT);
+    }
+
     uint8_t getRow(uint16_t y)
     {
         return (y / ((FONT_H + LINE_SPACING))) + startRow;
@@ -114,7 +176,12 @@ public:
                     drawCursor(x, y);
                 }
 
-                drawChar(*txt, x, y);
+                if (*txt == -30) {
+                    drawSpecialChar(*(uint16_t*)(txt + 1), x, y);
+                    txt += 2;
+                } else {
+                    drawChar(*txt, x, y);
+                }
                 x += FONT_W;
             }
             txt++;
