@@ -171,16 +171,15 @@ public:
             }
             break;
 
-        case 1: 
+        case 1:
             strcat(renderer->text, charLevel(getVel(step) + 1));
             break;
 
         case 2:
-            if (step->slide) {
-                strcat(renderer->text, "-");
-            } else {
-                strcat(renderer->text, " ");
-            }
+            // FIXME len differ between "⤦" and " " "♪"
+            // strcat(renderer->text, step->slide ? "⤸" : "♪");
+            strcat(renderer->text, step->slide ? "⤸" : " ");
+            // strcat(renderer->text, step->slide ? "_" : " ");
             break;
 
         case 3:
@@ -211,7 +210,7 @@ public:
             switch (col) {
             case 0: {
                 // FIXME from no note (0) to C0 need to fix right key
-                // TODO when no note, reuse the last inserted note from previous step 
+                // TODO when no note, reuse the last inserted note from previous step
                 uint8_t note = range(step->note + direction, Zic::_NOTE_START - 1, Zic::_NOTE_END);
                 step->note = range(note, Zic::_NOTE_START, Zic::_NOTE_END) != note ? 0 : note;
                 break;
