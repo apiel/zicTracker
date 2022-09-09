@@ -176,9 +176,9 @@ public:
             break;
 
         case 2:
-            // FIXME len differ between "⤦" and " " "♪"
-            // strcat(renderer->text, step->slide ? "⤸" : "♪");
-            strcat(renderer->text, step->slide ? "⤸" : " ");
+            // FIXME len differ between "⤦" and " " "♪" " "
+            // strcat(renderer->text, step->slide ? "⤸" : " ");
+            strcat(renderer->text, step->slide ? "⤸" : " ");
             // strcat(renderer->text, step->slide ? "_" : " ");
             break;
 
