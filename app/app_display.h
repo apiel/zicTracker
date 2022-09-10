@@ -62,6 +62,37 @@ protected:
 
     virtual void drawSpecialChar(uint16_t val, uint16_t x, uint16_t y)
     {
+        if (val == *(uint16_t*)(" " + 1)) {
+            return;
+        }
+
+        if (val == *(uint16_t*)("⤸" + 1)) {
+            // for (uint16_t i = 0; i < 12; i++) {
+            //     drawPixel(x + 4, y + i);
+            // }
+            // for (uint16_t i = 0; i < 5; i++) {
+            //     drawPixel(x + i + 2, y + 12);
+            // }
+
+
+            for (uint16_t i = 0; i < 9; i++) {
+                drawPixel(x + 5, y + i);
+            }
+            drawPixel(x + 4, y + 9);
+            drawPixel(x + 3, y + 10);
+            drawPixel(x + 2, y + 11);
+            drawPixel(x + 1, y + 12);
+
+            drawPixel(x + 2, y + 12);
+            drawPixel(x + 3, y + 12);
+            drawPixel(x + 4, y + 12);
+
+            drawPixel(x + 1, y + 11);
+            drawPixel(x + 1, y + 10);
+            drawPixel(x + 1, y + 9);
+            return;
+        }
+
         uint8_t level = 0;
         for (; level < 6; level++) {
             if (val == levelSpecialChar[level]) {
