@@ -176,14 +176,14 @@ public:
             break;
 
         case 2:
-            // FIXME len differ between "⤦" and " " "♪" " "
-            // strcat(renderer->text, step->slide ? "⤸" : " ");
-            strcat(renderer->text, step->slide ? "⤸" : " ");
-            // strcat(renderer->text, step->slide ? "_" : " ");
+            sprintf(renderer->text + strlen(renderer->text), "%d", step->condition);
             break;
 
         case 3:
-            sprintf(renderer->text + strlen(renderer->text), "%d ", step->condition);
+            // FIXME len differ between "⤦" and " " "♪" " "
+            // strcat(renderer->text, step->slide ? "⤸" : " ");
+            strcat(renderer->text, step->slide ? "⤸ " : "  ");
+            // strcat(renderer->text, step->slide ? "_" : " ");
             break;
         }
     }
@@ -193,10 +193,10 @@ public:
         uint8_t inst = col / 4;
         Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[inst][row - VIEW_PATTERN_ROW_HEADERS];
         col %= 4;
-        if (col == 2) {
+        if (col == 3) {
             step->slide = !step->slide;
         } else {
-            int8_t directions[] = { 12, 1, 0, 1 };
+            int8_t directions[] = { 12, 1, 1, 0 };
             int8_t direction = 0;
             if (keys->Right) {
                 direction = 1;
@@ -220,7 +220,7 @@ public:
                 step->velocity = velocity[vel];
                 break;
             }
-            case 3:
+            case 2:
                 step->condition = range(step->condition + direction, 1, 9);
                 break;
             }

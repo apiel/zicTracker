@@ -83,6 +83,7 @@ protected:
             drawPixel(x + 2, y + 11);
             drawPixel(x + 1, y + 12);
 
+            drawPixel(x + 1, y + 12);
             drawPixel(x + 2, y + 12);
             drawPixel(x + 3, y + 12);
             drawPixel(x + 4, y + 12);
@@ -102,45 +103,45 @@ protected:
 
         setColor(UI_COLOR_HEADER);
         if (level >= 5) {
+            drawPixel(x + 4, y);
             drawPixel(x + 5, y);
-            drawPixel(x + 6, y);
+            drawPixel(x + 4, y + 1);
             drawPixel(x + 5, y + 1);
-            drawPixel(x + 6, y + 1);
         }
 
         if (level >= 4) {
+            drawPixel(x + 1, y);
             drawPixel(x + 2, y);
-            drawPixel(x + 3, y);
+            drawPixel(x + 1, y + 1);
             drawPixel(x + 2, y + 1);
-            drawPixel(x + 3, y + 1);
         }
 
         if (level >= 3) {
 
+            drawPixel(x + 4, y + 4);
             drawPixel(x + 5, y + 4);
-            drawPixel(x + 6, y + 4);
+            drawPixel(x + 4, y + 3);
             drawPixel(x + 5, y + 3);
-            drawPixel(x + 6, y + 3);
         }
 
         if (level >= 2) {
+            drawPixel(x + 1, y + 3);
             drawPixel(x + 2, y + 3);
-            drawPixel(x + 3, y + 3);
+            drawPixel(x + 1, y + 4);
             drawPixel(x + 2, y + 4);
-            drawPixel(x + 3, y + 4);
         }
 
         if (level >= 1) {
+            drawPixel(x + 4, y + 7);
             drawPixel(x + 5, y + 7);
-            drawPixel(x + 6, y + 7);
+            drawPixel(x + 4, y + 6);
             drawPixel(x + 5, y + 6);
-            drawPixel(x + 6, y + 6);
         }
 
+        drawPixel(x + 1, y + 6);
         drawPixel(x + 2, y + 6);
-        drawPixel(x + 3, y + 6);
+        drawPixel(x + 1, y + 7);
         drawPixel(x + 2, y + 7);
-        drawPixel(x + 3, y + 7);
         setColor(UI_COLOR_FONT);
     }
 

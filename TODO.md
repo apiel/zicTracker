@@ -79,6 +79,8 @@
 
 - helm what s about https://github.com/mtytel/helm ? `helm --headless`
 
+- synthv1 with no-gui option??
+
 
 
 Mockup
