@@ -76,21 +76,21 @@ protected:
 
 
             for (uint16_t i = 0; i < 9; i++) {
-                drawPixel(x + 5, y + i);
+                drawPixel(x + 4, y + i);
             }
-            drawPixel(x + 4, y + 9);
-            drawPixel(x + 3, y + 10);
-            drawPixel(x + 2, y + 11);
-            drawPixel(x + 1, y + 12);
+            drawPixel(x + 3, y + 9);
+            drawPixel(x + 2, y + 10);
+            drawPixel(x + 1, y + 11);
+            drawPixel(x, y + 12);
 
+            drawPixel(x, y + 12);
             drawPixel(x + 1, y + 12);
             drawPixel(x + 2, y + 12);
             drawPixel(x + 3, y + 12);
-            drawPixel(x + 4, y + 12);
 
-            drawPixel(x + 1, y + 11);
-            drawPixel(x + 1, y + 10);
-            drawPixel(x + 1, y + 9);
+            drawPixel(x, y + 11);
+            drawPixel(x, y + 10);
+            drawPixel(x, y + 9);
             return;
         }
 
