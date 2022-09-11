@@ -12,7 +12,7 @@
 
 class App_Audio_Track {
 protected:
-    Zic_Seq_Step* stepOn;
+    Zic_Seq_Step* stepOn[INSTRUMENT_COUNT];
 
 public:
     uint8_t id = 0;
@@ -58,20 +58,21 @@ public:
         // actually if there is a not a slide, then the note should stop a little bit earlier?!
         // but if there is a slide, it might or not have a note off?
         // on a piano there would be a note off but on a clarinet there would not be
-        Zic_Seq_Step* stepOff = stepOn;
-        if (stepOff && !stepOff->slide && synth) {
-            synth->asr.off();
-            synth = NULL;
-        }
-        if (looper.state.playing && looper.stepOn != 255) {
-            stepOn = &looper.state.pattern->steps[0][looper.stepOn];
-            if (stepOn->note > 0) {
-                synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
-                synth->setStep(stepOn);
-                if (stepOff && stepOff->slide) {
-                    synth->asr.slide();
-                } else {
-                    synth->asr.on();
+
+        for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
+            Zic_Seq_Step* stepOff = stepOn[i];
+            if (stepOff && !stepOff->slide) {
+                synths[i]->asr.off();
+            }
+            if (looper.state.playing && looper.stepOn != 255) {
+                stepOn[i] = &looper.state.pattern->steps[i][looper.stepOn];
+                if (stepOn[i]->note > 0) {
+                    synths[i]->setStep(stepOn[i]);
+                    if (stepOff && stepOff->slide) {
+                        synths[i]->asr.slide();
+                    } else {
+                        synths[i]->asr.on();
+                    }
                 }
             }
         }
@@ -79,7 +80,10 @@ public:
 
     int16_t sample()
     {
-        int16_t s = synth ? synth->next() : 0;
+        int16_t s = 0;
+        for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
+            s += synths[i]->next();
+        }
         delayHistory.sample(s);
         return s
             + (delayEnabled ? delay0.sample() + delay1.sample() + delay2.sample() + delay3.sample() + delay4.sample() : 0);
