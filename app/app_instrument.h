@@ -1,6 +1,7 @@
 #ifndef APP_INSTRUMENT_H_
 #define APP_INSTRUMENT_H_
 
+#include <zic_seq_pattern.h>
 #include <zic_synth_file.h>
 
 #include "./app_file.h"
@@ -57,6 +58,13 @@ public:
             return "wavetables";
         }
         return "samples";
+    }
+
+    void setStep(Zic_Seq_Step* _step, int8_t detune = 0)
+    {
+        wave.reset();
+        wave.setNote(_step->note + detune);
+        wave.setVelocity(_step->velocity);
     }
 };
 

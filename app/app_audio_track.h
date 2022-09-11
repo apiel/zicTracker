@@ -11,6 +11,9 @@
 #define PATTERN_COMPONENT_COUNT 9
 
 class App_Audio_Track {
+protected:
+    Zic_Seq_Step* stepOn;
+
 public:
     uint8_t id = 0;
 
@@ -44,22 +47,24 @@ public:
 
     void next()
     {
+        // TODO think? wouldn't it make sense to just pass the step to the synth and out of the step set params
+        // then just trigger noteOn and noteOff
+
         looper.next();
         // FIXME there is no clear note OFF
         // maybe trigger note off earlier???
-        Zic_Seq_Step* stepOff = looper.stepOff == 255 ? NULL : &looper.state.pattern->steps[0][looper.stepOff];
+        // should note OFF run in the same time as the next step but then we need to handle even more polyphony...
+        // or should not off trigger before???
+        Zic_Seq_Step* stepOff = stepOn;
         if (stepOff && !stepOff->slide && synth) {
             synth->asr.off();
             synth = NULL;
         }
         if (looper.state.playing && looper.stepOn != 255) {
-            Zic_Seq_Step* stepOn = &looper.state.pattern->steps[0][looper.stepOn];
+            stepOn = &looper.state.pattern->steps[0][looper.stepOn];
             if (stepOn->note > 0) {
                 synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
-
-                synth->wave.reset();
-                synth->wave.setNote(stepOn->note + looper.state.detune);
-                synth->wave.setVelocity(stepOn->velocity);
+                synth->setStep(stepOn);
 
                 if (stepOff && stepOff->slide) {
                     synth->asr.slide();
