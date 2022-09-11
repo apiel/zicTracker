@@ -55,6 +55,9 @@ public:
         // maybe trigger note off earlier???
         // should note OFF run in the same time as the next step but then we need to handle even more polyphony...
         // or should not off trigger before???
+        // actually if there is a not a slide, then the note should stop a little bit earlier?!
+        // but if there is a slide, it might or not have a note off?
+        // on a piano there would be a note off but on a clarinet there would not be
         Zic_Seq_Step* stepOff = stepOn;
         if (stepOff && !stepOff->slide && synth) {
             synth->asr.off();
@@ -65,7 +68,6 @@ public:
             if (stepOn->note > 0) {
                 synth = synths[stepOn->instrument % INSTRUMENT_COUNT];
                 synth->setStep(stepOn);
-
                 if (stepOff && stepOff->slide) {
                     synth->asr.slide();
                 } else {
