@@ -336,6 +336,8 @@ public:
         return ret;
     }
 
+    const char* snapshotPath = "projects/current/patterns/pattern%03d_%02X.zic";
+
     void snapshot(App_Renderer* renderer) override
     {
         uint8_t id = currentPatternId;
@@ -345,10 +347,26 @@ public:
             for (uint8_t row = 0; row < lastRow; row += TABLE_VISIBLE_ROWS, renderer->startRow += TABLE_VISIBLE_ROWS) {
                 render(renderer);
                 saveFileContent(row == 0 ? "w" : "a", renderer->text, strlen(renderer->text),
-                    "projects/current/patterns/pattern%03d_%02X.zic", currentPatternId + 1, currentPatternId + 1);
+                    snapshotPath, currentPatternId + 1, currentPatternId + 1);
             }
         }
         currentPatternId = id;
+    }
+
+    void loadSnapshot() override
+    {
+        for (uint8_t id = 0; id < PATTERN_COUNT; id++) {
+            char filename[MAX_FILENAME];
+            snprintf(filename, MAX_FILENAME, snapshotPath, id + 1, id + 1);
+            Zic_File file(filename, "r");
+            if (file.isOpen()) {
+                file.seekFromStart(13);
+                char len[2];
+                file.read(len, 2);
+                printf("%s: %c%c\n", filename, len[0], len[1]);
+                file.close();
+            }
+        }
     }
 };
 
