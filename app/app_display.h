@@ -67,23 +67,22 @@ protected:
         }
 
         if (val == *(uint16_t*)("⤸" + 1)) {
-            // for (uint16_t i = 0; i < 12; i++) {
-            //     drawPixel(x + 4, y + i);
-            // }
-            // for (uint16_t i = 0; i < 5; i++) {
-            //     drawPixel(x + i + 2, y + 12);
-            // }
-
-
-            for (uint16_t i = 0; i < 9; i++) {
-                drawPixel(x + 4, y + i);
-            }
+            // arc
+            drawPixel(x + 2, y);
+            drawPixel(x + 3, y + 1);
+            drawPixel(x + 3, y + 2);
+            drawPixel(x + 4, y + 3);
+            drawPixel(x + 4, y + 4);
+            drawPixel(x + 4, y + 5);
+            drawPixel(x + 4, y + 6);
+            drawPixel(x + 4, y + 7);
+            drawPixel(x + 3, y + 8);
             drawPixel(x + 3, y + 9);
             drawPixel(x + 2, y + 10);
             drawPixel(x + 1, y + 11);
             drawPixel(x, y + 12);
 
-            drawPixel(x, y + 12);
+            // arrow
             drawPixel(x + 1, y + 12);
             drawPixel(x + 2, y + 12);
             drawPixel(x + 3, y + 12);
