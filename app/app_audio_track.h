@@ -21,7 +21,6 @@ public:
 
     App_Instrument synth0, synth1, synth2, synth3;
     App_Instrument* synths[INSTRUMENT_COUNT] = { &synth0, &synth1, &synth2, &synth3 };
-    App_Instrument* synth = NULL;
     Zic_Seq_LoopMaster looper;
     Zic_Effect_DelayHistory delayHistory;
     Zic_Effect_Delay delay0, delay1, delay2, delay3, delay4;
