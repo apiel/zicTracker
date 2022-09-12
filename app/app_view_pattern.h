@@ -360,12 +360,36 @@ public:
             snprintf(filename, MAX_FILENAME, snapshotPath, id + 1, id + 1);
             Zic_File file(filename, "r");
             if (file.isOpen()) {
+                Zic_Seq_Pattern* pattern = &patterns->patterns[id];
                 file.seekFromStart(13);
-                char len[2];
-                file.read(len, 2);
-                printf("%s: %c%c\n", filename, len[0], len[1]);
-                file.close();
+                char lenStr[3];
+                file.read(lenStr, 2);
+                lenStr[2] = 0;
+                pattern->stepCount = atoi(lenStr);
+                file.seekFromCurrent(44);
+                if (id == 0) {
+                    printf("%s: %c%c = %d\n", filename, lenStr[0], lenStr[1], pattern->stepCount);
+                    char stepStr[11];
+                    // while (file.read(stepStr, 11)) {
+                    //     stepStr[10] = 0;
+                    //     printf("%s\n", stepStr);
+                    // }
+                    for (uint8_t s = 0; s < pattern->stepCount; s++) {
+                        for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
+                            if (!file.read(stepStr, 11)) {
+                                break;
+                            }
+                            stepStr[10] = 0;
+                            Zic_Seq_Step * step = &pattern->steps[i][s];
+                            printf("%s cond %d %d\n", stepStr, stepStr[6] - '0', stepStr[8]);
+                            // step->condition = stepStr[6] - '0';
+                            // step->slide = stepStr[8] == -92;
+                        }
+                        file.seekFromCurrent(1);
+                    }
+                }
             }
+            file.close();
         }
     }
 };

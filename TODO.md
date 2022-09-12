@@ -2,6 +2,9 @@
 
 - doc!!
 
+- info bull 
+    only work with SDL display (so not in text mode)
+
 - save project!!!
     - name
     - save & restore
