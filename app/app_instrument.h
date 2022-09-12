@@ -20,6 +20,7 @@ public:
     // char filename[256] = "303.WAV";
     // char filename[256] = "111.WAV";
     char filename[256] = "BANK_A.WAV";
+    // char filename[256] = "_additive.wav";
     bool isWavetable = true;
 
     App_Instrument(uint8_t _id = 0)

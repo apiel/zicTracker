@@ -71,6 +71,14 @@
     - should be able to record sound from input channel (using usb-c sound card)
     - we could edit sample (set start/end) of selected sample
 
+- what about this https://sites.google.com/site/musicgapi/technical-documents/wav-file-format#inst
+
+- vital wavetable seem to use meta_data.set("clm ", "<!>2048 20000000 wavetable (vital.audio)");
+    as riff metadata, maybe we could also try to support this in zic/zic_file_wav.h line 37
+    in addition of ZICW
+
+- vital in headless mode!! `./vital --headless` 
+
 - amsynth
   can we do something with `AMSYNTH_NO_GUI=true amsynth` or `amsynth -x`
   then connect keyboard with `aconnect 'MPK mini':0 'amsynth':0`
