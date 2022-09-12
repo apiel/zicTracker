@@ -371,24 +371,22 @@ public:
                 lenStr[2] = 0;
                 pattern->stepCount = atoi(lenStr);
                 file.seekFromCurrent(44);
-                if (id == 0) {
-                    printf("%s: %c%c = %d\n", filename, lenStr[0], lenStr[1], pattern->stepCount);
-                    char stepStr[11];
-                    for (uint8_t s = 0; s < pattern->stepCount; s++) {
-                        for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
-                            if (!file.read(stepStr, 11)) {
-                                break;
-                            }
-                            stepStr[10] = 0;
-                            Zic_Seq_Step * step = &pattern->steps[i][s];
-                            printf("%s cond %s (%d)\n", stepStr, stepStr + 3, getLevel(*(uint16_t*)(stepStr + 4)));
-                            step->condition = stepStr[6] - '0';
-                            step->slide = stepStr[8] == -92;
-                            step->velocity = velocity[getLevel(*(uint16_t*)(stepStr + 4))];
-                            step->note = stepStr[0] == '-' ? 0 : Zic::charNotetoInt(stepStr[0], stepStr[1], stepStr[2]);
+                // printf("%s: %c%c = %d\n", filename, lenStr[0], lenStr[1], pattern->stepCount);
+                char stepStr[11];
+                for (uint8_t s = 0; s < pattern->stepCount; s++) {
+                    for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
+                        if (!file.read(stepStr, 11)) {
+                            break;
                         }
-                        file.seekFromCurrent(1);
+                        stepStr[10] = 0;
+                        Zic_Seq_Step* step = &pattern->steps[i][s];
+                        // printf("%s cond %s (%d)\n", stepStr, stepStr + 3, getLevel(*(uint16_t*)(stepStr + 4)));
+                        step->condition = stepStr[6] - '0';
+                        step->slide = stepStr[8] == -92;
+                        step->velocity = velocity[getLevel(*(uint16_t*)(stepStr + 4))];
+                        step->note = stepStr[0] == '-' ? 0 : Zic::charNotetoInt(stepStr[0], stepStr[1], stepStr[2]);
                     }
+                    file.seekFromCurrent(1);
                 }
             }
             file.close();
