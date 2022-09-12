@@ -2,6 +2,7 @@
 #define APP_DISPLAY_H_
 
 #include "./app_renderer.h"
+#include "./app_util.h"
 
 #ifdef FONT_FILE
 #include FONT_FILE
@@ -93,14 +94,8 @@ protected:
             return;
         }
 
-        uint8_t level = 0;
-        for (; level < 6; level++) {
-            if (val == levelSpecialChar[level]) {
-                break;
-            }
-        }
-
         setColor(UI_COLOR_HEADER);
+        uint8_t level = getLevel(val);
         if (level >= 5) {
             drawPixel(x + 4, y);
             drawPixel(x + 5, y);

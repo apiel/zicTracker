@@ -12,6 +12,8 @@
 // #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + 6)
 #define VIEW_PATTERN_COL 4 * INSTRUMENT_COUNT
 
+#define VELOCITY_ARR uint8_t velocity[6] = { 50, 70, 85, 100, 110, 127 };
+
 class App_View_PatternHeader : public App_View_TableField {
 protected:
     App_Patterns* patterns;
@@ -129,7 +131,7 @@ protected:
     App_Patterns* patterns;
     uint8_t* currentPatternId;
 
-    uint8_t velocity[6] = { 50, 70, 85, 100, 110, 127 };
+    VELOCITY_ARR
 
     uint8_t getVel(Zic_Seq_Step* step)
     {
@@ -355,6 +357,8 @@ public:
 
     void loadSnapshot() override
     {
+        VELOCITY_ARR
+
         for (uint8_t id = 0; id < PATTERN_COUNT; id++) {
             char filename[MAX_FILENAME];
             snprintf(filename, MAX_FILENAME, snapshotPath, id + 1, id + 1);
@@ -370,10 +374,6 @@ public:
                 if (id == 0) {
                     printf("%s: %c%c = %d\n", filename, lenStr[0], lenStr[1], pattern->stepCount);
                     char stepStr[11];
-                    // while (file.read(stepStr, 11)) {
-                    //     stepStr[10] = 0;
-                    //     printf("%s\n", stepStr);
-                    // }
                     for (uint8_t s = 0; s < pattern->stepCount; s++) {
                         for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
                             if (!file.read(stepStr, 11)) {
@@ -381,9 +381,11 @@ public:
                             }
                             stepStr[10] = 0;
                             Zic_Seq_Step * step = &pattern->steps[i][s];
-                            printf("%s cond %d %d\n", stepStr, stepStr[6] - '0', stepStr[8]);
-                            // step->condition = stepStr[6] - '0';
-                            // step->slide = stepStr[8] == -92;
+                            printf("%s cond %s (%d)\n", stepStr, stepStr + 3, getLevel(*(uint16_t*)(stepStr + 4)));
+                            step->condition = stepStr[6] - '0';
+                            step->slide = stepStr[8] == -92;
+                            step->velocity = velocity[getLevel(*(uint16_t*)(stepStr + 4))];
+                            step->note = stepStr[0] == '-' ? 0 : Zic::charNotetoInt(stepStr[0], stepStr[1], stepStr[2]);
                         }
                         file.seekFromCurrent(1);
                     }

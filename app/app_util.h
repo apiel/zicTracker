@@ -3,25 +3,46 @@
 
 #include <string.h>
 
-const char * alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const char* alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-const char * charLevel(uint8_t level) {
+const char* charLevel(uint8_t level)
+{
     switch (level) {
-        case 0:
-            return " ";
-        case 1:
-            return "⠠";
-        case 2:
-            return "⠤";
-        case 3:
-            return "⠴";
-        case 4:
-            return "⠶";
-        case 5:
-            return "⠾";
-        default:
-            return "⠿";
+    case 0:
+        return " ";
+    case 1:
+        return "⠠";
+    case 2:
+        return "⠤";
+    case 3:
+        return "⠴";
+    case 4:
+        return "⠶";
+    case 5:
+        return "⠾";
+    default:
+        return "⠿";
     }
+}
+
+uint16_t levelSpecialChar[6] = {
+    *(uint16_t*)("⠠" + 1),
+    *(uint16_t*)("⠤" + 1),
+    *(uint16_t*)("⠴" + 1),
+    *(uint16_t*)("⠶" + 1),
+    *(uint16_t*)("⠾" + 1),
+    *(uint16_t*)("⠿" + 1),
+};
+
+uint8_t getLevel(uint16_t val)
+{
+    uint8_t level = 0;
+    for (; level < 6; level++) {
+        if (val == levelSpecialChar[level]) {
+            break;
+        }
+    }
+    return level;
 }
 
 uint8_t alphanumToInt(char c)
