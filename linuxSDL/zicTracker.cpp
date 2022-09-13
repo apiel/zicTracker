@@ -24,14 +24,12 @@
 #include "../app/app_def.h"
 #include "../app/app_display.h"
 #include "../app/app_file.h"
-#include "../app/app_patterns.h"
 #include "zicKeyMap.h"
 
 // #include <zic_file_soundfont.h>
 
 UI_Display display;
-App_Patterns patterns;
-App app(&patterns, &display);
+App app(&display);
 
 typedef struct {
     bool keysChanged = false;

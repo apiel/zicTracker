@@ -20,12 +20,14 @@ public:
 class App_View_TrackSequencerPat : public App_View_TableField {
 protected:
     App_Tracks* tracks;
+    Zic_Seq_Pattern* patterns;
     Zic_Seq_PatternComponent newComponent;
     bool updating = false;
 
 public:
-    App_View_TrackSequencerPat(App_Tracks* _tracks)
+    App_View_TrackSequencerPat(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
         : tracks(_tracks)
+        , patterns(_patterns)
     {
     }
 
@@ -101,7 +103,7 @@ public:
         case 0: {
             int16_t id = newComponent.pattern == NULL ? -1 : newComponent.pattern->id;
             id = (id + direction) % PATTERN_COUNT;
-            newComponent.pattern = id < 0 ? NULL : &tracks->patterns->patterns[id];
+            newComponent.pattern = id < 0 ? NULL : &patterns[id];
             break;
         }
         case 1: {
@@ -118,6 +120,7 @@ public:
 
 class App_View_TrackSequencer : public App_View_Table {
 protected:
+    Zic_Seq_Pattern* patterns;
     App_View_TrackSequencerHeader header;
     App_View_TrackSequencerPat patField;
     App_Tracks* tracks;
@@ -140,9 +143,10 @@ protected:
     };
 
 public:
-    App_View_TrackSequencer(App_Tracks* _tracks)
+    App_View_TrackSequencer(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
         : App_View_Table(fields, VIEW_TRACK_SEQUENCER_ROW, VIEW_TRACK_SEQUENCER_COL)
-        , patField(_tracks)
+        , patterns(_patterns)
+        , patField(_tracks, _patterns)
         , tracks(_tracks)
     {
         initSelection();
@@ -190,7 +194,7 @@ public:
 
                 App_Audio_Track* track = tracks->tracks[i % TRACK_COUNT];
                 Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
-                component->pattern = pat[0] == '-' ? NULL : &tracks->patterns->patterns[strtol(pat, NULL, 16) - 1];
+                component->pattern = pat[0] == '-' ? NULL : &patterns[strtol(pat, NULL, 16) - 1];
                 component->setDetune((detune[0] == '-' ? -1 : 1) * alphanumToInt(detune[1]));
                 component->setCondition(condition);
             }

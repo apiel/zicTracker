@@ -2,7 +2,7 @@
 #define APP_AUDIO_TRACK_H_
 
 #include "./app_instrument.h"
-#include "./app_patterns.h"
+#include "./app_def.h"
 
 #include <wavetables/wavetable_Bank.h>
 #include <zic_effect_delay.h>
@@ -27,7 +27,7 @@ public:
     Zic_Effect_Delay* delays[DELAY_COUNT] = { &delay0, &delay1, &delay2, &delay3, &delay4 };
     bool delayEnabled = false;
 
-    App_Audio_Track(App_Patterns* patterns, uint8_t _id = 0)
+    App_Audio_Track(uint8_t _id = 0)
         : synth0(0)
         , synth1(1)
         , synth2(2)

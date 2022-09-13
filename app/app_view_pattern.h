@@ -1,7 +1,6 @@
 #ifndef APP_VIEW_PATTERN_H_
 #define APP_VIEW_PATTERN_H_
 
-#include "./app_patterns.h"
 #include "./app_renderer.h"
 #include "./app_util.h"
 #include "./app_view.h"
@@ -16,7 +15,7 @@
 
 class App_View_PatternHeader : public App_View_TableField {
 protected:
-    App_Patterns* patterns;
+    Zic_Seq_Pattern* patterns;
     uint8_t* currentPatternId;
 
     const char* headers[2] = { "PAT ", "LEN" };
@@ -27,7 +26,7 @@ protected:
     }
 
 public:
-    App_View_PatternHeader(App_Patterns* _patterns, uint8_t* _currentPatternId)
+    App_View_PatternHeader(Zic_Seq_Pattern* _patterns, uint8_t* _currentPatternId)
         : patterns(_patterns)
         , currentPatternId(_currentPatternId)
     {
@@ -59,7 +58,7 @@ public:
                 break;
 
             case 1:
-                sprintf(renderer->text + strlen(renderer->text), "%3d ", patterns->patterns[*currentPatternId].stepCount);
+                sprintf(renderer->text + strlen(renderer->text), "%3d ", patterns[*currentPatternId].stepCount);
                 break;
             case 2:
                 strcat(renderer->text, "RESET ");
@@ -87,7 +86,7 @@ public:
             *currentPatternId = (*currentPatternId + PATTERN_COUNT + direction) % PATTERN_COUNT;
         } else if (col == 1) {
             uint8_t steps[7] = { 1, 2, 4, 8, 16, 32, 64 };
-            uint8_t* stepCount = &patterns->patterns[*currentPatternId].stepCount;
+            uint8_t* stepCount = &patterns[*currentPatternId].stepCount;
             if (keys->Right) {
                 *stepCount = (*stepCount + 1) % MAX_STEPS_IN_PATTERN;
             } else if (keys->Left) {
@@ -128,7 +127,7 @@ public:
 
 class App_View_PatternStep : public App_View_TableField {
 protected:
-    App_Patterns* patterns;
+    Zic_Seq_Pattern* patterns;
     uint8_t* currentPatternId;
 
     VELOCITY_ARR
@@ -145,7 +144,7 @@ protected:
     }
 
 public:
-    App_View_PatternStep(App_Patterns* _patterns, uint8_t* _currentPatternId)
+    App_View_PatternStep(Zic_Seq_Pattern* _patterns, uint8_t* _currentPatternId)
         : patterns(_patterns)
         , currentPatternId(_currentPatternId)
     {
@@ -163,7 +162,7 @@ public:
             renderer->setCursor(col % 4 == 0 ? 3 : 1);
         }
         uint8_t stepPos = row - VIEW_PATTERN_ROW_HEADERS;
-        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[inst][stepPos];
+        Zic_Seq_Step* step = &patterns[*currentPatternId].steps[inst][stepPos];
         switch (col % 4) {
         case 0:
             if (step->note == 0) {
@@ -193,7 +192,7 @@ public:
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         uint8_t inst = col / 4;
-        Zic_Seq_Step* step = &patterns->patterns[*currentPatternId].steps[inst][row - VIEW_PATTERN_ROW_HEADERS];
+        Zic_Seq_Step* step = &patterns[*currentPatternId].steps[inst][row - VIEW_PATTERN_ROW_HEADERS];
         col %= 4;
         if (col == 3) {
             step->slide = !step->slide;
@@ -233,7 +232,7 @@ public:
 
 class App_View_Pattern : public App_View_Table {
 protected:
-    App_Patterns* patterns;
+    Zic_Seq_Pattern* patterns;
     uint8_t currentPatternId = 0;
 
     App_View_PatternHeader headerField;
@@ -315,7 +314,7 @@ protected:
     };
 
 public:
-    App_View_Pattern(App_Patterns* _patterns)
+    App_View_Pattern(Zic_Seq_Pattern* _patterns)
         : App_View_Table(fields, VIEW_PATTERN_ROW, VIEW_PATTERN_COL)
         , patterns(_patterns)
         , headerField(_patterns, &currentPatternId)
@@ -334,7 +333,7 @@ public:
     uint8_t update(UiKeys* keys, App_Renderer* renderer) override
     {
         uint8_t ret = App_View_Table::update(keys, renderer);
-        setLastRow(patterns->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
+        setLastRow(patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
         return ret;
     }
 
@@ -345,7 +344,7 @@ public:
         uint8_t id = currentPatternId;
         for (currentPatternId = 0; currentPatternId < PATTERN_COUNT; currentPatternId++) {
             renderer->startRow = 0;
-            setLastRow(patterns->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
+            setLastRow(patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
             for (uint8_t row = 0; row < lastRow; row += TABLE_VISIBLE_ROWS, renderer->startRow += TABLE_VISIBLE_ROWS) {
                 render(renderer);
                 saveFileContent(row == 0 ? "w" : "a", renderer->text, strlen(renderer->text),
@@ -364,14 +363,14 @@ public:
             snprintf(filename, MAX_FILENAME, snapshotPath, id + 1, id + 1);
             Zic_File file(filename, "r");
             if (file.isOpen()) {
-                Zic_Seq_Pattern* pattern = &patterns->patterns[id];
+                Zic_Seq_Pattern* pattern = &patterns[id];
+                pattern->id = id;
                 file.seekFromStart(13);
                 char lenStr[3];
                 file.read(lenStr, 2);
                 lenStr[2] = 0;
                 pattern->stepCount = atoi(lenStr);
                 file.seekFromCurrent(44);
-                // printf("%s: %c%c = %d\n", filename, lenStr[0], lenStr[1], pattern->stepCount);
                 char stepStr[11];
                 for (uint8_t s = 0; s < pattern->stepCount; s++) {
                     for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
@@ -380,7 +379,6 @@ public:
                         }
                         stepStr[10] = 0;
                         Zic_Seq_Step* step = &pattern->steps[i][s];
-                        // printf("%s cond %s (%d)\n", stepStr, stepStr + 3, getLevel(*(uint16_t*)(stepStr + 4)));
                         step->condition = stepStr[6] - '0';
                         step->slide = stepStr[8] == -92;
                         step->velocity = velocity[getLevel(*(uint16_t*)(stepStr + 4))];

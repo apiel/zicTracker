@@ -3,7 +3,6 @@
 
 #include "./app_audio_track.h"
 #include "./app_def.h"
-#include "./app_patterns.h"
 
 #include <stdlib.h>
 
@@ -13,7 +12,6 @@
 
 class App_Tracks {
 public:
-    App_Patterns* patterns;
     uint8_t trackId = TRACK_1;
     App_Audio_Track track0, track1, track2, track3;
     App_Audio_Track* tracks[TRACK_COUNT] = { &track0, &track1, &track2, &track3 };
@@ -21,12 +19,11 @@ public:
 
     Zic_Seq_Loop* looper = NULL;
 
-    App_Tracks(App_Patterns* _patterns)
-        : patterns(_patterns)
-        , track0(_patterns, TRACK_1)
-        , track1(_patterns, TRACK_2)
-        , track2(_patterns, TRACK_3)
-        , track3(_patterns, TRACK_4)
+    App_Tracks()
+        : track0(TRACK_1)
+        , track1(TRACK_2)
+        , track2(TRACK_3)
+        , track3(TRACK_4)
     {
         select(trackId);
 

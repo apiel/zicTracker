@@ -3,7 +3,6 @@
 
 #include "./app_def.h"
 #include "./app_display.h"
-#include "./app_patterns.h"
 #include "./app_project.h"
 #include "./app_renderer.h"
 #include "./app_tracks.h"
@@ -22,6 +21,8 @@ public:
     App_Tracks tracks;
     Zic_Seq_Tempo<> tempo;
     App_Project project;
+
+    Zic_Seq_Pattern patterns[PATTERN_COUNT];
 
     App_Display* display;
     UiKeys keys;
@@ -55,13 +56,12 @@ public:
         (Menu) { "Edit project name", "Name", 'N', &projectEditNameView, 'J', false }, // Select project
     };
 
-    App(App_Patterns* patterns, App_Display* _display)
-        : tracks(patterns)
-        , display(_display)
+    App(App_Display* _display)
+        : display(_display)
         , trackView(&tracks)
-        , trackSeqView(&tracks)
+        , trackSeqView(&tracks, &patterns[0])
         , instrumentView(&tracks)
-        , patternView(patterns)
+        , patternView(&patterns[0])
         , trackDelayView(&tracks)
         , projectView(&tempo, &tracks, &project, &menuView)
         , projectEditNameView(&project, &menuView)
