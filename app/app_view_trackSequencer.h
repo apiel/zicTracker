@@ -187,11 +187,6 @@ public:
                 char condition[2];
                 file.read(condition, 2);
 
-                // printf("trk%d(%d) pat: %s (%d), detune: %s, condition: %s\n",
-                //     (i % TRACK_COUNT) + 1, i / TRACK_COUNT,
-                //     pat, pat[0] == '-' ? -1 : (int)strtol(pat, NULL, 16) - 1,
-                //     detune, condition);
-
                 App_Audio_Track* track = tracks->tracks[i % TRACK_COUNT];
                 Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
                 component->pattern = pat[0] == '-' ? NULL : &patterns[strtol(pat, NULL, 16) - 1];
