@@ -353,6 +353,8 @@ public:
         App_View_Table::initDisplay(renderer);
     }
 
+    const char* snapshotPath = "projects/current/instruments/track%d-inst_%c.zic";
+
     void snapshot(App_Renderer* renderer) override
     {
         uint8_t inst = instrument;
@@ -360,11 +362,25 @@ public:
             tracks->select(t);
             for (instrument = 0; instrument < INSTRUMENT_COUNT; instrument++) {
                 render(renderer);
-                saveFileContent(renderer->text, strlen(renderer->text),
-                    "projects/current/instruments/track%d-inst_%c.zic", t + 1, 'A' + instrument);
+                saveFileContent(renderer->text, strlen(renderer->text), snapshotPath, t + 1, 'A' + instrument);
             }
         }
         instrument = inst;
+    }
+
+    void loadSnapshot() override
+    {
+        for (uint8_t t = 0; t < TRACK_COUNT; t++) {
+            tracks->select(t);
+            for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
+                char filename[MAX_FILENAME];
+                snprintf(filename, MAX_FILENAME, snapshotPath, t + 1, 'A' + i);
+                Zic_File file(filename, "r");
+                if (file.isOpen()) {
+                    file.close();
+                }
+            }
+        }
     }
 };
 

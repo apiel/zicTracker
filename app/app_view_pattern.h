@@ -386,8 +386,8 @@ public:
                     }
                     file.seekFromCurrent(1);
                 }
+                file.close();
             }
-            file.close();
         }
     }
 };
