@@ -29,6 +29,8 @@
     make a copy of last state and keep auto "saving". Every change are saved in temp state, if click restore, restore to saved state.
     If click save, create new state that can be restored...
 
+- conditional mute for x bar
+
 - use craft synth as midi controller
 
 - midi tracks

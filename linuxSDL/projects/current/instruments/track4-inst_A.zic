@@ -1,7 +1,7 @@
 Track  4 
 Instr. A 
-Type   Wavetable   
-Wav    BANK_A.WAV           
+Type   Sample      
+Wav    a_kick1.wav          
 Level  100%  >ON  
 Env    10    500  
 Filter 0.200 0.000

@@ -390,13 +390,30 @@ public:
 
                     file.seekFromCurrent(9);
                     file.read(idStr, 1);
-                    instrument->isWavetable = idStr[0] == 'W';
 
                     file.seekFromCurrent(19);
                     char path[22];
                     file.read(path, 21);
                     path[21] = 0;
-                    printf("filepath %s\n", path);
+                    strtok(path, " "); // get only the part before " "
+
+                    instrument->set(path, idStr[0] == 'W')->open();
+                    // printf("filepath %s.\n", path);
+
+                    char str5[6];
+                    file.seekFromCurrent(8);
+                    file.read(str5, 5);
+                    str5[3] = 0;
+                    instrument->wave.setAmplitude(atoi(str5));
+
+                    file.read(str5, 5);
+                    instrument->wave.setMute(str5[1] != '>');
+
+                    file.seekFromCurrent(9);
+                    file.read(str5, 5);
+                    str5[5] = 0;
+                    printf("val:%s (%d)\n", str5, atoi(str5));
+
                     file.close();
                 }
             }
