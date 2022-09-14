@@ -2,25 +2,15 @@
 
 - doc!!
 
-- info bull 
-    only work with SDL display (so not in text mode)
-
-- save project!!!
-    - name
-    - save & restore
-    make a copy of last state and keep auto "saving". Every change are saved in temp state, if click restore, restore to saved state.
-    If click save, create new state that can be restored...
-
-
-- polyphony
-    - should allow to play 3 notes at once
-    - in sample mode, it should allow to play 3 different samples at once?
-    - could we even think so mixup sample and wavetable?
-    - maybe the list of instrument should not be specific per track and then we could assign the instrument to the notes...
-
 - vital in headless mode!! `./vital --headless` 
 
+- fix audio mixer
 - fix wavetable from vital
+
+- poly instrument, since pattern support multiple instrument playing at once
+    we should do some like:
+    - if instrument A set to wavetable (or sample once sample can be pitched)
+    - and B set to poly, then instrument B replicate instrument A
 
 - sort files for .wav
 
@@ -32,6 +22,12 @@
     - 5? LFO
     - we could create wavetable to apply either on 1 or n steps
     - maybe there would be a way to make no difference between envelop and LFO, just need to find a good way to apply a modulation for a specific phase
+    - SHOULD modulation be assignable or should it be fixed per synth? Maybe easier to have it fix per synth...
+
+- save project!!!
+    - save & restore
+    make a copy of last state and keep auto "saving". Every change are saved in temp state, if click restore, restore to saved state.
+    If click save, create new state that can be restored...
 
 - use craft synth as midi controller
 
@@ -54,6 +50,9 @@
     - we could edit sample (set start/end) of selected sample
 
 - audio input mixer
+
+- doc within app
+    -> base on markdown? or simplified one using a converter...
 
 - Use soundfont as alternative synth engine to wav table/sample
     - sf2 is work in progress in zic_file_soundfont.h. However still have a lot to do, see comment in top of the file
@@ -105,3 +104,6 @@
 - synthv1 with no-gui option??
 
 - output sound over usb
+
+- info bull 
+    only work with SDL display (so not in text mode)
