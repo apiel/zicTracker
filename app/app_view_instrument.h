@@ -107,15 +107,15 @@ public:
 class App_View_InstrumentWav : public App_View_InstrumentRow {
 public:
     App_View_InstrumentWav(App_Tracks* _tracks, uint8_t* _instrument)
-        : App_View_InstrumentRow(_tracks, _instrument, "Wav    ", 12)
+        : App_View_InstrumentRow(_tracks, _instrument, "Wav    ", 21)
     {
     }
 
     void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        char filename[12];
-        strncpy(filename, getSynth()->filename, 12);
-        sprintf(renderer->text + strlen(renderer->text), "%-12s", filename);
+        char filename[21];
+        strncpy(filename, getSynth()->filename, 21);
+        sprintf(renderer->text + strlen(renderer->text), "%-21s", filename);
     }
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
@@ -377,6 +377,26 @@ public:
                 snprintf(filename, MAX_FILENAME, snapshotPath, t + 1, 'A' + i);
                 Zic_File file(filename, "r");
                 if (file.isOpen()) {
+                    file.seekFromStart(7);
+                    char idStr[1];
+                    file.read(idStr, 1);
+                    uint8_t trackId = idStr[0] - '1';
+                    file.seekFromCurrent(9);
+                    file.read(idStr, 1);
+                    uint8_t instId = idStr[0] - 'A';
+                    printf("%s track id %d instid %d\n", filename, trackId, instId);
+
+                    App_Instrument* instrument = tracks->tracks[trackId]->synths[instId];
+
+                    file.seekFromCurrent(9);
+                    file.read(idStr, 1);
+                    instrument->isWavetable = idStr[0] == 'W';
+
+                    file.seekFromCurrent(19);
+                    char path[22];
+                    file.read(path, 21);
+                    path[21] = 0;
+                    printf("filepath %s\n", path);
                     file.close();
                 }
             }

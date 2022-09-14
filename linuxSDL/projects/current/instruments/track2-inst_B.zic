@@ -1,7 +1,7 @@
 Track  2 
 Instr. B 
 Type   Sample      
-Wav    kick.wav    
+Wav    kick.wav             
 Level  100%  >ON  
 Env    10    500  
 Filter 0.200 0.000

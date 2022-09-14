@@ -70,6 +70,10 @@
 
 - Use audio block processing instead of indiviual sample processing?? maybe :p
 
+- should snapshot system not be base on rendered view but on custom format so changing the UI doesnt impact the snapshot?
+
+- should rename all those synth to instrument
+
 - fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
     At least be able to map midi controller!
 
