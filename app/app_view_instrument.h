@@ -384,7 +384,7 @@ public:
                     file.seekFromCurrent(9);
                     file.read(idStr, 1);
                     uint8_t instId = idStr[0] - 'A';
-                    printf("%s track id %d instid %d\n", filename, trackId, instId);
+                    // printf("%s track id %d instid %d\n", filename, trackId, instId);
 
                     App_Instrument* instrument = tracks->tracks[trackId]->synths[instId];
 
@@ -412,7 +412,28 @@ public:
                     file.seekFromCurrent(9);
                     file.read(str5, 5);
                     str5[5] = 0;
-                    printf("val:%s (%d)\n", str5, atoi(str5));
+                    instrument->asr.setAttack(atoi(str5));
+
+                    file.seekFromCurrent(1);
+                    file.read(str5, 5);
+                    str5[5] = 0;
+                    instrument->asr.setRelease(atoi(str5));
+
+                    file.seekFromCurrent(8);
+                    file.read(str5, 5);
+                    str5[5] = 0;
+                    instrument->filter.setCutoff(strtof(str5, NULL));
+
+                    file.seekFromCurrent(1);
+                    file.read(str5, 5);
+                    str5[5] = 0;
+                    instrument->filter.setResonance(strtof(str5, NULL));
+
+                    file.seekFromCurrent(8);
+                    file.read(str5, 5);
+                    str5[5] = 0;
+                    instrument->wave.morph(strtof(str5, NULL) - 1.0f);
+                    // printf("val:%s (%.5f)\n", str5, strtof(str5, NULL));
 
                     file.close();
                 }

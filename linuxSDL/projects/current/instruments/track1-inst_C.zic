@@ -2,7 +2,7 @@ Track  1
 Instr. C 
 Type   Wavetable   
 Wav    BANK_A.WAV           
-Level  100%  Muted
+Level  100%  >ON  
 Env    10    500  
 Filter 0.200 0.000
-Wavtbl 1.0  of 64
+Wavtbl 3.0  of 64
