@@ -40,7 +40,7 @@ TBD.
 There is 255 patterns per project from 01 to FF (using hexadecimal number to represent the ID of the pattern). A pattern can be up of 64 steps.
 There is 4 assignable notes per step. Those notes can be assign to one instrument for polyphony or to different instruments.
 
-E_3⠾1⤸ 
+`E_3⠾1⤸`
 
 The first 3 char `E_3` is the note. The 4th char is the velocity `⠾`. The 5th char is the conditional to play the pattern. The 6th char `⤸` is the slide to the next step.
 
