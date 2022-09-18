@@ -2,6 +2,8 @@
 
 - doc!!
 
+- /usr/lib/lv2
+
 - vital in headless mode!! `./vital --headless` 
 
 - fix audio mixer
