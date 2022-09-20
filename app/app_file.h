@@ -19,6 +19,7 @@ struct dirent* myReaddir(DIR* x)
     return directory;
 }
 
+// TODO next file in order using strcmp
 void nextFile(char* filename, const char* folder, const char* current, int8_t direction = 0)
 {
     struct dirent* directory;

@@ -14,6 +14,8 @@
 #include "./app_view_track.h"
 #include "./app_view_trackDelay.h"
 #include "./app_view_trackSequencer.h"
+#include "./app_lv2.h"
+
 #include <zic_seq_tempo.h>
 
 class App {
@@ -21,6 +23,7 @@ public:
     App_Tracks tracks;
     Zic_Seq_Tempo<> tempo;
     App_Project project;
+    App_LV2 lv2;
 
     Zic_Seq_Pattern patterns[PATTERN_COUNT];
 
