@@ -19,12 +19,13 @@ struct dirent* myReaddir(DIR* x)
     return directory;
 }
 
-void nextFile(char* filename, const char* folder, const char* current, int8_t direction = 0)
+// FIXME file with number doesnt show up
+void nextFile(char* filename, const char* folder, const char* current, int8_t direction)
 {
     DIR* x = opendir(folder);
     if (x != NULL) {
         struct dirent* directory;
-        if (direction == 0) {
+        if (direction == 0) { // TODO replace this by find first.
             if (((directory = myReaddir(x)) != NULL)) {
                 strncpy(filename, directory->d_name, 256);
                 return;
@@ -44,6 +45,26 @@ void nextFile(char* filename, const char* folder, const char* current, int8_t di
         }
         closedir(x);
     } else {
+        strncpy(filename, "Empty folder", 256);
+    }
+}
+
+// TODO wip to fix not finish
+void firstFile(char* filename, const char* folder)
+{
+    bool initialized = false;
+    DIR* x = opendir(folder);
+    if (x != NULL) {
+        struct dirent* directory;
+        while ((directory = myReaddir(x)) != NULL) {
+            if (!initialized || strcmp(directory->d_name, filename) == -1) {
+                strncpy(filename, directory->d_name, 256);
+                initialized = true;
+            }
+        }
+        closedir(x);
+    }
+    if (!initialized) {
         strncpy(filename, "Empty folder", 256);
     }
 }

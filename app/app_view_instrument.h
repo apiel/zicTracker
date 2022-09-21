@@ -99,7 +99,7 @@ public:
         } else if (keys->Left || keys->Down) {
             getSynth()->isWavetable = false;
         }
-        getSynth()->setNext();
+        getSynth()->setFirst();
         return VIEW_CHANGED;
     }
 };

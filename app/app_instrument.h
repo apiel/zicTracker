@@ -44,6 +44,13 @@ public:
         return this;
     }
 
+    App_Instrument* setFirst()
+    {
+        firstFile(filename, getFolder());
+        open();
+        return this;
+    }
+
     App_Instrument* open()
     {
         char filepath[270];
