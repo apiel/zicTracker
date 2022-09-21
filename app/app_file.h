@@ -19,69 +19,34 @@ struct dirent* myReaddir(DIR* x)
     return directory;
 }
 
-// TODO next file in order using strcmp
 void nextFile(char* filename, const char* folder, const char* current, int8_t direction = 0)
 {
-    struct dirent* directory;
     DIR* x = opendir(folder);
-
-    char* previous = NULL;
-
     if (x != NULL) {
-        while ((directory = myReaddir(x)) != NULL) {
-            if (direction == 0) {
+        struct dirent* directory;
+        if (direction == 0) {
+            if (((directory = myReaddir(x)) != NULL)) {
                 strncpy(filename, directory->d_name, 256);
                 return;
             }
-            if (strcmp(current, directory->d_name) == 0) {
-                strncpy(filename, directory->d_name, 256);
-                if (direction < 0) {
-                    if (previous != NULL) {
-                        strncpy(filename, previous, 256);
-                    }
-                    return;
-                }
-                if ((directory = myReaddir(x)) != NULL) {
+        } else {
+            char cur[256];
+            strncpy(cur, current, 256);
+            while ((directory = myReaddir(x)) != NULL) {
+                if (strcmp(directory->d_name, cur) == direction
+                    && (strcmp(filename, cur) == 0 || strcmp(directory->d_name, filename) == direction * -1)) {
                     strncpy(filename, directory->d_name, 256);
-                    return;
                 }
-                return;
             }
-            previous = directory->d_name;
+            if (!filename) {
+                strncpy(filename, cur, 256);
+            }
         }
         closedir(x);
+    } else {
+        strncpy(filename, "Empty folder", 256);
     }
-
-    strncpy(filename, "Empty folder", 256);
 }
-
-// void nextFile(char* filename, const char* folder, const char* current, int8_t direction = 0)
-// {
-//     struct dirent* directory;
-//     DIR* x = opendir(folder);
-
-//     char cur[256];
-//     strncpy(cur, current, 256);
-
-//     if (x != NULL) {
-//         if (direction == 0) {
-//             if (((directory = myReaddir(x)) != NULL)) {
-//                 strncpy(filename, directory->d_name, 256);
-//                 return;
-//             }
-//         } else {
-//             while ((directory = myReaddir(x)) != NULL) {
-//                 if (strcmp(cur, directory->d_name) == direction
-//                     && strcmp(filename, directory->d_name) != direction) {
-//                     strncpy(filename, directory->d_name, 256);
-//                 }
-//             }
-//         }
-
-//         closedir(x);
-//     }
-//     strncpy(filename, "Empty folder", 256);
-// }
 
 enum {
     FILE_NONE,

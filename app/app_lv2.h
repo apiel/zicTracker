@@ -26,8 +26,8 @@ public:
         }
 
         // LilvNode* plugin_uri = lilv_new_uri(world, "http://zynaddsubfx.sourceforge.net");
-        // LilvNode* plugin_uri = lilv_new_uri(world, "http://tytel.org/helm");
-        LilvNode* plugin_uri = lilv_new_uri(world, "http://vital.audio");
+        LilvNode* plugin_uri = lilv_new_uri(world, "http://tytel.org/helm");
+        // LilvNode* plugin_uri = lilv_new_uri(world, "http://vital.audio");
         const LilvPlugin* plugin = lilv_plugins_get_by_uri(plugins, plugin_uri);
         // LilvInstance* instance = lilv_plugin_instantiate(plugin, SAMPLE_RATE, NULL);
 

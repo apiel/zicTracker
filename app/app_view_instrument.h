@@ -120,6 +120,7 @@ public:
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
+        // TODO use up / down to move from block of letter A to B to C ...
         if (keys->Right || keys->Up) {
             getSynth()->setNext(+1);
         } else if (keys->Left || keys->Down) {
