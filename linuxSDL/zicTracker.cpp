@@ -250,9 +250,9 @@ int main(int argc, char* args[])
 
     // Zic_File_Soundfont soundfont("soundfonts/florestan-subset.sf2");
 
-    char fileFound[256];
-    nextFile(fileFound, "samples", "kick.wav", -1);
-    SDL_Log("Next file: %s\n", fileFound);
+    // char fileFound[256];
+    // nextFile(fileFound, "samples", "kick.wav", -1);
+    // SDL_Log("Next file: %s\n", fileFound);
 
     SDL_Window* window = SDL_CreateWindow(
         "Zic",

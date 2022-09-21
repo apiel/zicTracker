@@ -55,6 +55,34 @@ void nextFile(char* filename, const char* folder, const char* current, int8_t di
     strncpy(filename, "Empty folder", 256);
 }
 
+// void nextFile(char* filename, const char* folder, const char* current, int8_t direction = 0)
+// {
+//     struct dirent* directory;
+//     DIR* x = opendir(folder);
+
+//     char cur[256];
+//     strncpy(cur, current, 256);
+
+//     if (x != NULL) {
+//         if (direction == 0) {
+//             if (((directory = myReaddir(x)) != NULL)) {
+//                 strncpy(filename, directory->d_name, 256);
+//                 return;
+//             }
+//         } else {
+//             while ((directory = myReaddir(x)) != NULL) {
+//                 if (strcmp(cur, directory->d_name) == direction
+//                     && strcmp(filename, directory->d_name) != direction) {
+//                     strncpy(filename, directory->d_name, 256);
+//                 }
+//             }
+//         }
+
+//         closedir(x);
+//     }
+//     strncpy(filename, "Empty folder", 256);
+// }
+
 enum {
     FILE_NONE,
     FILE_SUCCESS,
