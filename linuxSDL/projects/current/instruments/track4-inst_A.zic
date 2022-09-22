@@ -1,8 +1,8 @@
 Track  4 
 Instr. A 
-Type   Wavetable   
-Wav    AKVF_NES.WAV         
+Type   Sample      
+Wav    _additive.wav        
 Level  100%  >ON  
 Env    10    500  
 Filter 0.200 0.010
-Wavtbl 1.0  of 64
+Wavtbl 1.0  of 256
