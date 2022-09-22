@@ -63,7 +63,7 @@ void firstFile(char* filename, const char* folder)
     if (x != NULL) {
         struct dirent* directory;
         while ((directory = myReaddir(x)) != NULL) {
-            printf("%s <> %s = %d\n", directory->d_name, filename, myStrcmp(directory->d_name, filename));
+            // printf("%s <> %s = %d\n", directory->d_name, filename, myStrcmp(directory->d_name, filename));
             if (!initialized || myStrcmp(directory->d_name, filename) == -1) {
                 strncpy(filename, directory->d_name, 256);
                 initialized = true;
