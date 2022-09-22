@@ -19,7 +19,8 @@ struct dirent* myReaddir(DIR* x)
     return directory;
 }
 
-int8_t myStrcmp(const char *__s1, const char *__s2) {
+int8_t myStrcmp(const char* __s1, const char* __s2)
+{
     int res = strcmp(__s1, __s2);
     if (res == 0) {
         return 0;
@@ -32,22 +33,14 @@ void nextFile(char* filename, const char* folder, const char* current, int8_t di
     DIR* x = opendir(folder);
     if (x != NULL) {
         struct dirent* directory;
-        if (direction == 0) { // TODO replace this by find first.
-            if (((directory = myReaddir(x)) != NULL)) {
+
+        char cur[256];
+        strncpy(cur, current, 256);
+        strncpy(filename, cur, 256);
+        while ((directory = myReaddir(x)) != NULL) {
+            if (myStrcmp(directory->d_name, cur) == direction
+                && (strcmp(filename, cur) == 0 || myStrcmp(directory->d_name, filename) == direction * -1)) {
                 strncpy(filename, directory->d_name, 256);
-                return;
-            }
-        } else {
-            char cur[256];
-            strncpy(cur, current, 256);
-            while ((directory = myReaddir(x)) != NULL) {
-                if (myStrcmp(directory->d_name, cur) == direction
-                    && (strcmp(filename, cur) == 0 || myStrcmp(directory->d_name, filename) == direction * -1)) {
-                    strncpy(filename, directory->d_name, 256);
-                }
-            }
-            if (!filename) {
-                strncpy(filename, cur, 256);
             }
         }
         closedir(x);
