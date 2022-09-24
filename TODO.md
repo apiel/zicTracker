@@ -3,11 +3,17 @@
 - doc!!
 
 - /usr/lib/lv2
+    - https://github.com/zynthian/zynthian-sys/issues/200
+    
 
 - vital in headless mode!! `./vital --headless` 
 
 - fix audio mixer
 - fix wavetable from vital
+
+- should pattern include also the instrument settings
+    - or should there be a way to save different instrument combination for a given pattern
+    then the sequencer is using this combination instead of the pattern
 
 - poly instrument, since pattern support multiple instrument playing at once
     we should do some like:
@@ -111,3 +117,10 @@
 
 - info bull 
     only work with SDL display (so not in text mode)
+
+
+## ESP32 or rpi zero
+
+- make a random synth generator base on the type of music (1 or 2 voice) 
+    - with 4 pot to change the sound setting
+    - few button to switch of sound preset
