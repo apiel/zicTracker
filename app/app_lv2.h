@@ -3,6 +3,12 @@
 
 #include <lilv/lilv.h>
 
+#include <lv2/core/lv2_util.h>
+#include <lv2/lv2plug.in/ns/ext/atom/atom.h>
+#include <lv2/lv2plug.in/ns/ext/atom/util.h>
+#include <lv2/lv2plug.in/ns/ext/midi/midi.h>
+#include <lv2/lv2plug.in/ns/lv2core/lv2.h>
+
 #include "./app_def.h"
 
 class App_LV2 {
@@ -19,6 +25,27 @@ protected:
 
     float control_in_1 = 0.0f;
     float control_in_2 = 0.0f;
+
+    LV2_Atom_Sequence* output_midi;
+
+    // LV2_URID_Map* map = NULL;
+    // struct Urids {
+    //     LV2_URID midi_MidiEvent;
+    // } urids;
+    // const LV2_Feature* const* features;
+    //     void mapSTuff() {
+    //     printf("Query features");
+    //     const char* missing = lv2_features_query(
+    //         features,
+    //         LV2_URID__map, &map, true,
+    //         NULL);
+
+    //     if (missing)
+    //         printf("!! Feature map not provided by the host. Can't instantiate mySimplePolySynth\n");
+    //     else
+    //         printf("Feature map provided by the host. Can instantiate mySimplePolySynth\n");
+    //     urids.midi_MidiEvent = map->map(map->handle, LV2_MIDI__MidiEvent);
+    // }
 
 public:
     App_LV2()
@@ -81,8 +108,9 @@ public:
                 audio++;
             }
         }
-        // lilv_instance_connect_port(instance, 2, &audio_out);
-        // lilv_instance_connect_port(instance, 10, &control_in_1);
+
+        lilv_instance_connect_port(instance, 0, &output_midi);
+        // lilv_instance_connect_port(instance, 3, &audio_out);
 
         lilv_instance_activate(instance);
     }
@@ -99,7 +127,25 @@ public:
         lilv_world_free(world);
     }
 
-    int16_t sample() {
+    void note(bool on = true)
+    {
+        LV2_Atom_Event event;
+        event.time.frames = 0; // frame;
+        event.body.type = 0; // urids.midi_MidiEvent;
+        event.body.size = 3;
+
+        uint8_t* msg = (uint8_t*)LV2_ATOM_BODY(&event.body);
+
+        msg[0] = on ? LV2_MIDI_MSG_NOTE_ON : LV2_MIDI_MSG_NOTE_OFF;
+        msg[1] = 60; // plugin->last_midi_note;
+        msg[2] = 128;
+
+        uint32_t capacity = output_midi->atom.size;
+        lv2_atom_sequence_append_event(output_midi, capacity, &event);
+    }
+
+    int16_t sample()
+    {
         lilv_instance_run(instance, 1);
         return (int16_t)(audio_out * 10000.0f);
     }

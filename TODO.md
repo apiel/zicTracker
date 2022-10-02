@@ -11,6 +11,8 @@
 - fix audio mixer
 - fix wavetable from vital
 
+- TODO rename slide to tie!
+
 - should pattern include also the instrument settings
     - or should there be a way to save different instrument combination for a given pattern
     then the sequencer is using this combination instead of the pattern
@@ -40,6 +42,8 @@
 - conditional mute for x bar
 
 - use craft synth as midi controller
+
+- step probability
 
 - midi tracks
 
