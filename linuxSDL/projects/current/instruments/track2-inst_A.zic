@@ -5,4 +5,4 @@ Wav    bass03.wav
 Level  100%  >ON  
 Env    0     140  
 Filter 0.750 0.600
-Wavtbl 1.0  of 256
+Wavtbl 1.0  of 64

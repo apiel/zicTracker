@@ -1,10 +1,10 @@
 #ifndef APP_VIEW_TRACK_SEQUENCER_H_
 #define APP_VIEW_TRACK_SEQUENCER_H_
 
-#include "./app_renderer.h"
+#include <app_core_renderer.h>
 #include "./app_tracks.h"
-#include "./app_util.h"
-#include "./app_view_table.h"
+#include <app_core_util.h>
+#include <app_core_view_table.h>
 
 #define VIEW_TRACK_SEQUENCER_ROW (1 + PATTERN_COMPONENT_COUNT)
 #define VIEW_TRACK_SEQUENCER_COL TRACK_COUNT * 3

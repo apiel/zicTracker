@@ -1,9 +1,9 @@
 #ifndef APP_VIEW_TRACK_DELAY_H_
 #define APP_VIEW_TRACK_DELAY_H_
 
-#include "./app_renderer.h"
+#include <app_core_renderer.h>
 #include "./app_tracks.h"
-#include "./app_view_table.h"
+#include <app_core_view_table.h>
 
 #define VIEW_TRACK_DELAY_ROW 8
 #define VIEW_TRACK_DELAY_COL 4

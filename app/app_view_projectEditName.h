@@ -1,10 +1,10 @@
 #ifndef APP_VIEW_PROJECT_EDIT_NAME_H_
 #define APP_VIEW_PROJECT_EDIT_NAME_H_
 
-#include "./app_renderer.h"
+#include <app_core_renderer.h>
 #include "./app_project.h"
 #include "./app_view_menu.h"
-#include "./app_view_table.h"
+#include <app_core_view_table.h>
 
 #define VIEW_PROJECT_EDIT_NAME_ROW 10
 #define VIEW_PROJECT_EDIT_NAME_COL 10

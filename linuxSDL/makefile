@@ -3,6 +3,7 @@
 
 # zic lib folder
 ZIC_LIB=../../zic
+ZIC_APP_CORE_LIB=../../zicAppCore
 
 # default
 SDL_CONFIG=sdl2-config
@@ -52,7 +53,7 @@ rg351Log:
 	sshpass -p "ark" ssh ark@$(RG351_IP) tail -f /roms/ports/zic/zic.log
 
 build:
-	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) `$(SDL_CONFIG) --cflags --libs` $(LV2)  -DZIC_TARGET=$(ZIC_TARGET) $(ZIC_SDL_MIXER)
+	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) -I$(ZIC_APP_CORE_LIB) `$(SDL_CONFIG) --cflags --libs` $(LV2)  -DZIC_TARGET=$(ZIC_TARGET) $(ZIC_SDL_MIXER)
 
 # -fopenmp for soundTouch "warning: ignoring #pragma omp parallel"
 # -Wno-narrowing for font.h:62:56: warning: narrowing conversion of ‘(8 * ((int)size))’ from ‘int’ to ‘Uint16’ {aka ‘short unsigned int’} inside { } [-Wnarrowing]

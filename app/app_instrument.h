@@ -4,7 +4,7 @@
 #include <zic_seq_pattern.h>
 #include <zic_synth_file.h>
 
-#include "./app_file.h"
+#include <app_core_file.h>
 
 class App_Instrument : public Zic_Synth_File {
 protected:

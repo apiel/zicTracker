@@ -5,4 +5,4 @@ Wav    psykick6.wav
 Level  80 %  >ON  
 Env    10    500  
 Filter 0.990 0.000
-Wavtbl 1.0  of 256
+Wavtbl 1.0  of 64

@@ -9,7 +9,7 @@
 #define FONT_SIZE 2
 #define LINE_SPACING 8
 
-#include "../app/app_display.h"
+#include <app_core_display.h>
 
 // rg351
 #define SCREEN_W 480

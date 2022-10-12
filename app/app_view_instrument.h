@@ -1,9 +1,9 @@
 #ifndef APP_VIEW_INSTRUMENT_H_
 #define APP_VIEW_INSTRUMENT_H_
 
-#include "./app_renderer.h"
+#include <app_core_renderer.h>
 #include "./app_tracks.h"
-#include "./app_view_table.h"
+#include <app_core_view_table.h>
 
 #define VIEW_INSTR_ROW 8
 #define VIEW_INSTR_COL 3

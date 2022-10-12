@@ -1,10 +1,10 @@
 #ifndef APP_VIEW_PATTERN_H_
 #define APP_VIEW_PATTERN_H_
 
-#include "./app_renderer.h"
-#include "./app_util.h"
-#include "./app_view.h"
-#include "./app_view_table.h"
+#include <app_core_renderer.h>
+#include <app_core_util.h>
+#include <app_core_view.h>
+#include <app_core_view_table.h>
 
 #define VIEW_PATTERN_ROW_HEADERS 4
 #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + MAX_STEPS_IN_PATTERN)

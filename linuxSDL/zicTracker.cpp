@@ -22,8 +22,8 @@
 
 #include "../app/app.h"
 #include "../app/app_def.h"
-#include "../app/app_display.h"
-#include "../app/app_file.h"
+#include <app_core_display.h>
+#include <app_core_file.h>
 #include "zicKeyMap.h"
 
 // #include <zic_file_soundfont.h>

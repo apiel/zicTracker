@@ -2,9 +2,9 @@
 #define APP_H_
 
 #include "./app_def.h"
-#include "./app_display.h"
+#include <app_core_display.h>
 #include "./app_project.h"
-#include "./app_renderer.h"
+#include <app_core_renderer.h>
 #include "./app_tracks.h"
 #include "./app_view_instrument.h"
 #include "./app_view_menu.h"

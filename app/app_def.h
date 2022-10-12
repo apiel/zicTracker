@@ -3,12 +3,9 @@
 
 #include <stdint.h>
 
-#define PATTERN_COUNT 255 // uint8 -> 2 hex
+#include <app_core_def.h>
 
-enum {
-    VIEW_NONE,
-    VIEW_CHANGED,
-};
+#define PATTERN_COUNT 255 // uint8 -> 2 hex
 
 enum {
     TRACK_1,
@@ -38,24 +35,5 @@ enum {
     DELAY_5,
     DELAY_COUNT
 };
-
-enum {
-    UI_KEY_UP,
-    UI_KEY_DOWN,
-    UI_KEY_LEFT,
-    UI_KEY_RIGHT,
-    UI_KEY_EDIT,
-    UI_KEY_MENU,
-    UI_KEY_COUNT
-};
-
-typedef struct {
-    bool Up = false;
-    bool Down = false;
-    bool Right = false;
-    bool Left = false;
-    bool Edit = false;
-    bool Menu = false;
-} UiKeys;
 
 #endif

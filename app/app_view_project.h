@@ -4,10 +4,10 @@
 #include <zic_seq_tempo.h>
 
 #include "./app_project.h"
-#include "./app_renderer.h"
+#include <app_core_renderer.h>
 #include "./app_view_menu.h"
-#include "./app_view_table.h"
-#include "./app_util.h"
+#include <app_core_view_table.h>
+#include <app_core_util.h>
 
 #define VIEW_PROJECT_ROW 3
 #define VIEW_PROJECT_COL 3

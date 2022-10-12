@@ -1,8 +1,8 @@
 #ifndef APP_VIEW_MENU_H_
 #define APP_VIEW_MENU_H_
 
-#include "./app_renderer.h"
-#include "./app_view.h"
+#include <app_core_renderer.h>
+#include <app_core_view.h>
 
 typedef struct {
     const char* name;
