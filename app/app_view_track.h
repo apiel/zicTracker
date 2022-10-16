@@ -133,7 +133,7 @@ public:
 
     void initDisplay(App_Renderer* renderer)
     {
-        renderer->useColoredHeader();
+        renderer->useColoredRow();
         renderer->useColoredLabel();
         App_View_Table::initDisplay(renderer);
     }
