@@ -350,7 +350,7 @@ public:
 
     void initDisplay(App_Renderer* renderer)
     {
-        renderer->useColoredLabel();
+        renderer->useColor(0, 255, 0, 6);
         App_View_Table::initDisplay(renderer);
     }
 

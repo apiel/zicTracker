@@ -1,8 +1,8 @@
 #ifndef APP_VIEW_TRACK_H_
 #define APP_VIEW_TRACK_H_
 
-#include <app_core_renderer.h>
 #include "./app_tracks.h"
+#include <app_core_renderer.h>
 #include <app_core_view_table.h>
 
 #include <zic_seq_pattern.h>
@@ -134,7 +134,7 @@ public:
     void initDisplay(App_Renderer* renderer)
     {
         renderer->useColoredRow();
-        renderer->useColoredLabel();
+        renderer->useColor(0, 255, 0, 6);
         App_View_Table::initDisplay(renderer);
     }
 

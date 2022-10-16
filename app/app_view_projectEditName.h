@@ -1,9 +1,9 @@
 #ifndef APP_VIEW_PROJECT_EDIT_NAME_H_
 #define APP_VIEW_PROJECT_EDIT_NAME_H_
 
-#include <app_core_renderer.h>
 #include "./app_project.h"
 #include "./app_view_menu.h"
+#include <app_core_renderer.h>
 #include <app_core_view_table.h>
 
 #define VIEW_PROJECT_EDIT_NAME_ROW 10
@@ -151,7 +151,7 @@ public:
 
     void initDisplay(App_Renderer* renderer)
     {
-        renderer->useColoredLabel();
+        renderer->useColor(0, 1, 0, 4);
         App_View_Table::initDisplay(renderer);
     }
 };

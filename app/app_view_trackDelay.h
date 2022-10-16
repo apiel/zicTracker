@@ -1,8 +1,8 @@
 #ifndef APP_VIEW_TRACK_DELAY_H_
 #define APP_VIEW_TRACK_DELAY_H_
 
-#include <app_core_renderer.h>
 #include "./app_tracks.h"
+#include <app_core_renderer.h>
 #include <app_core_view_table.h>
 
 #define VIEW_TRACK_DELAY_ROW 8
@@ -202,7 +202,8 @@ public:
 
     void initDisplay(App_Renderer* renderer)
     {
-        renderer->useColoredLabel();
+        renderer->useColor(0, 1, 0, 5);
+        renderer->useColor(0, 255, 0, 1);
         renderer->useColoredRow(2);
         App_View_Table::initDisplay(renderer);
     }

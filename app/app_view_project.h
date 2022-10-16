@@ -18,7 +18,7 @@ protected:
 
 public:
     App_View_ProjectBpm(Zic_Seq_Tempo<>* _tempo)
-        : App_View_TableLabeledRow("BPM ", 3)
+        : App_View_TableLabeledRow("BPM  ", 3)
         , tempo(_tempo)
     {
     }
@@ -49,7 +49,7 @@ protected:
 
 public:
     App_View_ProjectPlay(App_Tracks* _tracks)
-        : App_View_TableLabeledRow("SEQ ", 5)
+        : App_View_TableLabeledRow("SEQ  ", 5)
         , tracks(_tracks)
     {
     }
@@ -133,7 +133,7 @@ public:
 
     void initDisplay(App_Renderer* renderer)
     {
-        renderer->useColoredLabel();
+        renderer->useColor(0, 255, 0, 4);
         App_View_Table::initDisplay(renderer);
     }
 
