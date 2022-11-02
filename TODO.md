@@ -1,5 +1,7 @@
 ## TODO
 
+- Audio usb host to mixer, so we could route mc-101 and circuit track audio into zic mixer (eventually add effect)
+
 - doc!!
 
 - /usr/lib/lv2
