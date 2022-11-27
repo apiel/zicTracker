@@ -2,9 +2,7 @@
 #define APP_H_
 
 #include "./app_def.h"
-#include <app_core_display.h>
 #include "./app_project.h"
-#include <app_core_renderer.h>
 #include "./app_tracks.h"
 #include "./app_view_instrument.h"
 #include "./app_view_menu.h"
@@ -14,6 +12,8 @@
 #include "./app_view_track.h"
 #include "./app_view_trackDelay.h"
 #include "./app_view_trackSequencer.h"
+#include <app_core_display.h>
+#include <app_core_renderer.h>
 
 #include <zic_seq_tempo.h>
 
@@ -22,7 +22,6 @@ public:
     App_Tracks tracks;
     Zic_Seq_Tempo<> tempo;
     App_Project project;
-    // App_LV2 lv2;
 
     Zic_Seq_Pattern patterns[PATTERN_COUNT];
 
@@ -71,15 +70,17 @@ public:
     {
     }
 
-    float sample(float* buf, int len)
+    void sample(float* buf, int len)
     {
-        if (tempo.next()) {
-            tracks.next();
-            if (menuView.getView()->renderOn(EVENT_VIEW_ON_TEMPO)) {
-                render();
+        for (int t = 0; t < len; t++) {
+            if (tempo.next()) {
+                tracks.next();
+                if (menuView.getView()->renderOn(EVENT_VIEW_ON_TEMPO)) {
+                    render();
+                }
             }
         }
-        return tracks.sample(buf, len);
+        tracks.sample(buf, len);
     }
 
     void render()

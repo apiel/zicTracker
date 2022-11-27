@@ -62,6 +62,7 @@ public:
             Zic_Seq_Step* stepOff = stepOn[i];
             if (stepOff && !stepOff->slide) {
                 synths[i]->asr.off();
+                printf("note off %d\n", i);
             }
             if (looper.state.playing && looper.stepOn != 255) {
                 stepOn[i] = &looper.state.pattern->steps[i][looper.stepOn];
@@ -71,6 +72,7 @@ public:
                         synths[i]->asr.slide();
                     } else {
                         synths[i]->asr.on();
+                        printf("note on %d\n", i);
                     }
                 }
             }

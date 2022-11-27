@@ -1,5 +1,11 @@
 ## TODO
 
+- sequencer layout
+    sequencer seminote volume instrument
+    instrument_1 2 3 4
+    pattern
+    project name
+
 - Audio usb host to mixer, so we could route mc-101 and circuit track audio into zic mixer (eventually add effect)
 
 - doc!!
