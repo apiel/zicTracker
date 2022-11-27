@@ -45,13 +45,14 @@ public:
         }
     }
 
-    int16_t sample()
+    int16_t sample(float* buf, int len)
     {
-        int16_t sample = 0;
-        for (uint8_t t = 0; t < TRACK_COUNT; t++) {
-            sample += tracks[t]->sample();
-        }
-        return sample;
+        // int16_t sample = 0;
+        // for (uint8_t t = 0; t < TRACK_COUNT; t++) {
+        //     sample += tracks[t]->sample();
+        // }
+        // return sample;
+        return 0.0;
     }
 
     void togglePlay()

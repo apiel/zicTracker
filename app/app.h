@@ -14,7 +14,6 @@
 #include "./app_view_track.h"
 #include "./app_view_trackDelay.h"
 #include "./app_view_trackSequencer.h"
-// #include "./app_lv2.h"
 
 #include <zic_seq_tempo.h>
 
@@ -72,7 +71,7 @@ public:
     {
     }
 
-    int16_t sample()
+    float sample(float* buf, int len)
     {
         if (tempo.next()) {
             tracks.next();
@@ -80,8 +79,7 @@ public:
                 render();
             }
         }
-        return tracks.sample();
-        // return tracks.sample() + lv2.sample();
+        return tracks.sample(buf, len);
     }
 
     void render()
@@ -128,9 +126,6 @@ public:
 
     void start()
     {
-        // const char * yo = "⠿";
-        // const char * yo2 = "⠾";
-        // printf("App start %d\n", *(uint16_t*)(" "+1));
         for (uint8_t i; i < APP_MENU_SIZE; i++) {
             if (menu[i].view) {
                 menu[i].view->loadSnapshot();

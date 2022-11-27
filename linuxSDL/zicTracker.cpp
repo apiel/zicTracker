@@ -10,24 +10,8 @@ App app(&display);
 
 void audioCallBack(void* userdata, Uint8* stream, int len)
 {
-    static union sampleTUNT {
-        Uint8 ch[2];
-        int16_t sample;
-    } sampleDataU;
-
-    for (int i = 0; i < len; i++) {
-        sampleDataU.sample = app.sample();
-        stream[i] = sampleDataU.ch[0];
-        i++;
-        stream[i] = sampleDataU.ch[1];
-
-#if CHANNELS == 2
-        i++;
-        stream[i] = sampleDataU.ch[0];
-        i++;
-        stream[i] = sampleDataU.ch[1];
-#endif
-    }
+    float* buf = (float*)stream;
+    app.sample(buf, len);
 }
 
 int main(int argc, char* args[])
