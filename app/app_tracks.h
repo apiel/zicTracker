@@ -57,7 +57,7 @@ public:
         //     int16_t s = tracks[2]->sample();
         //     buf[t] = s / 32768.0f;
         // }
-        tracks[2]->sample(buf, len);
+        tracks[0]->sample(buf, len);
     }
 
     void togglePlay()

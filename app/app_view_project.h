@@ -153,9 +153,10 @@ public:
             file.seekFromStart(5);
             file.read(project->name, PROJECT_NAME_LEN);
             project->name[PROJECT_NAME_LEN - 1] = '\0';
-            file.seekFromCurrent(5);
+            file.seekFromCurrent(6);
             char bpm[3];
             file.read(bpm, 3);
+            // printf("yoyoyo BPM: %s\n", bpm);
             trimToNumeric(bpm);
             tempo->set(atoi(bpm));
 

@@ -75,12 +75,12 @@ public:
 
     void sample(float* buf, int len)
     {
-        for (int t = 0; t < len; t++) {
-            if (tempo.next()) {
-                tracks.next();
-                if (menuView.getView()->renderOn(EVENT_VIEW_ON_TEMPO)) {
-                    render();
-                }
+        if (tempo.next(SDL_GetTicks64()))
+        // if (tempo.next())
+        {
+            tracks.next();
+            if (menuView.getView()->renderOn(EVENT_VIEW_ON_TEMPO)) {
+                render();
             }
         }
         tracks.sample(buf, len);
