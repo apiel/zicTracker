@@ -25,29 +25,10 @@ public:
     pd::PdBase pd;
     pd::Patch patch;
 
-    App_Instrument synth0, synth1, synth2, synth3;
-    App_Instrument* synths[INSTRUMENT_COUNT] = { &synth0, &synth1, &synth2, &synth3 };
-    Zic_Effect_DelayHistory delayHistory;
-    Zic_Effect_Delay delay0, delay1, delay2, delay3, delay4;
-    Zic_Effect_Delay* delays[DELAY_COUNT] = { &delay0, &delay1, &delay2, &delay3, &delay4 };
-    bool delayEnabled = false;
-
     App_Audio_Track(uint8_t _id = 0)
         : looper(&components[0], PATTERN_COMPONENT_COUNT)
-    , synth0(0)
-    , synth1(1)
-    , synth2(2)
-    , synth3(3)
-    , delay0(&delayHistory)
-    , delay1(&delayHistory)
-    , delay2(&delayHistory)
-    , delay3(&delayHistory)
-    , delay4(&delayHistory)
     {
         id = _id;
-        // TODO load pattern from last state saved in project status file
-        // synth1.set("kick.wav", false)->open();
-
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
             SDL_Log("Could not init pd\n");
         }
@@ -95,21 +76,8 @@ public:
 
     void sample(float* buf, int len)
     {
-        // int16_t s = 0;
-        // for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
-        //     s += synths[i]->next();
-        // }
-        // delayHistory.sample(s);
-        // return s
-        //     + (delayEnabled ? delay0.sample() + delay1.sample() + delay2.sample() + delay3.sample() + delay4.sample() : 0);
-
         int ticks = len * tickDivider;
         pd.processFloat(ticks, NULL, buf);
-    }
-
-    void toggleDelay()
-    {
-        // delayEnabled = !delayEnabled;
     }
 };
 
