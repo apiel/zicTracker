@@ -53,10 +53,11 @@ public:
         // }
         // return sample;
 
-        for (int t = 0; t < len; t++) {
-            int16_t s = tracks[0]->sample();
-            buf[t] = s / 32768.0f;
-        }
+        // for (int t = 0; t < len; t += APP_CHANNELS) {
+        //     int16_t s = tracks[2]->sample();
+        //     buf[t] = s / 32768.0f;
+        // }
+        tracks[2]->sample(buf, len);
     }
 
     void togglePlay()

@@ -1,9 +1,10 @@
 #ifndef APP_AUDIO_TRACK_H_
 #define APP_AUDIO_TRACK_H_
 
-#include "./app_instrument.h"
 #include "./app_def.h"
+#include "./app_instrument.h"
 
+#include <PdBase.hpp>
 #include <wavetables/wavetable_Bank.h>
 #include <zic_effect_delay.h>
 #include <zic_seq_loopMaster.h>
@@ -13,35 +14,45 @@
 class App_Audio_Track {
 protected:
     Zic_Seq_Step* stepOn[INSTRUMENT_COUNT];
+    const float tickDivider = 1.0f / (256.0f * APP_CHANNELS);
 
 public:
     uint8_t id = 0;
 
     Zic_Seq_PatternComponent components[PATTERN_COMPONENT_COUNT];
 
+    Zic_Seq_LoopMaster looper;
+    pd::PdBase pd;
+    pd::Patch patch;
+
     App_Instrument synth0, synth1, synth2, synth3;
     App_Instrument* synths[INSTRUMENT_COUNT] = { &synth0, &synth1, &synth2, &synth3 };
-    Zic_Seq_LoopMaster looper;
     Zic_Effect_DelayHistory delayHistory;
     Zic_Effect_Delay delay0, delay1, delay2, delay3, delay4;
     Zic_Effect_Delay* delays[DELAY_COUNT] = { &delay0, &delay1, &delay2, &delay3, &delay4 };
     bool delayEnabled = false;
 
     App_Audio_Track(uint8_t _id = 0)
-        : synth0(0)
-        , synth1(1)
-        , synth2(2)
-        , synth3(3)
-        , looper(&components[0], PATTERN_COMPONENT_COUNT)
-        , delay0(&delayHistory)
-        , delay1(&delayHistory)
-        , delay2(&delayHistory)
-        , delay3(&delayHistory)
-        , delay4(&delayHistory)
+        : looper(&components[0], PATTERN_COMPONENT_COUNT)
+    , synth0(0)
+    , synth1(1)
+    , synth2(2)
+    , synth3(3)
+    , delay0(&delayHistory)
+    , delay1(&delayHistory)
+    , delay2(&delayHistory)
+    , delay3(&delayHistory)
+    , delay4(&delayHistory)
     {
         id = _id;
         // TODO load pattern from last state saved in project status file
-        synth1.set("kick.wav", false)->open();
+        // synth1.set("kick.wav", false)->open();
+
+        if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
+            SDL_Log("Could not init pd\n");
+        }
+        pd.computeAudio(true);
+        patch = pd.openPatch("hello.pd", "puredata/synth01");
     }
 
     void next()
@@ -61,38 +72,44 @@ public:
         for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
             Zic_Seq_Step* stepOff = stepOn[i];
             if (stepOff && !stepOff->slide) {
-                synths[i]->asr.off();
-                printf("note off %d\n", i);
+                // synths[i]->asr.off();
+                // printf("note off %d\n", i);
+                pd.sendNoteOn(1, stepOff->note, 0);
             }
             if (looper.state.playing && looper.stepOn != 255) {
                 stepOn[i] = &looper.state.pattern->steps[i][looper.stepOn];
                 if (stepOn[i]->note > 0) {
-                    synths[i]->setStep(stepOn[i]);
-                    if (stepOff && stepOff->slide) {
-                        synths[i]->asr.slide();
-                    } else {
-                        synths[i]->asr.on();
-                        printf("note on %d\n", i);
-                    }
+                    pd.sendNoteOn(1, stepOn[i]->note, stepOn[i]->velocity);
+                    // printf("note on %d (%d)\n", stepOn[i]->note, stepOn[i]->velocity);
+                    // synths[i]->setStep(stepOn[i]);
+                    // if (stepOff && stepOff->slide) {
+                    //     synths[i]->asr.slide();
+                    // } else {
+                    //     synths[i]->asr.on();
+                    //     // printf("note on %d\n", i);
+                    // }
                 }
             }
         }
     }
 
-    int16_t sample()
+    void sample(float* buf, int len)
     {
-        int16_t s = 0;
-        for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
-            s += synths[i]->next();
-        }
-        delayHistory.sample(s);
-        return s
-            + (delayEnabled ? delay0.sample() + delay1.sample() + delay2.sample() + delay3.sample() + delay4.sample() : 0);
+        // int16_t s = 0;
+        // for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
+        //     s += synths[i]->next();
+        // }
+        // delayHistory.sample(s);
+        // return s
+        //     + (delayEnabled ? delay0.sample() + delay1.sample() + delay2.sample() + delay3.sample() + delay4.sample() : 0);
+
+        int ticks = len * tickDivider;
+        pd.processFloat(ticks, NULL, buf);
     }
 
     void toggleDelay()
     {
-        delayEnabled = !delayEnabled;
+        // delayEnabled = !delayEnabled;
     }
 };
 
