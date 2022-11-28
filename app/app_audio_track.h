@@ -16,7 +16,7 @@
 class App_Audio_Track {
 protected:
     Zic_Seq_Step* stepOff[INSTRUMENT_COUNT];
-    const float tickDivider = 1.0f / (256.0f * APP_CHANNELS);
+    const float tickDivider = APP_TICK_DIVIDER;
     PdObject pdObject;
 
 public:
@@ -52,26 +52,19 @@ public:
     {
         looper.next();
 
+        // TODO need to handle slide
         for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
             if (stepOff[i] && !stepOff[i]->slide) {
-                // synths[i]->asr.off();
-                // printf("note off %d\n", i);
+                // printf("note off %d\n", stepOff[i]->note);
                 pd.sendNoteOn(1, stepOff[i]->note, 0);
                 stepOff[i] = NULL;
             }
             if (looper.state.playing && looper.stepOn != 255) {
                 Zic_Seq_Step* step = &looper.state.pattern->steps[i][looper.stepOn];
                 if (step->note > 0) {
+                    // printf("note on %d (%d)\n", step->note, step->velocity);
                     pd.sendNoteOn(1, step->note, step->velocity);
                     stepOff[i] = step;
-                    printf("note on %d (%d)\n", step->note, step->velocity);
-                    // synths[i]->setStep(step);
-                    // if (stepOff && stepOff->slide) {
-                    //     synths[i]->asr.slide();
-                    // } else {
-                    //     synths[i]->asr.on();
-                    //     // printf("note on %d\n", i);
-                    // }
                 }
             }
         }
