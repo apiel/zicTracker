@@ -11,6 +11,9 @@
 #include <zic_synth_file.h>
 
 class App_Tracks {
+protected:
+    const float mixerDivider = 1.0f / TRACK_COUNT;
+
 public:
     uint8_t trackId = TRACK_1;
     App_Audio_Track track0, track1, track2, track3;
@@ -57,7 +60,7 @@ public:
         for (uint8_t i = 0; i < TRACK_COUNT; i++) {
             tracks[i]->sample(b, len);
             for (int j = 0; j < len; j++) {
-                buf[j] += b[j] * 0.25f;
+                buf[j] += b[j] * mixerDivider;
             }
         }
         delete[] b;
