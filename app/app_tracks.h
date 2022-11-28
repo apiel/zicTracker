@@ -56,14 +56,16 @@ public:
             buf[j] = 0.0f;
         }
 
-        float* b = new float[len];
+        // NOTE should dynamic data allocation?
+        float buffer[APP_AUDIO_CHUNK];
+        // float* buffer = new float[len];
         for (uint8_t i = 0; i < TRACK_COUNT; i++) {
-            tracks[i]->sample(b, len);
+            tracks[i]->sample(buffer, len);
             for (int j = 0; j < len; j++) {
-                buf[j] += b[j] * mixerDivider;
+                buf[j] += buffer[j] * mixerDivider;
             }
         }
-        delete[] b;
+        // delete[] buffer;
     }
 
     void togglePlay()
