@@ -11,9 +11,6 @@
 #include <zic_synth_file.h>
 
 class App_Tracks {
-protected:
-    const float tickDivider = APP_TICK_DIVIDER;
-
 public:
     uint8_t trackId = TRACK_1;
     App_Audio_Track track0, track1, track2, track3;
@@ -50,24 +47,20 @@ public:
 
     void sample(float* buf, int len)
     {
-        tracks[0]->sample(buf, len);
-        // int ticks = len * tickDivider;
-        // for (int j = 0; j < ticks; j++) {
-        //     buf[j] = 0;
-        // }
+        // tracks[0]->sample(buf, len);
 
-        // float* b = new float[ticks];
-        // // for (uint8_t i = 0; i < TRACK_COUNT; i++) {
-        // //     tracks[i]->sample(b, len);
-        // //     for (int j = 0; j < ticks; j++) {
-        // //         buf[j] += b[j];
-        // //     }
-        // // }
-        // tracks[0]->sample(b, len);
-        // for (int j = 0; j < ticks; j++) {
-        //     buf[j] += b[j];
-        // }
-        // free(b);
+        for (int j = 0; j < len; j++) {
+            buf[j] = 0.0f;
+        }
+
+        float* b = new float[len];
+        for (uint8_t i = 0; i < TRACK_COUNT; i++) {
+            tracks[i]->sample(b, len);
+            for (int j = 0; j < len; j++) {
+                buf[j] += b[j] * 0.25f;
+            }
+        }
+        delete[] b;
     }
 
     void togglePlay()

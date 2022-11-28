@@ -16,7 +16,7 @@
 class App_Audio_Track {
 protected:
     Zic_Seq_Step* stepOff[INSTRUMENT_COUNT];
-    const float tickDivider = APP_TICK_DIVIDER;
+    const float tickDivider = 1.0f / (256.0f * APP_CHANNELS);
     PdObject pdObject;
 
 public:
