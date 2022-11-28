@@ -19,8 +19,8 @@ ZIC_TARGET=0
 LIBPD_DIR=../../libpd
 PUREDATA = -I$(LIBPD_DIR)/libpd_wrapper -I$(LIBPD_DIR)/libpd_wrapper/util \
            -I$(LIBPD_DIR)/pure-data/src -I$(LIBPD_DIR)/cpp \
-		   ./libpd.so
-        #    -I./src -std=c++11 -DLIBPD_USE_STD_MUTEX -O3 \
+		   ./libpd.so -DPDINSTANCE
+        #    -std=c++11 -DLIBPD_USE_STD_MUTEX -O3
 
 RG351_IP=192.168.1.108
 

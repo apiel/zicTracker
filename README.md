@@ -74,6 +74,15 @@ TBD.
 
 ## Linux Installation
 
+Need to install libpd.
+
+```sh
+git clone --recurse-submodules https://github.com/libpd/libpd.git
+cd libpd
+make MULTI=true
+cd ..
+```
+
 ```sh
 apt-get install libsdl2-dev
 # in the same folder clone both repo
@@ -82,7 +91,6 @@ git clone https://github.com/apiel/zicTracker.git
 cd zicTracker/linuxSDL
 make
 ```
-
 ## Toolchain
 
 ### anbernic rg351
