@@ -22,12 +22,8 @@
 #X obj 174 310 - 1;
 #X obj 174 277 poly 4 1;
 #X obj 174 478 clone synth 4;
-#X obj 21 206 print noteon \$1;
-#X obj 40 173 pack 0 0;
 #X connect 1 0 3 0;
-#X connect 1 0 24 0;
 #X connect 1 1 4 0;
-#X connect 1 1 24 1;
 #X connect 2 0 22 0;
 #X connect 3 0 21 0;
 #X connect 4 0 21 1;
@@ -54,4 +50,3 @@
 #X connect 21 1 2 1;
 #X connect 21 2 2 2;
 #X connect 22 0 7 0;
-#X connect 24 0 23 0;

@@ -4,7 +4,7 @@
 #include "./app_def.h"
 #include "./app_project.h"
 #include "./app_tracks.h"
-// #include "./app_view_instrument.h"
+#include "./app_view_instrument.h"
 #include "./app_view_menu.h"
 #include "./app_view_pattern.h"
 #include "./app_view_project.h"
@@ -30,7 +30,7 @@ public:
 
     // App_View_Track trackView;
     App_View_TrackSequencer trackSeqView;
-    // App_View_Instrument instrumentView;
+    App_View_Instrument instrumentView;
     App_View_Pattern patternView;
     // App_View_TrackDelay trackDelayView;
     App_View_Project projectView;
@@ -45,10 +45,9 @@ public:
         (Menu) { "Tracks sequencer", "Sequencer", 'S', &trackSeqView, 'T', true },
         // (Menu) { "Tracks", "Tracks", 'T', &trackView, 'T', false },
         // (Menu) { "Track delay", "Delay", 'D', &trackDelayView, 'T', false },
-        // (Menu) { "Instruments", "Instruments", 'I', &instrumentView, 'I', true },
         (Menu) { "Tracks", "Tracks", 'T', NULL, 'T', false },
         (Menu) { "Track delay", "Delay", 'D', NULL, 'T', false },
-        (Menu) { "Instruments", "Instruments", 'I', NULL, 'I', true },
+        (Menu) { "Instruments", "Instruments", 'I', &instrumentView, 'I', true },
         (Menu) { "Instruments kit", "Kit", 'K', NULL, 'I', false }, // this is how to save a kit // should it be called presets?
         // 4 LFO -> can be assigned to any changeable values and can be use for multiple instrument at the same time
         // 4 Extra Envelop -> same as LFO
@@ -64,7 +63,7 @@ public:
         : display(_display)
         // , trackView(&tracks)
         , trackSeqView(&tracks, &patterns[0])
-        // , instrumentView(&tracks)
+        , instrumentView(&tracks)
         , patternView(&patterns[0])
         // , trackDelayView(&tracks)
         , projectView(&tempo, &tracks, &project, &menuView)

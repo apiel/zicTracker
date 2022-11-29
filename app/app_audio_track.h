@@ -34,10 +34,10 @@ public:
     {
         id = _id;
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
-            SDL_Log("Could not init pd\n");
+            APP_LOG("Could not init pd\n");
         }
         pd.computeAudio(true);
-        patch = pd.openPatch("hello.pd", "puredata/synth01");
+        patch = pd.openPatch("main.pd", "puredata/synth01");
         pd.setReceiver(&pdObject);
         pd.setMidiReceiver(&pdObject);
     }
