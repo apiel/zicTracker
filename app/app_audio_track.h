@@ -40,6 +40,7 @@ public:
         patch = pd.openPatch("main.pd", "puredata/synth01");
         pd.setReceiver(&pdObject);
         pd.setMidiReceiver(&pdObject);
+        // pd.sendControlChange(1, 1, 10);
     }
 
     ~App_Audio_Track()
