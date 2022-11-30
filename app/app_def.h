@@ -7,10 +7,6 @@
 
 #define PATTERN_COUNT 255 // uint8 -> 2 hex
 
-#ifndef APP_LOG
-#define APP_LOG printf
-#endif
-
 enum {
     TRACK_1,
     TRACK_2,

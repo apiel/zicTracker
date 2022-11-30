@@ -46,7 +46,7 @@ public:
     void yo(void)
     {
         duk_context* ctx = duk_create_heap_default();
-        int ret = duk_peval_file(ctx, "instruments/synth01/main.js");
+        duk_eval_file(ctx, "instruments/synth01/main.js");
         printf("1+2=%d\n", (int)duk_get_int(ctx, -1));
         duk_destroy_heap(ctx);
     }
