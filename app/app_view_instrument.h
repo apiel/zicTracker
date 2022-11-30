@@ -34,21 +34,15 @@ public:
         pd.setReceiver(&pdObject);
         // pd.setMidiReceiver(&pdObject);
         pd.sendControlChange(1, 1, 10);
-        yo();
+
+        duk_eval_file_extra(ctx, "instruments/synth01/main.js");
+        printf("1+2=%d\n", (int)duk_get_int(ctx, -1));
     }
 
     ~App_View_Instrument()
     {
         pd.closePatch(patch);
         pd.clear();
-    }
-
-    void yo(void)
-    {
-        duk_context* ctx = duk_create_heap_default();
-        duk_eval_file(ctx, "instruments/synth01/main.js");
-        printf("1+2=%d\n", (int)duk_get_int(ctx, -1));
-        duk_destroy_heap(ctx);
     }
 };
 
