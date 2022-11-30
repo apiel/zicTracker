@@ -35,14 +35,32 @@ public:
         // pd.setMidiReceiver(&pdObject);
         pd.sendControlChange(1, 1, 10);
 
+        duk_push_c_function(ctx, App_View_Instrument::yoyo, DUK_VARARGS);
+        duk_put_global_string(ctx, "yoyo");
+
         duk_eval_file_extra(ctx, "instruments/synth01/main.js");
         printf("1+2=%d\n", (int)duk_get_int(ctx, -1));
+
+        duk_get_global_string(ctx, "processLine");
+        duk_push_string(ctx, "foo bar");
+        duk_call(ctx, 1);
+        printf("encoded: %s\n", duk_to_string(ctx, -1));
+        duk_pop(ctx);
     }
 
     ~App_View_Instrument()
     {
         pd.closePatch(patch);
         pd.clear();
+    }
+
+    static duk_ret_t yoyo(duk_context* ctx)
+    {
+        duk_push_string(ctx, " ");
+        duk_insert(ctx, 0);
+        duk_join(ctx, duk_get_top(ctx) - 1);
+        printf("yoyoyoo %s\n", duk_safe_to_string(ctx, -1));
+        return 0;
     }
 };
 
