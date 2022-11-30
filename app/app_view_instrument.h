@@ -5,36 +5,15 @@
 #include <PdBase.hpp>
 #include <PdObject.h>
 #include <app_core_renderer.h>
-#include <app_core_view_table.h>
+#include <app_core_view_js.h>
+
+#include <duktape.h>
 
 #define VIEW_INSTR_ROW 8
 #define VIEW_INSTR_COL 3
 #define VIEW_INSTR_LABELS 7
 
-class App_View_InstrumentCcRow : public App_View_TableField {
-protected:
-    App_Tracks* tracks;
-    uint8_t* instrument;
-
-public:
-    App_View_InstrumentCcRow(App_Tracks* _tracks, uint8_t* _instrument)
-        : tracks(_tracks)
-        , instrument(_instrument)
-    {
-    }
-
-    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-    {
-        strcat(renderer->text, "hello");
-    }
-
-    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
-    {
-        return VIEW_CHANGED;
-    }
-};
-
-class App_View_Instrument : public App_View_Table {
+class App_View_Instrument : public App_View_JS {
 protected:
     App_Tracks* tracks;
 
@@ -42,39 +21,20 @@ protected:
     pd::PdBase pd;
     pd::Patch patch;
 
-    uint8_t instrument = 0;
-
-    App_View_InstrumentCcRow ccField;
-    App_View_TableField* fields[VIEW_INSTR_ROW * VIEW_INSTR_COL] = {
-        // clang-format off
-        NULL, NULL, NULL,
-        &ccField, NULL, NULL,
-        &ccField, NULL, NULL,
-        &ccField, NULL, NULL,
-        &ccField, NULL, NULL,
-        &ccField, NULL, NULL,
-        &ccField, NULL, NULL,
-        &ccField, NULL, NULL,
-        // clang-format on
-    };
-
 public:
     App_View_Instrument(App_Tracks* _tracks)
-        : App_View_Table(fields, VIEW_INSTR_ROW, VIEW_INSTR_COL)
-        , tracks(_tracks)
+        : tracks(_tracks)
         , pdObject(255)
-        , ccField(_tracks, &instrument)
     {
-        initSelection();
-
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
             APP_LOG("Could not init pd\n");
         }
         // pd.computeAudio(true);
-        patch = pd.openPatch("main.pd", "puredata/synth01");
+        patch = pd.openPatch("main.pd", "instruments/synth01");
         pd.setReceiver(&pdObject);
         // pd.setMidiReceiver(&pdObject);
         pd.sendControlChange(1, 1, 10);
+        yo();
     }
 
     ~App_View_Instrument()
@@ -83,20 +43,13 @@ public:
         pd.clear();
     }
 
-    void initDisplay(App_Renderer* renderer)
+    void yo(void)
     {
-        renderer->useColor(0, 255, 0, 6);
-        App_View_Table::initDisplay(renderer);
+        duk_context* ctx = duk_create_heap_default();
+        int ret = duk_peval_file(ctx, "instruments/synth01/main.js");
+        printf("1+2=%d\n", (int)duk_get_int(ctx, -1));
+        duk_destroy_heap(ctx);
     }
-
-    // uint8_t update(UiKeys* keys, App_Renderer* renderer) override
-    // {
-    //     // if (keys->Edit) {
-    //     pd.sendControlChange(1, 1, 10);
-    //     printf("update instr.\n");
-    //     // }
-    //     return App_View_Table::update(keys, renderer);
-    // }
 };
 
 #endif
