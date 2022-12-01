@@ -29,46 +29,25 @@ public:
     static App_Display* display;
     UiKeys keys;
 
-    // App_View_Track trackView;
-    App_View_TrackSequencer trackSeqView;
-    // App_View_Instrument instrumentView;
-    App_View_Pattern patternView;
-    // App_View_TrackDelay trackDelayView;
-    App_View_Project projectView;
-    App_View_ProjectEditName projectEditNameView;
-
     App_View_Menu menuView;
 
     bool rendered = false;
 
 #define APP_MENU_SIZE 9
     Menu menu[APP_MENU_SIZE] = {
-        (Menu) { "Tracks sequencer", "Sequencer", 'S', &trackSeqView, 'T', true },
-        // (Menu) { "Tracks", "Tracks", 'T', &trackView, 'T', false },
-        // (Menu) { "Track delay", "Delay", 'D', &trackDelayView, 'T', false },
+        (Menu) { "Tracks sequencer", "Sequencer", 'S', App_View_TrackSequencer::getInstance(&tracks, &patterns[0]), 'T', true },
         (Menu) { "Tracks", "Tracks", 'T', NULL, 'T', false },
         (Menu) { "Track delay", "Delay", 'D', NULL, 'T', false },
-        // (Menu) { "Instruments", "Instruments", 'I', &instrumentView, 'I', true },
         (Menu) { "Instruments", "Instruments", 'I', App_View_Instrument::getInstance(&tracks), 'I', true },
         (Menu) { "Instruments kit", "Kit", 'K', NULL, 'I', false }, // this is how to save a kit // should it be called presets?
-        // 4 LFO -> can be assigned to any changeable values and can be use for multiple instrument at the same time
-        // 4 Extra Envelop -> same as LFO
-        // IFX: reverb, distortion...
-        // { "Project", 'P', VIEW_TRACK_PROJECT, 'T', false }, // Select project
-        (Menu) { "Pattern", "Pattern", 'P', &patternView, 'P', true },
+        (Menu) { "Pattern", "Pattern", 'P', App_View_Pattern::getInstance(&patterns[0]), 'P', true },
         (Menu) { "Sampler", "Sampler", 'S', NULL, 'S', true }, // Record all track to sample and edit sample
-        (Menu) { "Project", "Project", 'J', &projectView, 'J', true }, // Select project
-        (Menu) { "Edit project name", "Name", 'N', &projectEditNameView, 'J', false }, // Select project
+        (Menu) { "Project", "Project", 'J', App_View_Project::getInstance(&tempo, &tracks, &project, &menuView), 'J', true }, // Select project
+        (Menu) { "Edit project name", "Name", 'N', App_View_ProjectEditName::getInstance(&project, &menuView), 'J', false }, // Select project
     };
 
     App(App_Display* _display)
-        : trackSeqView(&tracks, &patterns[0])
-        // , instrumentView(&tracks)
-        , patternView(&patterns[0])
-        // , trackDelayView(&tracks)
-        , projectView(&tempo, &tracks, &project, &menuView)
-        , projectEditNameView(&project, &menuView)
-        , menuView(&menu[0], APP_MENU_SIZE)
+        : menuView(&menu[0], APP_MENU_SIZE)
     {
         App::display = _display;
     }

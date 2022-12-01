@@ -314,7 +314,6 @@ protected:
         // clang-format on
     };
 
-public:
     App_View_Pattern(Zic_Seq_Pattern* _patterns)
         : App_View_Table(fields, VIEW_PATTERN_ROW, VIEW_PATTERN_COL)
         , patterns(_patterns)
@@ -322,6 +321,17 @@ public:
         , stepField(_patterns, &currentPatternId)
     {
         initSelection();
+    }
+
+public:
+    static App_View_Pattern* instance;
+
+    static App_View_Pattern* getInstance(Zic_Seq_Pattern* _patterns)
+    {
+        if (!instance) {
+            instance = new App_View_Pattern(_patterns);
+        }
+        return instance;
     }
 
     void initDisplay(App_Renderer* renderer)
@@ -392,5 +402,7 @@ public:
         }
     }
 };
+
+App_View_Pattern* App_View_Pattern::instance = NULL;
 
 #endif

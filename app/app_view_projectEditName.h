@@ -139,7 +139,6 @@ protected:
         // clang-format on
     };
 
-public:
     App_View_ProjectEditName(App_Project* project, App_View_Menu* menu)
         : App_View_Table(fields, VIEW_PROJECT_EDIT_NAME_ROW, VIEW_PROJECT_EDIT_NAME_COL)
         , nameField(project)
@@ -149,11 +148,24 @@ public:
         initSelection();
     }
 
+public:
+    static App_View_ProjectEditName* instance;
+
+    static App_View_ProjectEditName* getInstance(App_Project* project, App_View_Menu* menu)
+    {
+        if (!instance) {
+            instance = new App_View_ProjectEditName(project, menu);
+        }
+        return instance;
+    }
+
     void initDisplay(App_Renderer* renderer)
     {
         renderer->useColor(0, 1, 0, 4, COLOR_MEDIUM);
         App_View_Table::initDisplay(renderer);
     }
 };
+
+App_View_ProjectEditName* App_View_ProjectEditName::instance = NULL;
 
 #endif

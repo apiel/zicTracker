@@ -23,17 +23,6 @@ protected:
     pd::PdBase pd;
     pd::Patch patch;
 
-public:
-    static App_View_Instrument* instance;
-
-    static App_View_Instrument* getInstance(App_Tracks* _tracks)
-    {
-        if (!instance) {
-            instance = new App_View_Instrument(_tracks);
-        }
-        return instance;
-    }
-
     App_View_Instrument(App_Tracks* _tracks)
         : tracks(_tracks)
         , pdObject(255)
@@ -82,6 +71,17 @@ public:
         printf("state.valueA2=%s\n", duk_to_string(ctx, -1));
 
         duk_pop(ctx);
+    }
+
+public:
+    static App_View_Instrument* instance;
+
+    static App_View_Instrument* getInstance(App_Tracks* _tracks)
+    {
+        if (!instance) {
+            instance = new App_View_Instrument(_tracks);
+        }
+        return instance;
     }
 
     ~App_View_Instrument()

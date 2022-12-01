@@ -4,10 +4,10 @@
 #include <zic_seq_tempo.h>
 
 #include "./app_project.h"
-#include <app_core_renderer.h>
 #include "./app_view_menu.h"
-#include <app_core_view_table.h>
+#include <app_core_renderer.h>
 #include <app_core_util.h>
+#include <app_core_view_table.h>
 
 #define VIEW_PROJECT_ROW 3
 #define VIEW_PROJECT_COL 3
@@ -119,7 +119,6 @@ protected:
         // clang-format on
     };
 
-public:
     App_View_Project(Zic_Seq_Tempo<>* _tempo, App_Tracks* tracks, App_Project* _project, App_View_Menu* menu)
         : App_View_Table(fields, VIEW_PROJECT_ROW, VIEW_PROJECT_COL)
         , bpmField(_tempo)
@@ -129,6 +128,17 @@ public:
         , tempo(_tempo)
     {
         initSelection();
+    }
+
+public:
+    static App_View_Project* instance;
+
+    static App_View_Project* getInstance(Zic_Seq_Tempo<>* _tempo, App_Tracks* tracks, App_Project* _project, App_View_Menu* menu)
+    {
+        if (!instance) {
+            instance = new App_View_Project(_tempo, tracks, _project, menu);
+        }
+        return instance;
     }
 
     void initDisplay(App_Renderer* renderer)
@@ -164,5 +174,7 @@ public:
         }
     }
 };
+
+App_View_Project* App_View_Project::instance = NULL;
 
 #endif

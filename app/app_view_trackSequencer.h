@@ -144,7 +144,6 @@ protected:
         // clang-format on
     };
 
-public:
     App_View_TrackSequencer(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
         : App_View_Table(fields, VIEW_TRACK_SEQUENCER_ROW, VIEW_TRACK_SEQUENCER_COL)
         , patterns(_patterns)
@@ -152,6 +151,17 @@ public:
         , tracks(_tracks)
     {
         initSelection();
+    }
+    
+public:
+    static App_View_TrackSequencer* instance;
+
+    static App_View_TrackSequencer* getInstance(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
+    {
+        if (!instance) {
+            instance = new App_View_TrackSequencer(_tracks, _patterns);
+        }
+        return instance;
     }
 
     bool renderOn(uint8_t event) override
@@ -200,5 +210,7 @@ public:
         }
     }
 };
+
+App_View_TrackSequencer* App_View_TrackSequencer::instance = NULL;
 
 #endif
