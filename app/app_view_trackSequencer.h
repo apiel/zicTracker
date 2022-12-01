@@ -48,7 +48,7 @@ public:
             }
         }
         if (col % 3 == 0) {
-            renderer->useColor(row, col / 3 * 7, track->looper.isComponentPlaying(row - 1) ? COLOR_PLAY : COLOR_MEDIUM);
+            renderer->useColor(row, col / 3 * 7, track->looper.isComponentPlaying(row - 1) ? COLOR_PLAY : COLOR_MARKER);
             strcat(renderer->text,
                 track->looper.isComponentPlaying(row - 1) ? ">"
                                                           : (track->looper.isCurrentComponent(row - 1) ? "*" : " "));
