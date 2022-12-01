@@ -6,7 +6,11 @@ function renderer() {
 }
 
 function update(keys) {
-  count++;
+  if (keys.Up) {
+    count++;
+  } else if (keys.Down) {
+    count--;
+  }
   // log(JSON.stringify(keys));
   content = "updated";
   return 1;
