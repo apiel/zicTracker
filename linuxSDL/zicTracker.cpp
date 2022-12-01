@@ -6,12 +6,12 @@
 #include <app_core_file.h>
 
 UI_Display uiDisplay;
-App app(&uiDisplay);
+App *app = App::getInstance(&uiDisplay);
 
 void audioCallBack(void* userdata, Uint8* stream, int len)
 {
     float* buf = (float*)stream;
-    app.sample(buf, len);
+    app->sample(buf, len);
 }
 
 int main(int argc, char* args[])
@@ -52,24 +52,24 @@ int main(int argc, char* args[])
         return 1;
     }
 
-    app.start();
-    app.render();
+    app->start();
+    app->render();
     SDL_UpdateWindowSurface(window);
 
     while (handleEvent()) {
         if (ui.keysChanged) {
             ui.keysChanged = false;
-            app.handleUi(ui.keys);
+            app->handleUi(ui.keys);
             SDL_Log("\n%s\n", uiDisplay.text);
             // SDL_UpdateWindowSurface(window);
         }
         // SDL_Delay(10);
-        if (app.rendered) {
-            app.rendered = false;
+        if (app->rendered) {
+            app->rendered = false;
             SDL_UpdateWindowSurface(window);
         }
     }
-    app.quit();
+    app->quit();
 
     SDL_DestroyWindow(window);
     SDL_CloseAudioDevice(audioDevice);

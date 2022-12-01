@@ -17,8 +17,17 @@
 
 #include <zic_seq_tempo.h>
 
-// TODO make app singleton
+#define APP_MENU_SIZE 9
+
 class App {
+
+protected:
+    App(App_Display* _display)
+        : menuView(&menu[0], APP_MENU_SIZE)
+    {
+        App::display = _display;
+    }
+
 public:
     App_Tracks tracks;
     Zic_Seq_Tempo<> tempo;
@@ -33,7 +42,6 @@ public:
 
     bool rendered = false;
 
-#define APP_MENU_SIZE 9
     Menu menu[APP_MENU_SIZE] = {
         (Menu) { "Tracks sequencer", "Sequencer", 'S', App_View_TrackSequencer::getInstance(&tracks, &patterns[0]), 'T', true },
         (Menu) { "Tracks", "Tracks", 'T', NULL, 'T', false },
@@ -46,10 +54,14 @@ public:
         (Menu) { "Edit project name", "Name", 'N', App_View_ProjectEditName::getInstance(&project, &menuView), 'J', false }, // Select project
     };
 
-    App(App_Display* _display)
-        : menuView(&menu[0], APP_MENU_SIZE)
+    static App* instance;
+
+    static App* getInstance(App_Display* _display)
     {
-        App::display = _display;
+        if (!instance) {
+            instance = new App(_display);
+        }
+        return instance;
     }
 
     void sample(float* buf, int len)
@@ -118,5 +130,6 @@ public:
 };
 
 App_Display* App::display = NULL;
+App* App::instance = NULL;
 
 #endif
