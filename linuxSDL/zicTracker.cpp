@@ -5,8 +5,8 @@
 #include <app_core_display.h>
 #include <app_core_file.h>
 
-UI_Display display;
-App app(&display);
+UI_Display uiDisplay;
+App app(&uiDisplay);
 
 void audioCallBack(void* userdata, Uint8* stream, int len)
 {
@@ -45,7 +45,7 @@ int main(int argc, char* args[])
         return 1;
     }
     SDL_Surface* screenSurface = SDL_GetWindowSurface(window);
-    display.init(screenSurface);
+    uiDisplay.init(screenSurface);
 
     SDL_AudioDeviceID audioDevice = initAudio(audioCallBack);
     if (SDL_getenv("ZIC_SKIP_AUDIO") == NULL && !audioDevice) {
@@ -60,7 +60,7 @@ int main(int argc, char* args[])
         if (ui.keysChanged) {
             ui.keysChanged = false;
             app.handleUi(ui.keys);
-            SDL_Log("\n%s\n", display.text);
+            SDL_Log("\n%s\n", uiDisplay.text);
             // SDL_UpdateWindowSurface(window);
         }
         // SDL_Delay(10);

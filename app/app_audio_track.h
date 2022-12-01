@@ -4,7 +4,6 @@
 #include "./app_def.h"
 #include "./app_instrument.h"
 
-#include <APP_SDL/sdl2.h>
 #include <PdBase.hpp>
 #include <PdObject.h>
 #include <wavetables/wavetable_Bank.h>
@@ -37,7 +36,7 @@ public:
             APP_LOG("Could not init pd\n");
         }
         pd.computeAudio(true);
-        patch = pd.openPatch("main.pd", "puredata/synth01");
+        patch = pd.openPatch("main.pd", "instruments/synth01");
         pd.setReceiver(&pdObject);
         pd.setMidiReceiver(&pdObject);
         // pd.sendControlChange(1, 1, 10);
@@ -63,7 +62,7 @@ public:
             if (looper.state.playing && looper.stepOn != 255) {
                 Zic_Seq_Step* step = &looper.state.pattern->steps[i][looper.stepOn];
                 if (step->note > 0) {
-                    // printf("note on %d (%d)\n", step->note, step->velocity);
+                    printf("note on %d (%d)\n", step->note, step->velocity);
                     pd.sendNoteOn(1, step->note, step->velocity);
                     stepOff[i] = step;
                 }

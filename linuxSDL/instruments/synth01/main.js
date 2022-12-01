@@ -1,12 +1,15 @@
 function processLine(line) {
-  return 'hello' + line;
+  log("internal state.value", state.value);
+  yoyo();
+  return "hello" + line;
 }
 
-yoyo('wowowowow');
+function renderer() {
+  log("renderer");
+  render("wowowowow");
+}
+// yoyo('bla bla');
 
 var x = 1 + 2;
-setTimeout(function () {
-  log("timer 3");
-}, 2345);
 log("hello:", x);
 123;

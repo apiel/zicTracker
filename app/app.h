@@ -17,6 +17,7 @@
 
 #include <zic_seq_tempo.h>
 
+// TODO make app singleton
 class App {
 public:
     App_Tracks tracks;
@@ -25,12 +26,12 @@ public:
 
     Zic_Seq_Pattern patterns[PATTERN_COUNT];
 
-    App_Display* display;
+    static App_Display* display;
     UiKeys keys;
 
     // App_View_Track trackView;
     App_View_TrackSequencer trackSeqView;
-    App_View_Instrument instrumentView;
+    // App_View_Instrument instrumentView;
     App_View_Pattern patternView;
     // App_View_TrackDelay trackDelayView;
     App_View_Project projectView;
@@ -47,7 +48,8 @@ public:
         // (Menu) { "Track delay", "Delay", 'D', &trackDelayView, 'T', false },
         (Menu) { "Tracks", "Tracks", 'T', NULL, 'T', false },
         (Menu) { "Track delay", "Delay", 'D', NULL, 'T', false },
-        (Menu) { "Instruments", "Instruments", 'I', &instrumentView, 'I', true },
+        // (Menu) { "Instruments", "Instruments", 'I', &instrumentView, 'I', true },
+        (Menu) { "Instruments", "Instruments", 'I', App_View_Instrument::getInstance(&tracks), 'I', true },
         (Menu) { "Instruments kit", "Kit", 'K', NULL, 'I', false }, // this is how to save a kit // should it be called presets?
         // 4 LFO -> can be assigned to any changeable values and can be use for multiple instrument at the same time
         // 4 Extra Envelop -> same as LFO
@@ -60,16 +62,15 @@ public:
     };
 
     App(App_Display* _display)
-        : display(_display)
-        // , trackView(&tracks)
-        , trackSeqView(&tracks, &patterns[0])
-        , instrumentView(&tracks)
+        : trackSeqView(&tracks, &patterns[0])
+        // , instrumentView(&tracks)
         , patternView(&patterns[0])
         // , trackDelayView(&tracks)
         , projectView(&tempo, &tracks, &project, &menuView)
         , projectEditNameView(&project, &menuView)
         , menuView(&menu[0], APP_MENU_SIZE)
     {
+        App::display = _display;
     }
 
     void sample(float* buf, int len)
@@ -87,11 +88,11 @@ public:
 
     void render()
     {
-        if (display->ready()) {
+        if (App::display->ready()) {
             // TODO find a better place way to reset cursor
-            display->reset();
-            menuView.getView()->render(display);
-            display->drawText();
+            App::display->reset();
+            menuView.getView()->render(App::display);
+            App::display->drawText();
             rendered = true;
         }
     }
@@ -108,9 +109,9 @@ public:
 
         if (keys.Menu && keys.Edit) {
             tracks.togglePlay();
-        } else if (menuView.update(&keys, display) != VIEW_NONE) {
+        } else if (menuView.update(&keys, App::display) != VIEW_NONE) {
             render();
-        } else if (menuView.getView()->update(&keys, display) != VIEW_NONE) {
+        } else if (menuView.getView()->update(&keys, App::display) != VIEW_NONE) {
             render();
         }
     }
@@ -122,7 +123,7 @@ public:
             if (menu[i].view) {
                 renderer.reset();
                 renderer.startRow = 0;
-                menu[i].view->snapshot(&renderer);
+                // menu[i].view->snapshot(&renderer);
             }
         }
     }
@@ -136,5 +137,7 @@ public:
         }
     }
 };
+
+App_Display* App::display = NULL;
 
 #endif
