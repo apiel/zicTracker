@@ -173,6 +173,7 @@ public:
             break;
 
         case 1:
+            renderer->useColor(row, col / 4 * 7 + 3, COLOR_MEDIUM);
             strcat(renderer->text, charLevel(getVel(step) + 1));
             break;
 

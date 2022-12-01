@@ -151,7 +151,7 @@ public:
 
     void initDisplay(App_Renderer* renderer)
     {
-        renderer->useColor(0, 1, 0, 4);
+        renderer->useColor(0, 1, 0, 4, COLOR_MEDIUM);
         App_View_Table::initDisplay(renderer);
     }
 };

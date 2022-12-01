@@ -1,8 +1,8 @@
 #ifndef APP_VIEW_TRACK_SEQUENCER_H_
 #define APP_VIEW_TRACK_SEQUENCER_H_
 
-#include <app_core_renderer.h>
 #include "./app_tracks.h"
+#include <app_core_renderer.h>
 #include <app_core_util.h>
 #include <app_core_view_table.h>
 
@@ -48,6 +48,7 @@ public:
             }
         }
         if (col % 3 == 0) {
+            renderer->useColor(row, col / 3 * 7, track->looper.isComponentPlaying(row - 1) ? COLOR_PLAY : COLOR_MEDIUM);
             strcat(renderer->text,
                 track->looper.isComponentPlaying(row - 1) ? ">"
                                                           : (track->looper.isCurrentComponent(row - 1) ? "*" : " "));
@@ -57,6 +58,7 @@ public:
                 sprintf(renderer->text + strlen(renderer->text), "%02X", component->pattern->id + 1);
             }
         } else if (col % 3 == 1) {
+            renderer->useColor(row, col / 3 * 7 + 3, 4, COLOR_LIGHT);
             if (component->detune < 0) {
                 sprintf(renderer->text + strlen(renderer->text), "-%c", alphanum[-component->detune]);
             } else {

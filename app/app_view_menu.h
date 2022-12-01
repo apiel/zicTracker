@@ -84,17 +84,23 @@ public:
 
     void render(App_Renderer* renderer)
     {
-        renderer->useFirstLetterHilighted();
+        renderer->setDefaultColor(COLOR_MEDIUM);
         strcpy(renderer->text, "");
+        uint8_t row = 0, col = 0;
         for (uint8_t i = 0; i < menuSize; i++) {
             if (i != 0 && menu[i].group != menu[i - 1].group) {
                 strcat(renderer->text, "\n");
+                row++;
+                col = 0;
             }
             if (i == currentMenu) {
                 renderer->setCursor(1, 1);
             }
+            renderer->useColor(row, col + 1, COLOR_PRIMARY);
             sprintf(renderer->text + strlen(renderer->text), " %s", menu[i].shortName);
+            col += strlen(menu[i].shortName) + 1;
         }
+        renderer->useColor(row + 2, 1, 2, COLOR_HILIGHT);
         sprintf(renderer->text + strlen(renderer->text), "\n\n >> %s", menu[currentMenu].name);
     }
 
