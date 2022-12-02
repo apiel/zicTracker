@@ -1,5 +1,6 @@
 var size = 4;
 var pos = 0;
+var editMode = false;
 
 function renderer() {
     CONFIG.sort(function (a, b) {
@@ -16,10 +17,11 @@ function renderer() {
     useColor(3, 3, COLOR_DARK, 7);
     useColor(4, 3, COLOR_DARK, 7);
 
-    useColor(1, 0, pos === 0 ? COLOR_HILIGHT : COLOR_HIDE);
-    useColor(2, 0, pos === 1 ? COLOR_HILIGHT : COLOR_HIDE);
-    useColor(3, 0, pos === 2 ? COLOR_HILIGHT : COLOR_HIDE);
-    useColor(4, 0, pos === 3 ? COLOR_HILIGHT : COLOR_HIDE);
+    var hilight = editMode ? COLOR_CURSOR : COLOR_HILIGHT;
+    useColor(1, 0, pos === 0 ? hilight : COLOR_HIDE);
+    useColor(2, 0, pos === 1 ? hilight : COLOR_HIDE);
+    useColor(3, 0, pos === 2 ? hilight : COLOR_HIDE);
+    useColor(4, 0, pos === 3 ? hilight : COLOR_HIDE);
 
     render(
         'Envelop:\n* Attack:  ' +
@@ -36,7 +38,9 @@ function renderer() {
 
 function update(keys) {
     // log(JSON.stringify(keys));
+    editMode = false;
     if (keys.Edit) {
+        editMode = true;
         if (keys.Up) {
             CONFIG[pos][2] = Math.min(CONFIG[pos][2] + 5, 127);
         } else if (keys.Down) {
