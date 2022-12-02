@@ -63,6 +63,18 @@ public:
         }
         return instance;
     }
+
+    uint8_t update(UiKeys* keys, App_Renderer* renderer) override
+    {
+        uint8_t status = App_View_JS::update(keys, renderer);
+        if (status == VIEW_STATE_CHANGED) {
+            // TODO update config
+
+            // TODO implement save
+            save();
+        }
+        return status;
+    }
 };
 
 App_View_Instrument* App_View_Instrument::instance = NULL;
