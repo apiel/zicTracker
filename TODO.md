@@ -1,5 +1,7 @@
 ## TODO
 
+- use TypeScript for JS file so we can define available type for the UI!!
+
 - sequencer layout
     sequencer seminote volume instrument
     instrument_1 2 3 4

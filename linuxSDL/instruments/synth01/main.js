@@ -11,7 +11,7 @@ function update(keys) {
   } else if (keys.Down) {
     count--;
   }
-  // log(JSON.stringify(keys));
+  log(JSON.stringify(CONFIG));
   content = "updated";
   return 1;
 }
