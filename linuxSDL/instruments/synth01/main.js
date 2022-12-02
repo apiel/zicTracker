@@ -35,7 +35,18 @@ function renderer() {
 }
 
 function update(keys) {
-    if (keys.Down) {
+    // log(JSON.stringify(keys));
+    if (keys.Edit) {
+        if (keys.Up) {
+            CONFIG[pos][2] = Math.min(CONFIG[pos][2] + 5, 127);
+        } else if (keys.Down) {
+            CONFIG[pos][2] = Math.max(CONFIG[pos][2] - 5, 0);
+        } else if (keys.Right) {
+            CONFIG[pos][2] =  Math.min(CONFIG[pos][2] + 1, 127);
+        } else if (keys.Left) {
+            CONFIG[pos][2] = Math.max(CONFIG[pos][2] - 1, 0);
+        }
+    } else if (keys.Down) {
         pos = (pos + 1) % size;
     } else if (keys.Up) {
         pos = (pos - 1 + size) % size;
