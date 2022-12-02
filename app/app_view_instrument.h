@@ -46,6 +46,8 @@ protected:
         duk_put_global_string(ctx, "VIEW_NONE");
         duk_push_int(ctx, VIEW_CHANGED);
         duk_put_global_string(ctx, "VIEW_CHANGED");
+        duk_push_int(ctx, VIEW_STATE_CHANGED);
+        duk_put_global_string(ctx, "VIEW_STATE_CHANGED");
 
         duk_eval_file_extra(ctx, "instruments/synth01/main.js");
         duk_pop(ctx);

@@ -43,12 +43,16 @@ function update(keys) {
         editMode = true;
         if (keys.Up) {
             CONFIG[pos][2] = Math.min(CONFIG[pos][2] + 5, 127);
+            return VIEW_STATE_CHANGED;
         } else if (keys.Down) {
             CONFIG[pos][2] = Math.max(CONFIG[pos][2] - 5, 0);
+            return VIEW_STATE_CHANGED;
         } else if (keys.Right) {
             CONFIG[pos][2] =  Math.min(CONFIG[pos][2] + 1, 127);
+            return VIEW_STATE_CHANGED;
         } else if (keys.Left) {
             CONFIG[pos][2] = Math.max(CONFIG[pos][2] - 1, 0);
+            return VIEW_STATE_CHANGED;
         }
     } else if (keys.Down) {
         pos = (pos + 1) % size;
