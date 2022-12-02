@@ -58,7 +58,7 @@ public:
                 sprintf(renderer->text + strlen(renderer->text), "%02X", component->pattern->id + 1);
             }
         } else if (col % 3 == 1) {
-            renderer->useColor(row, col / 3 * 7 + 3, 4, COLOR_LIGHT);
+            renderer->useColor(row, col / 3 * 7 + 3, COLOR_LIGHT, 4);
             if (component->detune < 0) {
                 sprintf(renderer->text + strlen(renderer->text), "-%c", alphanum[-component->detune]);
             } else {

@@ -100,7 +100,7 @@ public:
             sprintf(renderer->text + strlen(renderer->text), " %s", menu[i].shortName);
             col += strlen(menu[i].shortName) + 1;
         }
-        renderer->useColor(row + 2, 1, 2, COLOR_HILIGHT);
+        renderer->useColor(row + 2, 1, COLOR_HILIGHT, 2);
         sprintf(renderer->text + strlen(renderer->text), "\n\n >> %s", menu[currentMenu].name);
     }
 
