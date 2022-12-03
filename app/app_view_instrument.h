@@ -15,7 +15,7 @@
 class App_View_Instrument : public App_View_JS, App_Load_Config {
 protected:
     App_Tracks* tracks;
-
+    
     const char* getConfigFile()
     {
         return "instruments/synth01/main.cfg";
@@ -27,7 +27,7 @@ protected:
         load();
         // logCfg();
 
-        duk_idx_t arr_idx = duk_push_array(ctx);
+        duk_idx_t configIdx = duk_push_array(ctx);
         for (int i = 0; i < APP_CONFIG_SIZE && config[i][0] != 255; i++) {
             duk_idx_t subArr_idx = duk_push_array(ctx);
             if (config[i][0] == *(uint8_t*)"cc") {
@@ -37,7 +37,7 @@ protected:
                 duk_put_prop_index(ctx, subArr_idx, 1);
                 duk_push_int(ctx, config[i][2]);
                 duk_put_prop_index(ctx, subArr_idx, 2);
-                duk_put_prop_index(ctx, arr_idx, i);
+                duk_put_prop_index(ctx, configIdx, i);
             }
         }
         duk_put_global_string(ctx, "CONFIG");
@@ -68,7 +68,21 @@ public:
     {
         uint8_t status = App_View_JS::update(keys, renderer);
         if (status == VIEW_STATE_CHANGED) {
-            // TODO update config
+            duk_get_global_string(ctx, "CONFIG");
+            void *ptr = duk_get_heapptr(ctx, -1);
+            duk_size_t len = duk_get_length(ctx, -1);
+            for (duk_size_t i = 0; i < len; i++) {
+                duk_push_heapptr(ctx, ptr);
+                duk_get_prop_index(ctx, -1, i);
+                duk_get_prop_index(ctx, -1, 0);
+                // printf("cmd: %s\n", duk_get_string(ctx, -1));
+                if (*(uint8_t*)"cc" == *(uint8_t*)duk_get_string(ctx, -1)) {
+                    duk_get_prop_index(ctx, -2, 1);
+                    duk_get_prop_index(ctx, -3, 2);
+                    printf("cc: %d, val: %d\n", duk_get_int(ctx, -2), duk_get_int(ctx, -1));
+                }
+                duk_pop(ctx);
+            }
 
             // TODO implement save
             save();
