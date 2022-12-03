@@ -15,6 +15,7 @@
 class App_View_Instrument : public App_View_JS, App_Load_Config {
 protected:
     App_Tracks* tracks;
+    bool presetIsPlaying = true;
 
     const char* getConfigFile()
     {
@@ -59,6 +60,9 @@ protected:
 public:
     static App_View_Instrument* instance;
 
+    // TODO
+    void updatePlayingPreset() {}
+
     static App_View_Instrument* getInstance(App_Tracks* _tracks)
     {
         if (!instance) {
@@ -74,6 +78,8 @@ public:
         uint8_t cc = duk_get_int(ctx, 0);
         uint8_t val = duk_get_int(ctx, 1);
         printf(">>>>>>>>>>>>> cc: %d, val: %d\n", cc, val);
+
+        instance->tracks->cc(cc, val);
 
         return 0;
     }

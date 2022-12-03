@@ -62,7 +62,7 @@ public:
             if (looper.state.playing && looper.stepOn != 255) {
                 Zic_Seq_Step* step = &looper.state.pattern->steps[i][looper.stepOn];
                 if (step->note > 0) {
-                    printf("note on %d (%d)\n", step->note, step->velocity);
+                    // printf("note on %d (%d)\n", step->note, step->velocity);
                     pd.sendNoteOn(1, step->note, step->velocity);
                     stepOff[i] = step;
                 }
@@ -74,6 +74,11 @@ public:
     {
         int ticks = len * tickDivider;
         pd.processFloat(ticks, NULL, buf);
+    }
+
+    void cc(uint8_t num, uint8_t val)
+    {
+        pd.sendControlChange(1, num, val);
     }
 };
 

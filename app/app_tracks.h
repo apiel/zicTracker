@@ -86,6 +86,14 @@ public:
     {
         return tracks[0]->looper.isPlaying();
     }
+
+    void cc(uint8_t num, uint8_t val)
+    {
+        // TODO should we select the right track?
+        for (uint8_t i = 0; i < TRACK_COUNT; i++) {
+            tracks[i]->cc(num, val);
+        }
+    }
 };
 
 #endif
