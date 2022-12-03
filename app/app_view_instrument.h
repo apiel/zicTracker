@@ -75,27 +75,17 @@ public:
         uint8_t val = duk_get_int(ctx, 1);
         printf(">>>>>>>>>>>>> cc: %d, val: %d\n", cc, val);
 
-        // only neceassary if saving
-
-        // for (uint8_t i = 0; i < APP_CONFIG_SIZE; i++) {
-        //     if (instance->config[i][0] == *(uint8_t*)"cc" && instance->config[i][1] == cc) {
-        //         instance->config[i][2] = val;
-        //         break;
-        //     }
-        // }
-
-        // Should save be debounced or only happen while changing view?
-        // But then would need a central config system that could be enough for the whole sequencer...
-
-        // save();
-
-        // Even have a save button
-
         return 0;
     }
 
     // should we save from js or from patch / preset selector
     static duk_ret_t duk_save(duk_context* ctx)
+    {
+        instance->pullJsConfigAndSave();
+        return 0;
+    }
+
+    void pullJsConfigAndSave()
     {
         duk_get_global_string(ctx, "CONFIG");
         void* ptr = duk_get_heapptr(ctx, -1);
@@ -110,15 +100,15 @@ public:
                 duk_get_prop_index(ctx, -3, 2);
                 // printf("cc: %d, val: %d\n", duk_get_int(ctx, -2), duk_get_int(ctx, -1));
                 for (uint8_t i = 0; i < APP_CONFIG_SIZE; i++) {
-                    if (instance->config[i][0] == *(uint8_t*)"cc" && instance->config[i][1] == duk_get_int(ctx, -2)) {
-                        instance->config[i][2] = duk_get_int(ctx, -1);
+                    if (config[i][0] == *(uint8_t*)"cc" && config[i][1] == duk_get_int(ctx, -2)) {
+                        config[i][2] = duk_get_int(ctx, -1);
                         break;
                     }
                 }
             }
             duk_pop(ctx);
         }
-        instance->save();
+        save();
     }
 };
 
