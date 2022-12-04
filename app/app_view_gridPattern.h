@@ -1,15 +1,15 @@
-#ifndef APP_VIEW_TRACK_SEQUENCER_H_
-#define APP_VIEW_TRACK_SEQUENCER_H_
+#ifndef APP_VIEW_GRID_PATTERN_H_
+#define APP_VIEW_GRID_PATTERN_H_
 
 #include "./app_tracks.h"
 #include <app_core_renderer.h>
 #include <app_core_util.h>
 #include <app_core_view_table.h>
 
-#define VIEW_TRACK_SEQUENCER_ROW PATTERN_COMPONENT_COUNT
-#define VIEW_TRACK_SEQUENCER_COL TRACK_COUNT * 3
+#define VIEW_GRID_PATTERN_ROW PATTERN_COMPONENT_COUNT
+#define VIEW_GRID_PATTERN_COL TRACK_COUNT * 3
 
-class App_View_TrackSequencerPat : public App_View_TableField {
+class App_View_GridPatternField : public App_View_TableField {
 protected:
     App_Tracks* tracks;
     Zic_Seq_Pattern* patterns;
@@ -18,7 +18,7 @@ protected:
     char* description;
 
 public:
-    App_View_TrackSequencerPat(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns, char* _description)
+    App_View_GridPatternField(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns, char* _description)
         : tracks(_tracks)
         , patterns(_patterns)
         , description(_description)
@@ -128,14 +128,14 @@ public:
     }
 };
 
-class App_View_TrackSequencer : public App_View_Table {
+class App_View_GridPattern : public App_View_Table {
 protected:
     Zic_Seq_Pattern* patterns;
-    App_View_TrackSequencerPat patField;
+    App_View_GridPatternField patField;
     App_Tracks* tracks;
     char description[30] = "";
 
-    App_View_TableField* fields[VIEW_TRACK_SEQUENCER_ROW * VIEW_TRACK_SEQUENCER_COL] = {
+    App_View_TableField* fields[VIEW_GRID_PATTERN_ROW * VIEW_GRID_PATTERN_COL] = {
         // clang-format off
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
@@ -148,8 +148,8 @@ protected:
         // clang-format on
     };
 
-    App_View_TrackSequencer(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
-        : App_View_Table(fields, VIEW_TRACK_SEQUENCER_ROW, VIEW_TRACK_SEQUENCER_COL)
+    App_View_GridPattern(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
+        : App_View_Table(fields, VIEW_GRID_PATTERN_ROW, VIEW_GRID_PATTERN_COL)
         , patterns(_patterns)
         , patField(_tracks, _patterns, description)
         , tracks(_tracks)
@@ -158,12 +158,12 @@ protected:
     }
 
 public:
-    static App_View_TrackSequencer* instance;
+    static App_View_GridPattern* instance;
 
-    static App_View_TrackSequencer* getInstance(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
+    static App_View_GridPattern* getInstance(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
     {
         if (!instance) {
-            instance = new App_View_TrackSequencer(_tracks, _patterns);
+            instance = new App_View_GridPattern(_tracks, _patterns);
         }
         return instance;
     }
@@ -226,6 +226,6 @@ public:
     }
 };
 
-App_View_TrackSequencer* App_View_TrackSequencer::instance = NULL;
+App_View_GridPattern* App_View_GridPattern::instance = NULL;
 
 #endif

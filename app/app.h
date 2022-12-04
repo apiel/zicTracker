@@ -13,7 +13,7 @@
 // #include "./app_view_track.h"
 // #include "./app_view_trackDelay.h"
 #include "./app_view_menu.h"
-#include "./app_view_trackSequencer.h"
+#include "./app_view_gridPattern.h"
 #include <app_core_display.h>
 #include <app_core_renderer.h>
 #include <zic_seq_tempo.h>
@@ -44,7 +44,7 @@ public:
 
     Menu menu[APP_MENU_SIZE] = {
         // NOTE Group menu per decimal number
-        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_TrackSequencer::getInstance(&tracks, &patterns[0]) },
+        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_GridPattern::getInstance(&tracks, &patterns[0]) },
         (Menu) { 11, "Grid: Instrument seq.", "Instr.", NULL },
         (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL },
         (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", NULL },
