@@ -13,17 +13,10 @@ typedef struct {
     const char* name;
     const char* shortName;
     App_View* view;
-    uint8_t join; // Link menu item together, for example 10 and 20. Set the same value (>0) to join them e.g.: 1
 } Menu;
-
-// typedef struct {
-//     bool selected;
-//     uint8_t groups;
-// } MenuState;
 
 class App_View_Menu : public App_View {
 protected:
-    bool selected[APP_MENU_SIZE];
     uint8_t groups[APP_MENU_SIZE];
     Menu* menu;
 
@@ -34,14 +27,12 @@ protected:
 
     void menuInc(int8_t val)
     {
-        selected[currentMenu] = false;
         uint8_t group = groups[currentMenu];
         inc(val);
         // Avoid to get out of the group
         if (group != groups[currentMenu]) {
             inc(-val);
         }
-        selected[currentMenu] = true;
     }
 
     void groupInc(int8_t val)
@@ -72,12 +63,10 @@ protected:
             return;
         }
 
-        selected[currentMenu] = false;
         currentMenu = i;
         for (uint8_t col = 0; i + 1 < APP_MENU_SIZE && groups[i + 1] == nextGroup && col < column; i++, col++) {
             currentMenu++;
         }
-        selected[currentMenu] = true;
     }
 
     void menuPlus()
@@ -111,11 +100,8 @@ public:
 
     void initMenu()
     {
-        uint8_t previousGroup = 0;
         for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
             groups[i] = (uint8_t)(menu[i].id * 0.1f);
-            selected[i] = previousGroup != groups[i];
-            previousGroup = groups[i];
         }
     }
 
