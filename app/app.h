@@ -53,8 +53,8 @@ public:
         (Menu) { 22, "Edit: Effect", "IFX", NULL },
         (Menu) { 30, "Scatter effect", "Scatter", NULL },
         (Menu) { 31, "Master filter & effect", "MF+MFX", NULL },
-        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView) }, // Select project
-        (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView) }, // Select project
+        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView), true },
+        (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView) },
     };
 
     static App* instance;

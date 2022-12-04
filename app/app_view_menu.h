@@ -13,6 +13,7 @@ typedef struct {
     const char* name;
     const char* shortName;
     App_View* view;
+    bool forceSelect = false;
 } Menu;
 
 class App_View_Menu : public App_View {
@@ -64,7 +65,7 @@ protected:
         }
 
         currentMenu = i;
-        for (uint8_t col = 0; i + 1 < APP_MENU_SIZE && groups[i + 1] == nextGroup && col < column; i++, col++) {
+        for (uint8_t col = 0; i + 1 < APP_MENU_SIZE && groups[i + 1] == nextGroup && col < column && !menu[i].forceSelect; i++, col++) {
             currentMenu++;
         }
     }
