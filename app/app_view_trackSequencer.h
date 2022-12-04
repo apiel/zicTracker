@@ -15,11 +15,13 @@ protected:
     Zic_Seq_Pattern* patterns;
     Zic_Seq_PatternComponent newComponent;
     bool updating = false;
+    char* description;
 
 public:
-    App_View_TrackSequencerPat(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
+    App_View_TrackSequencerPat(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns, char* _description)
         : tracks(_tracks)
         , patterns(_patterns)
+        , description(_description)
     {
     }
 
@@ -38,12 +40,26 @@ public:
             if (updating) {
                 component = &newComponent;
             }
+
+            if (col % 3 == 0) {
+                if (component->pattern == NULL) {
+                    sprintf(description, "Pattern: to be selected");
+                } else {
+                    sprintf(description, "Pattern: %02X (%d steps)", component->pattern->id + 1, component->pattern->stepCount);
+                }
+            } else if (col % 3 == 1) {
+                sprintf(description, "Detune: %d semi tone", component->detune);
+            } else if (col % 3 == 2) {
+                sprintf(description, "Condition: %s %s",
+                    SEQ_CONDITIONS_NAMES[component->condition],
+                    SEQ_CONDITIONS_FULLNAMES[component->condition]);
+            }
         }
         if (col % 3 == 0) {
             renderer->useColor(row + 1, col / 3 * 7, track->looper.isComponentPlaying(row) ? COLOR_PLAY : COLOR_MARKER);
             strcat(renderer->text,
                 track->looper.isComponentPlaying(row) ? ">"
-                                                          : (track->looper.isCurrentComponent(row) ? "*" : " "));
+                                                      : (track->looper.isCurrentComponent(row) ? "*" : " "));
             if (component->pattern == NULL) {
                 strcat(renderer->text, "--");
             } else {
@@ -117,6 +133,7 @@ protected:
     Zic_Seq_Pattern* patterns;
     App_View_TrackSequencerPat patField;
     App_Tracks* tracks;
+    char description[30] = "";
 
     App_View_TableField* fields[VIEW_TRACK_SEQUENCER_ROW * VIEW_TRACK_SEQUENCER_COL] = {
         // clang-format off
@@ -125,19 +142,16 @@ protected:
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        // &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-
         // clang-format on
     };
 
     App_View_TrackSequencer(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
         : App_View_Table(fields, VIEW_TRACK_SEQUENCER_ROW, VIEW_TRACK_SEQUENCER_COL)
         , patterns(_patterns)
-        , patField(_tracks, _patterns)
+        , patField(_tracks, _patterns, description)
         , tracks(_tracks)
     {
         initSelection();
@@ -173,7 +187,7 @@ public:
         }
         strcat(renderer->text, "\n");
         App_View_Table::render(renderer);
-        sprintf(renderer->text + strlen(renderer->text), " Yoyoyoyo");
+        sprintf(renderer->text + strlen(renderer->text), " %s", description);
     }
 
     const char* snapshotPath = "projects/current/sequencer.zic";
