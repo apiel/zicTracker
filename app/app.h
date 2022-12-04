@@ -1,31 +1,31 @@
 #ifndef APP_H_
 #define APP_H_
 
+#define APP_MENU_SIZE 11
+
 #include "./app_def.h"
 #include "./app_project.h"
 #include "./app_tracks.h"
 #include "./app_view_instrument.h"
-#include "./app_view_menu.h"
 #include "./app_view_pattern.h"
 #include "./app_view_project.h"
 #include "./app_view_projectEditName.h"
 // #include "./app_view_track.h"
 // #include "./app_view_trackDelay.h"
+#include "./app_view_menu.h"
 #include "./app_view_trackSequencer.h"
 #include <app_core_display.h>
 #include <app_core_renderer.h>
-
 #include <zic_seq_tempo.h>
-
-#define APP_MENU_SIZE 11
 
 class App {
 
 protected:
     App(App_Display* _display)
-        : menuView(&menu[0], APP_MENU_SIZE)
+        : menuView(&menu[0])
     {
         App::display = _display;
+        menuView.initMenu();
     }
 
 public:
@@ -43,17 +43,17 @@ public:
     bool rendered = false;
 
     Menu menu[APP_MENU_SIZE] = {
-        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_TrackSequencer::getInstance(&tracks, &patterns[0]), 'G', true },
-        (Menu) { 11, "Grid: Instrument seq.", "Instr.", NULL, 'G', false },
-        (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL, 'G', false },
-        (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", NULL, 'G', false },
-        (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]), 'E', true },
-        (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance(&tracks), 'E', false },
-        (Menu) { 22, "Edit: Effect", "IFX", NULL, 'E', false },
-        (Menu) { 30, "Scatter effect", "Scatter", NULL, 'M', true },
-        (Menu) { 31, "Master filter & effect", "MF+MFX", NULL, 'M', false },
-        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView), 'J', true }, // Select project
-        (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView), 'J', false }, // Select project
+        (Menu) { 10, 1, "Grid: Pattern sequencer", "Pattern", App_View_TrackSequencer::getInstance(&tracks, &patterns[0]) },
+        (Menu) { 11, 1, "Grid: Instrument seq.", "Instr.", NULL },
+        (Menu) { 12, 1, "Grid: Effect sequencer", "IFX", NULL },
+        (Menu) { 13, 1, "Grid: Volume & Master FX", "VOL+MFX", NULL },
+        (Menu) { 20, 2, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]) },
+        (Menu) { 21, 2, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance(&tracks) },
+        (Menu) { 22, 2, "Edit: Effect", "IFX", NULL },
+        (Menu) { 30, 3, "Scatter effect", "Scatter", NULL },
+        (Menu) { 31, 3, "Master filter & effect", "MF+MFX", NULL },
+        (Menu) { 40, 4, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView) }, // Select project
+        (Menu) { 41, 4, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView) }, // Select project
     };
 
     static App* instance;
