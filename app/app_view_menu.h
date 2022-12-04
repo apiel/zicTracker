@@ -37,6 +37,7 @@ protected:
         selected[currentMenu] = false;
         uint8_t group = groups[currentMenu];
         inc(val);
+        // Avoid to get out of the group
         if (group != groups[currentMenu]) {
             inc(-val);
         }
@@ -45,20 +46,38 @@ protected:
 
     void groupInc(int8_t val)
     {
-        uint8_t join = menu[currentMenu].join;
-        do {
-            inc(val);
-        } while (!selected[currentMenu]);
+        uint8_t group = groups[currentMenu];
+        uint8_t nextGroup = group + val;
 
-        if (join) {
-            uint8_t group = groups[currentMenu];
-            for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
-                if (groups[i] == group && menu[i].join == join) {
-                    currentMenu = i;
-                    selected[currentMenu] = true;
-                }
+        // If we assume that group start from 10
+        if (nextGroup == 0) {
+            return;
+        }
+
+        uint8_t column = 0;
+        for (uint8_t i = 0; i < currentMenu; i++) {
+            if (groups[i] == group) {
+                column++;
             }
         }
+
+        uint8_t i = 0;
+        for (; i < APP_MENU_SIZE; i++) {
+            if (groups[i] == nextGroup) {
+                break;
+            }
+        }
+
+        if (groups[i] != nextGroup) {
+            return;
+        }
+
+        selected[currentMenu] = false;
+        currentMenu = i;
+        for (uint8_t col = 0; i + 1 < APP_MENU_SIZE && groups[i + 1] == nextGroup && col < column; i++, col++) {
+            currentMenu++;
+        }
+        selected[currentMenu] = true;
     }
 
     void menuPlus()
