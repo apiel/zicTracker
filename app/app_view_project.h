@@ -98,7 +98,8 @@ public:
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
-        menu->setView('J', 'N');
+        printf(">>>>>>>>>>>>>>>>>>>>>>>update name\n");
+        menu->setView(41);
         return VIEW_CHANGED;
     }
 };

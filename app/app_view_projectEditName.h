@@ -111,7 +111,7 @@ public:
             project->name[strlen(project->name) - 1] = '\0';
             return VIEW_CHANGED;
         } else {
-            menu->setView('J', 'J');
+            menu->setView(40);
             return VIEW_CHANGED;
         }
         return VIEW_NONE;

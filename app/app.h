@@ -43,17 +43,17 @@ public:
     bool rendered = false;
 
     Menu menu[APP_MENU_SIZE] = {
-        (Menu) { "Grid: Pattern sequencer", "Pattern", 'P', App_View_TrackSequencer::getInstance(&tracks, &patterns[0]), 'G', true },
-        (Menu) { "Grid: Instrument seq.", "Instr.", 'I', NULL, 'G', false },
-        (Menu) { "Grid: Effect sequencer", "IFX", 'X', NULL, 'G', false },
-        (Menu) { "Grid: Volume & Master FX", "VOL+MFX", 'V', NULL, 'G', false },
-        (Menu) { "Edit: Pattern", "Pattern", 'P', App_View_Pattern::getInstance(&patterns[0]), 'E', true },
-        (Menu) { "Edit: Instrument", "Instr.", 'I', App_View_Instrument::getInstance(&tracks), 'E', false },
-        (Menu) { "Edit: Effect", "IFX", 'X', NULL, 'E', false },
-        (Menu) { "Scatter effect", "Scatter", 'P', NULL, 'M', true },
-        (Menu) { "Master filter & effect", "MF+MFX", 'F', NULL, 'M', false },
-        (Menu) { "Project", "Project", 'J', App_View_Project::getInstance(&tempo, &tracks, &project, &menuView), 'J', true }, // Select project
-        (Menu) { "Edit project name", "Name", 'N', App_View_ProjectEditName::getInstance(&project, &menuView), 'J', false }, // Select project
+        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_TrackSequencer::getInstance(&tracks, &patterns[0]), 'G', true },
+        (Menu) { 11, "Grid: Instrument seq.", "Instr.", NULL, 'G', false },
+        (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL, 'G', false },
+        (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", NULL, 'G', false },
+        (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]), 'E', true },
+        (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance(&tracks), 'E', false },
+        (Menu) { 22, "Edit: Effect", "IFX", NULL, 'E', false },
+        (Menu) { 30, "Scatter effect", "Scatter", NULL, 'M', true },
+        (Menu) { 31, "Master filter & effect", "MF+MFX", NULL, 'M', false },
+        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView), 'J', true }, // Select project
+        (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView), 'J', false }, // Select project
     };
 
     static App* instance;

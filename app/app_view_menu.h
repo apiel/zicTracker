@@ -5,9 +5,9 @@
 #include <app_core_view.h>
 
 typedef struct {
+    uint8_t id;
     const char* name;
     const char* shortName;
-    char key;
     App_View* view;
     char group;
     bool selected;
@@ -122,12 +122,12 @@ public:
         return VIEW_NONE;
     }
 
-    void setView(char group, char key)
+    void setView(uint8_t id)
     {
         for (uint8_t i = 0; i < menuSize; i++) {
-            if (menu[i].group == group && menu[i].key == key) {
+            if (menu[i].id == id) {
                 currentMenu = i;
-                break;
+                return;
             }
         }
     }
