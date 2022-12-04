@@ -17,7 +17,7 @@
 
 #include <zic_seq_tempo.h>
 
-#define APP_MENU_SIZE 9
+#define APP_MENU_SIZE 11
 
 class App {
 
@@ -43,13 +43,15 @@ public:
     bool rendered = false;
 
     Menu menu[APP_MENU_SIZE] = {
-        (Menu) { "Tracks sequencer", "Sequencer", 'S', App_View_TrackSequencer::getInstance(&tracks, &patterns[0]), 'T', true },
-        (Menu) { "Tracks", "Tracks", 'T', NULL, 'T', false },
-        (Menu) { "Track delay", "Delay", 'D', NULL, 'T', false },
-        (Menu) { "Instruments", "Instruments", 'I', App_View_Instrument::getInstance(&tracks), 'I', true },
-        (Menu) { "Instruments kit", "Kit", 'K', NULL, 'I', false }, // this is how to save a kit // should it be called presets?
-        (Menu) { "Pattern", "Pattern", 'P', App_View_Pattern::getInstance(&patterns[0]), 'P', true },
-        (Menu) { "Sampler", "Sampler", 'S', NULL, 'S', true }, // Record all track to sample and edit sample
+        (Menu) { "Grid: Pattern sequencer", "Pattern", 'P', App_View_TrackSequencer::getInstance(&tracks, &patterns[0]), 'G', true },
+        (Menu) { "Grid: Instrument seq.", "Instr.", 'I', NULL, 'G', false },
+        (Menu) { "Grid: Effect sequencer", "IFX", 'X', NULL, 'G', false },
+        (Menu) { "Grid: Volume & Master FX", "VOL+MFX", 'V', NULL, 'G', false },
+        (Menu) { "Edit: Pattern", "Pattern", 'P', App_View_Pattern::getInstance(&patterns[0]), 'E', true },
+        (Menu) { "Edit: Instrument", "Instr.", 'I', App_View_Instrument::getInstance(&tracks), 'E', false },
+        (Menu) { "Edit: Effect", "IFX", 'X', NULL, 'E', false },
+        (Menu) { "Scatter effect", "Scatter", 'P', NULL, 'M', true },
+        (Menu) { "Master filter & effect", "MF+MFX", 'F', NULL, 'M', false },
         (Menu) { "Project", "Project", 'J', App_View_Project::getInstance(&tempo, &tracks, &project, &menuView), 'J', true }, // Select project
         (Menu) { "Edit project name", "Name", 'N', App_View_ProjectEditName::getInstance(&project, &menuView), 'J', false }, // Select project
     };

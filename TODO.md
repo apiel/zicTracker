@@ -1,5 +1,11 @@
 ## TODO
 
+MAIN: SCATTER MFX VCF
+GRID: MIDI PAT INST IFX MFX+VOL
+EDIT: PAT  PAT INST IFX
+      Project Name
+
+
 - use TypeScript for JS file so we can define available type for the UI!!
 
 - sequencer layout
