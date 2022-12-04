@@ -43,17 +43,18 @@ public:
     bool rendered = false;
 
     Menu menu[APP_MENU_SIZE] = {
-        (Menu) { 10, 1, "Grid: Pattern sequencer", "Pattern", App_View_TrackSequencer::getInstance(&tracks, &patterns[0]) },
-        (Menu) { 11, 1, "Grid: Instrument seq.", "Instr.", NULL },
-        (Menu) { 12, 1, "Grid: Effect sequencer", "IFX", NULL },
-        (Menu) { 13, 1, "Grid: Volume & Master FX", "VOL+MFX", NULL },
-        (Menu) { 20, 2, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]) },
-        (Menu) { 21, 2, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance(&tracks) },
-        (Menu) { 22, 2, "Edit: Effect", "IFX", NULL },
-        (Menu) { 30, 3, "Scatter effect", "Scatter", NULL },
-        (Menu) { 31, 3, "Master filter & effect", "MF+MFX", NULL },
-        (Menu) { 40, 4, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView) }, // Select project
-        (Menu) { 41, 4, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView) }, // Select project
+        // NOTE Group menu per decimal number
+        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_TrackSequencer::getInstance(&tracks, &patterns[0]) },
+        (Menu) { 11, "Grid: Instrument seq.", "Instr.", NULL },
+        (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL },
+        (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", NULL },
+        (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]) },
+        (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance(&tracks) },
+        (Menu) { 22, "Edit: Effect", "IFX", NULL },
+        (Menu) { 30, "Scatter effect", "Scatter", NULL },
+        (Menu) { 31, "Master filter & effect", "MF+MFX", NULL },
+        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView) }, // Select project
+        (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView) }, // Select project
     };
 
     static App* instance;

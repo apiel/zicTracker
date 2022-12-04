@@ -9,8 +9,7 @@
 #endif
 
 typedef struct {
-    uint8_t id;
-    uint8_t group;
+    uint8_t id; // NOTE Group menu per decimal number, 10,11,12 will be in the same group, as 20,21,22, etc.
     const char* name;
     const char* shortName;
     App_View* view;
@@ -19,6 +18,7 @@ typedef struct {
 class App_View_Menu : public App_View {
 protected:
     bool selected[APP_MENU_SIZE];
+    uint8_t groups[APP_MENU_SIZE];
     Menu* menu;
 
     void inc(int8_t val)
@@ -29,9 +29,9 @@ protected:
     void menuInc(int8_t val)
     {
         selected[currentMenu] = false;
-        uint8_t group = menu[currentMenu].group;
+        uint8_t group = groups[currentMenu];
         inc(val);
-        if (group != menu[currentMenu].group) {
+        if (group != groups[currentMenu]) {
             inc(-val);
         }
         selected[currentMenu] = true;
@@ -78,9 +78,9 @@ public:
     {
         uint8_t previousGroup = 0;
         for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
-            selected[i] = previousGroup != menu[i].group;
-            printf("Menu %d: %s => %d\n", i, menu[i].name, selected[i]);
-            previousGroup = menu[i].group;
+            groups[i] = (uint8_t)(menu[i].id * 0.1f);
+            selected[i] = previousGroup != groups[i];
+            previousGroup = groups[i];
         }
     }
 
@@ -101,7 +101,7 @@ public:
         strcpy(renderer->text, "");
         uint8_t row = 0, col = 0;
         for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
-            if (i != 0 && menu[i].group != menu[i - 1].group) {
+            if (i != 0 && groups[i] != groups[i - 1]) {
                 strcat(renderer->text, "\n");
                 row++;
                 col = 0;
