@@ -6,16 +6,8 @@
 #include <app_core_util.h>
 #include <app_core_view_table.h>
 
-#define VIEW_TRACK_SEQUENCER_ROW (1 + PATTERN_COMPONENT_COUNT)
+#define VIEW_TRACK_SEQUENCER_ROW PATTERN_COMPONENT_COUNT
 #define VIEW_TRACK_SEQUENCER_COL TRACK_COUNT * 3
-
-class App_View_TrackSequencerHeader : public App_View_TableField {
-public:
-    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-    {
-        sprintf(renderer->text + strlen(renderer->text), " TRACK%d", col + 1);
-    }
-};
 
 class App_View_TrackSequencerPat : public App_View_TableField {
 protected:
@@ -39,7 +31,7 @@ public:
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        Zic_Seq_PatternComponent* component = &track->components[(row - 1) % PATTERN_COMPONENT_COUNT];
+        Zic_Seq_PatternComponent* component = &track->components[(row) % PATTERN_COMPONENT_COUNT];
 
         if (selectedRow == row && selectedCol == col) {
             renderer->setCursor(2, col % 3 == 0 ? 1 : 0);
@@ -48,17 +40,17 @@ public:
             }
         }
         if (col % 3 == 0) {
-            renderer->useColor(row, col / 3 * 7, track->looper.isComponentPlaying(row - 1) ? COLOR_PLAY : COLOR_MARKER);
+            renderer->useColor(row + 1, col / 3 * 7, track->looper.isComponentPlaying(row) ? COLOR_PLAY : COLOR_MARKER);
             strcat(renderer->text,
-                track->looper.isComponentPlaying(row - 1) ? ">"
-                                                          : (track->looper.isCurrentComponent(row - 1) ? "*" : " "));
+                track->looper.isComponentPlaying(row) ? ">"
+                                                          : (track->looper.isCurrentComponent(row) ? "*" : " "));
             if (component->pattern == NULL) {
                 strcat(renderer->text, "--");
             } else {
                 sprintf(renderer->text + strlen(renderer->text), "%02X", component->pattern->id + 1);
             }
         } else if (col % 3 == 1) {
-            renderer->useColor(row, col / 3 * 7 + 3, COLOR_LIGHT, 4);
+            renderer->useColor(row + 1, col / 3 * 7 + 3, COLOR_LIGHT, 4);
             if (component->detune < 0) {
                 sprintf(renderer->text + strlen(renderer->text), "-%c", alphanum[-component->detune]);
             } else {
@@ -72,7 +64,7 @@ public:
     Zic_Seq_PatternComponent* getComponent(uint8_t row, uint8_t col)
     {
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        return &track->components[(row - 1) % PATTERN_COMPONENT_COUNT];
+        return &track->components[(row) % PATTERN_COMPONENT_COUNT];
     }
 
     void updateStart(uint8_t row, uint8_t col)
@@ -123,13 +115,11 @@ public:
 class App_View_TrackSequencer : public App_View_Table {
 protected:
     Zic_Seq_Pattern* patterns;
-    App_View_TrackSequencerHeader header;
     App_View_TrackSequencerPat patField;
     App_Tracks* tracks;
 
     App_View_TableField* fields[VIEW_TRACK_SEQUENCER_ROW * VIEW_TRACK_SEQUENCER_COL] = {
         // clang-format off
-        &header, &header, &header, &header, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
@@ -139,7 +129,7 @@ protected:
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
         &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
+        // &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
 
         // clang-format on
     };
@@ -152,7 +142,7 @@ protected:
     {
         initSelection();
     }
-    
+
 public:
     static App_View_TrackSequencer* instance;
 
@@ -171,8 +161,19 @@ public:
 
     void initDisplay(App_Renderer* renderer)
     {
+    }
+
+    void render(App_Renderer* renderer)
+    {
         renderer->useColoredRow();
-        App_View_Table::initDisplay(renderer);
+        renderer->useColoredRow(9, COLOR_MEDIUM);
+        strcpy(renderer->text, "");
+        for (uint8_t i = 0; i < TRACK_COUNT; i++) {
+            sprintf(renderer->text + strlen(renderer->text), " TRACK%d", i + 1);
+        }
+        strcat(renderer->text, "\n");
+        App_View_Table::render(renderer);
+        sprintf(renderer->text + strlen(renderer->text), " Yoyoyoyo");
     }
 
     const char* snapshotPath = "projects/current/sequencer.zic";
