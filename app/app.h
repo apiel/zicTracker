@@ -44,13 +44,13 @@ public:
 
     Menu menu[APP_MENU_SIZE] = {
         // NOTE Group menu per decimal number
-        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_TrackSequencer::getInstance(&tracks, &patterns[0]) },
-        (Menu) { 11, "Grid: Instrument seq.", "Instr.", NULL },
-        (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL },
+        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_TrackSequencer::getInstance(&tracks, &patterns[0]), 1 },
+        (Menu) { 11, "Grid: Instrument seq.", "Instr.", NULL, 2 },
+        (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL, 3 },
         (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", NULL },
-        (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]) },
-        (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance(&tracks) },
-        (Menu) { 22, "Edit: Effect", "IFX", NULL },
+        (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]), 1 },
+        (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance(&tracks), 2 },
+        (Menu) { 22, "Edit: Effect", "IFX", NULL, 3 },
         (Menu) { 30, "Scatter effect", "Scatter", NULL },
         (Menu) { 31, "Master filter & effect", "MF+MFX", NULL },
         (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView) }, // Select project

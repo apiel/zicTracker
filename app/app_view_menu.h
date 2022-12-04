@@ -13,7 +13,13 @@ typedef struct {
     const char* name;
     const char* shortName;
     App_View* view;
+    uint8_t join; // Link menu item together, for example 10 and 20. Set the same value (>0) to join them e.g.: 1
 } Menu;
+
+// typedef struct {
+//     bool selected;
+//     uint8_t groups;
+// } MenuState;
 
 class App_View_Menu : public App_View {
 protected:
@@ -39,9 +45,20 @@ protected:
 
     void groupInc(int8_t val)
     {
+        uint8_t join = menu[currentMenu].join;
         do {
             inc(val);
         } while (!selected[currentMenu]);
+
+        if (join) {
+            uint8_t group = groups[currentMenu];
+            for (uint8_t i = 0; i < APP_MENU_SIZE; i++) {
+                if (groups[i] == group && menu[i].join == join) {
+                    currentMenu = i;
+                    selected[currentMenu] = true;
+                }
+            }
+        }
     }
 
     void menuPlus()
@@ -71,7 +88,6 @@ public:
     App_View_Menu(Menu* _menu)
         : menu(_menu)
     {
-
     }
 
     void initMenu()
