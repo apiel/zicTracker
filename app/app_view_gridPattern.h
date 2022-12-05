@@ -5,6 +5,7 @@
 #include <app_core_renderer.h>
 #include <app_core_util.h>
 #include <app_core_view_table.h>
+#include "./app_view_grid.h"
 
 #define VIEW_GRID_PATTERN_ROW PATTERN_COMPONENT_COUNT
 #define VIEW_GRID_PATTERN_COL TRACK_COUNT * 3
@@ -133,28 +134,14 @@ public:
     }
 };
 
-class App_View_GridPattern : public App_View_Table {
+class App_View_GridPattern : public App_View_Grid {
 protected:
     Zic_Seq_Pattern* patterns;
     App_View_GridPatternField patField;
     App_Tracks* tracks;
-    char description[30] = "";
-
-    App_View_TableField* fields[VIEW_GRID_PATTERN_ROW * VIEW_GRID_PATTERN_COL] = {
-        // clang-format off
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        // clang-format on
-    };
 
     App_View_GridPattern(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
-        : App_View_Table(fields, VIEW_GRID_PATTERN_ROW, VIEW_GRID_PATTERN_COL)
+        : App_View_Grid(&patField)
         , patterns(_patterns)
         , patField(_tracks, _patterns, description)
         , tracks(_tracks)
@@ -171,28 +158,6 @@ public:
             instance = new App_View_GridPattern(_tracks, _patterns);
         }
         return instance;
-    }
-
-    bool renderOn(uint8_t event) override
-    {
-        return true;
-    }
-
-    void initDisplay(App_Renderer* renderer)
-    {
-    }
-
-    void render(App_Renderer* renderer)
-    {
-        renderer->useColoredRow();
-        renderer->useColoredRow(9, COLOR_MEDIUM);
-        strcpy(renderer->text, "");
-        for (uint8_t i = 0; i < TRACK_COUNT; i++) {
-            sprintf(renderer->text + strlen(renderer->text), " TRACK%d", i + 1);
-        }
-        strcat(renderer->text, "\n");
-        App_View_Table::render(renderer);
-        sprintf(renderer->text + strlen(renderer->text), " %s", description);
     }
 
     const char* snapshotPath = "projects/current/sequencer.zic";
