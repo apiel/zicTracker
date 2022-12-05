@@ -1,5 +1,5 @@
-#ifndef APP_VIEW_GRID_PATTERN_H_
-#define APP_VIEW_GRID_PATTERN_H_
+#ifndef APP_VIEW_GRID_INSTRUMENT_H_
+#define APP_VIEW_GRID_INSTRUMENT_H_
 
 #include "./app_tracks.h"
 #include <app_core_renderer.h>
@@ -8,16 +8,14 @@
 
 #include "./app_view_grid.h"
 
-class App_View_GridPatternField : public App_View_GridField {
+class App_View_GridInstrumentField : public App_View_GridField {
 protected:
-    Zic_Seq_Pattern* patterns;
     Zic_Seq_PatternComponent newComponent;
     bool editing = false;
 
 public:
-    App_View_GridPatternField(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns, char* _description)
+    App_View_GridInstrumentField(App_Tracks* _tracks, char* _description)
         : App_View_GridField(_tracks, _description)
-        , patterns(_patterns)
     {
     }
 
@@ -103,7 +101,7 @@ public:
         int8_t direction = getDirection(keys, 16);
         int16_t id = newComponent.pattern == NULL ? -1 : newComponent.pattern->id;
         id = (id + direction) % PATTERN_COUNT;
-        newComponent.pattern = id < 0 ? NULL : &patterns[id];
+        newComponent.pattern = NULL;
         return VIEW_CHANGED;
     }
     uint8_t updateCol1(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
@@ -134,68 +132,31 @@ public:
     }
 };
 
-class App_View_GridPattern : public App_View_Grid {
+class App_View_GridInstrument : public App_View_Grid {
 protected:
-    Zic_Seq_Pattern* patterns;
-    App_View_GridPatternField field;
+    App_View_GridInstrumentField field;
     App_Tracks* tracks;
 
-    App_View_GridPattern(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
+    App_View_GridInstrument(App_Tracks* _tracks)
         : App_View_Grid(&field)
-        , patterns(_patterns)
-        , field(_tracks, _patterns, description)
+        , field(_tracks, description)
         , tracks(_tracks)
     {
         initSelection();
     }
 
 public:
-    static App_View_GridPattern* instance;
+    static App_View_GridInstrument* instance;
 
-    static App_View_GridPattern* getInstance(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
+    static App_View_GridInstrument* getInstance(App_Tracks* _tracks)
     {
         if (!instance) {
-            instance = new App_View_GridPattern(_tracks, _patterns);
+            instance = new App_View_GridInstrument(_tracks);
         }
         return instance;
     }
-
-    const char* snapshotPath = "projects/current/sequencer.zic";
-
-    void snapshot(App_Renderer* renderer) override
-    {
-        render(renderer);
-        saveFileContent(renderer->text, strlen(renderer->text), snapshotPath);
-    }
-
-    void loadSnapshot() override
-    {
-        Zic_File file(snapshotPath, "r");
-        if (file.isOpen()) {
-            file.seekFromStart(28);
-
-            for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE * TRACK_COUNT; i++) {
-                file.seekFromCurrent(i % TRACK_COUNT == 0 ? 2 : 1);
-                char pat[3];
-                file.read(pat, 2);
-                pat[2] = '\0';
-                char detune[2];
-                file.read(detune, 2);
-                char condition[2];
-                file.read(condition, 2);
-
-                App_Audio_Track* track = tracks->tracks[i % TRACK_COUNT];
-                Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
-                component->pattern = pat[0] == '-' ? NULL : &patterns[strtol(pat, NULL, 16) - 1];
-                component->setDetune((detune[0] == '-' ? -1 : 1) * alphanumToInt(detune[1]));
-                component->setCondition(condition);
-            }
-
-            file.close();
-        }
-    }
 };
 
-App_View_GridPattern* App_View_GridPattern::instance = NULL;
+App_View_GridInstrument* App_View_GridInstrument::instance = NULL;
 
 #endif
