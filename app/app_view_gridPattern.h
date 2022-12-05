@@ -5,88 +5,87 @@
 #include <app_core_renderer.h>
 #include <app_core_util.h>
 #include <app_core_view_table.h>
+
+#define VIEW_GRID_ROW PATTERN_COMPONENT_COUNT
+
 #include "./app_view_grid.h"
 
-#define VIEW_GRID_PATTERN_ROW PATTERN_COMPONENT_COUNT
-#define VIEW_GRID_PATTERN_COL TRACK_COUNT * 3
-
-class App_View_GridPatternField : public App_View_TableField {
+class App_View_GridPatternField : public App_View_GridField {
 protected:
-    App_Tracks* tracks;
     Zic_Seq_Pattern* patterns;
     Zic_Seq_PatternComponent newComponent;
     bool editing = false;
-    char* description;
 
 public:
     App_View_GridPatternField(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns, char* _description)
-        : tracks(_tracks)
+        : App_View_GridField(_tracks, _description)
         , patterns(_patterns)
-        , description(_description)
     {
-    }
-
-    bool isSelectable(uint8_t row, uint8_t col) override
-    {
-        return true;
-    }
-
-    void selected(App_Renderer* renderer, uint8_t row, uint8_t col) override
-    {
-        App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        Zic_Seq_PatternComponent* component = &track->components[(row) % PATTERN_COMPONENT_COUNT];
-
-        renderer->setCursor(2, col % 3 == 0 ? 1 : 0);
-        if (editing) {
-            component = &newComponent;
-        }
-
-        if (col % 3 == 0) {
-            if (component->pattern == NULL) {
-                sprintf(description, "Pattern: to be selected");
-            } else {
-                sprintf(description, "Pattern: %02X (%d steps)", component->pattern->id + 1, component->pattern->stepCount);
-            }
-        } else if (col % 3 == 1) {
-            sprintf(description, "Detune: %d semi tone", component->detune);
-        } else if (col % 3 == 2) {
-            sprintf(description, "Condition: %s %s",
-                SEQ_CONDITIONS_NAMES[component->condition],
-                SEQ_CONDITIONS_FULLNAMES[component->condition]);
-        }
-    }
-
-    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-    {
-        App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        Zic_Seq_PatternComponent* component = &track->components[(row) % PATTERN_COMPONENT_COUNT];
-
-        if (col % 3 == 0) {
-            renderer->useColor(row + 1, col / 3 * 7, track->looper.isComponentPlaying(row) ? COLOR_PLAY : COLOR_MARKER);
-            strcat(renderer->text,
-                track->looper.isComponentPlaying(row) ? ">"
-                                                      : (track->looper.isCurrentComponent(row) ? "*" : " "));
-            if (component->pattern == NULL) {
-                strcat(renderer->text, "--");
-            } else {
-                sprintf(renderer->text + strlen(renderer->text), "%02X", component->pattern->id + 1);
-            }
-        } else if (col % 3 == 1) {
-            renderer->useColor(row + 1, col / 3 * 7 + 3, COLOR_LIGHT, 4);
-            if (component->detune < 0) {
-                sprintf(renderer->text + strlen(renderer->text), "-%c", alphanum[-component->detune]);
-            } else {
-                sprintf(renderer->text + strlen(renderer->text), "+%c", alphanum[component->detune]);
-            }
-        } else {
-            strcat(renderer->text, SEQ_CONDITIONS_NAMES[component->condition]);
-        }
     }
 
     Zic_Seq_PatternComponent* getComponent(uint8_t row, uint8_t col)
     {
+        if (editing) {
+            return &newComponent;
+        }
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
         return &track->components[(row) % PATTERN_COMPONENT_COUNT];
+    }
+
+    void selectCol0(App_Renderer* renderer, uint8_t row, uint8_t col)
+    {
+        Zic_Seq_PatternComponent* component = getComponent(row, col);
+        if (component->pattern == NULL) {
+            sprintf(description, "Pattern: to be selected");
+        } else {
+            sprintf(description, "Pattern: %02X (%d steps)", component->pattern->id + 1, component->pattern->stepCount);
+        }
+    }
+
+    void selectCol1(App_Renderer* renderer, uint8_t row, uint8_t col)
+    {
+        Zic_Seq_PatternComponent* component = getComponent(row, col);
+        sprintf(description, "Detune: %d semi tone", component->detune);
+    }
+
+    void selectCol2(App_Renderer* renderer, uint8_t row, uint8_t col)
+    {
+        Zic_Seq_PatternComponent* component = getComponent(row, col);
+        sprintf(description, "Condition: %s %s",
+            SEQ_CONDITIONS_NAMES[component->condition],
+            SEQ_CONDITIONS_FULLNAMES[component->condition]);
+    }
+
+    void renderCol0(App_Renderer* renderer, uint8_t row, uint8_t col)
+    {
+        App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+        Zic_Seq_PatternComponent* component = getComponent(row, col);
+        renderer->useColor(row + 1, col / 3 * 7, track->looper.isComponentPlaying(row) ? COLOR_PLAY : COLOR_MARKER);
+        strcat(renderer->text,
+            track->looper.isComponentPlaying(row) ? ">"
+                                                  : (track->looper.isCurrentComponent(row) ? "*" : " "));
+        if (component->pattern == NULL) {
+            strcat(renderer->text, "--");
+        } else {
+            sprintf(renderer->text + strlen(renderer->text), "%02X", component->pattern->id + 1);
+        }
+    }
+
+    void renderCol1(App_Renderer* renderer, uint8_t row, uint8_t col)
+    {
+        Zic_Seq_PatternComponent* component = getComponent(row, col);
+        renderer->useColor(row + 1, col / 3 * 7 + 3, COLOR_LIGHT, 4);
+        if (component->detune < 0) {
+            sprintf(renderer->text + strlen(renderer->text), "-%c", alphanum[-component->detune]);
+        } else {
+            sprintf(renderer->text + strlen(renderer->text), "+%c", alphanum[component->detune]);
+        }
+    }
+
+    void renderCol2(App_Renderer* renderer, uint8_t row, uint8_t col)
+    {
+        Zic_Seq_PatternComponent* component = getComponent(row, col);
+        strcat(renderer->text, SEQ_CONDITIONS_NAMES[component->condition]);
     }
 
     void updateStart(uint8_t row, uint8_t col)
@@ -97,40 +96,43 @@ public:
 
     void updateEnd(uint8_t row, uint8_t col)
     {
-        getComponent(row, col)->set(&newComponent);
         editing = false;
+        getComponent(row, col)->set(&newComponent);
     }
 
-    uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
+    uint8_t updateCol0(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        int8_t directions[] = { 16, 12, 1 };
-        int8_t direction = 0;
-        if (keys->Right) {
-            direction = 1;
-        } else if (keys->Left) {
-            direction = -1;
-        } else if (keys->Up) {
-            direction = directions[col % 3];
-        } else if (keys->Down) {
-            direction = -directions[col % 3];
-        }
-
-        switch (col % 3) {
-        case 0: {
-            int16_t id = newComponent.pattern == NULL ? -1 : newComponent.pattern->id;
-            id = (id + direction) % PATTERN_COUNT;
-            newComponent.pattern = id < 0 ? NULL : &patterns[id];
-            break;
-        }
-        case 1: {
-            newComponent.setDetune(newComponent.detune + direction);
-            break;
-        }
-        case 2:
-            newComponent.setCondition(newComponent.condition + direction);
-            break;
-        }
+        int8_t direction = getDirection(keys, 16);
+        int16_t id = newComponent.pattern == NULL ? -1 : newComponent.pattern->id;
+        id = (id + direction) % PATTERN_COUNT;
+        newComponent.pattern = id < 0 ? NULL : &patterns[id];
         return VIEW_CHANGED;
+    }
+    uint8_t updateCol1(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
+    {
+        int8_t direction = getDirection(keys, 12);
+        newComponent.setDetune(newComponent.detune + direction);
+        return VIEW_CHANGED;
+    }
+    uint8_t updateCol2(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
+    {
+        int8_t direction = getDirection(keys, 1);
+        newComponent.setCondition(newComponent.condition + direction);
+        return VIEW_CHANGED;
+    }
+
+    uint8_t getDirection(UiKeys* keys, uint8_t bigStep)
+    {
+        if (keys->Right) {
+            return 1;
+        } else if (keys->Left) {
+            return -1;
+        } else if (keys->Up) {
+            return bigStep;
+        } else if (keys->Down) {
+            return -bigStep;
+        }
+        return 0;
     }
 };
 
