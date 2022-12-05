@@ -27,7 +27,7 @@ public:
 
     void selectCol1(App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        renderer->setCursor(3, 1);
+        renderer->setCursor(2, 1);
         sprintf(description, "Preset: to be selected");
     }
 
@@ -42,7 +42,7 @@ public:
 
     void renderCol1(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected)
     {
-        strcat(renderer->text, " ---");
+        strcat(renderer->text, " -- ");
     }
 
     uint8_t updateCol0(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
