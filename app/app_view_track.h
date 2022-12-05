@@ -29,14 +29,16 @@ public:
         return col != 0 && row != 0;
     }
 
+    void selected(App_Renderer* renderer, uint8_t row, uint8_t col) override
+    {
+        renderer->setCursor(3, 1);
+    }
+
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         if (col == 0) {
             strcat(renderer->text, label);
         } else {
-            if (selectedRow == row && selectedCol == col) {
-                renderer->setCursor(3, 1);
-            }
             uint8_t trackId = col - 1;
             App_Audio_Track* track = tracks->tracks[trackId];
             renderValue(renderer, trackId, track);

@@ -1,31 +1,28 @@
-#ifndef APP_VIEW_GRID_PATTERN_H_
-#define APP_VIEW_GRID_PATTERN_H_
+#ifndef APP_VIEW_GRID_H_
+#define APP_VIEW_GRID_H_
 
 #include "./app_tracks.h"
 #include <app_core_renderer.h>
 #include <app_core_util.h>
 #include <app_core_view_table.h>
 
-#define VIEW_GRID_PATTERN_ROW PATTERN_COMPONENT_COUNT
-#define VIEW_GRID_PATTERN_COL TRACK_COUNT * 3
+#define VIEW_GRID_ROW PATTERN_COMPONENT_COUNT
+#define VIEW_GRID_COL TRACK_COUNT * 3
 
-class App_View_GridPatternField : public App_View_TableField {
+class App_View_GridField : public App_View_TableField {
 protected:
     App_Tracks* tracks;
-    Zic_Seq_Pattern* patterns;
-    Zic_Seq_PatternComponent newComponent;
     bool editing = false;
     char* description;
 
 public:
-    App_View_GridPatternField(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns, char* _description)
+    App_View_GridField(App_Tracks* _tracks, char* _description)
         : tracks(_tracks)
-        , patterns(_patterns)
         , description(_description)
     {
     }
 
-    bool isSelectable(uint8_t row, uint8_t col) override
+    virtual bool isSelectable(uint8_t row, uint8_t col) override
     {
         return true;
     }
@@ -133,44 +130,32 @@ public:
     }
 };
 
-class App_View_GridPattern : public App_View_Table {
+class App_View_Grid : public App_View_Table {
 protected:
-    Zic_Seq_Pattern* patterns;
-    App_View_GridPatternField patField;
     App_Tracks* tracks;
     char description[30] = "";
 
-    App_View_TableField* fields[VIEW_GRID_PATTERN_ROW * VIEW_GRID_PATTERN_COL] = {
+    App_View_TableField* field;
+
+    App_View_TableField* fields[VIEW_GRID_ROW * VIEW_GRID_COL] = {
         // clang-format off
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
-        &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField, &patField,
+        field, field, field, field, field, field, field, field, field, field, field, field,
+        field, field, field, field, field, field, field, field, field, field, field, field,
+        field, field, field, field, field, field, field, field, field, field, field, field,
+        field, field, field, field, field, field, field, field, field, field, field, field,
+        field, field, field, field, field, field, field, field, field, field, field, field,
+        field, field, field, field, field, field, field, field, field, field, field, field,
+        field, field, field, field, field, field, field, field, field, field, field, field,
+        field, field, field, field, field, field, field, field, field, field, field, field,
         // clang-format on
     };
 
-    App_View_GridPattern(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
-        : App_View_Table(fields, VIEW_GRID_PATTERN_ROW, VIEW_GRID_PATTERN_COL)
-        , patterns(_patterns)
-        , patField(_tracks, _patterns, description)
+public:
+    App_View_Grid(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns, App_View_TableField* field)
+        : App_View_Table(fields, VIEW_GRID_ROW, VIEW_GRID_COL)
         , tracks(_tracks)
     {
         initSelection();
-    }
-
-public:
-    static App_View_GridPattern* instance;
-
-    static App_View_GridPattern* getInstance(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
-    {
-        if (!instance) {
-            instance = new App_View_GridPattern(_tracks, _patterns);
-        }
-        return instance;
     }
 
     bool renderOn(uint8_t event) override
@@ -194,43 +179,6 @@ public:
         App_View_Table::render(renderer);
         sprintf(renderer->text + strlen(renderer->text), " %s", description);
     }
-
-    const char* snapshotPath = "projects/current/sequencer.zic";
-
-    void snapshot(App_Renderer* renderer) override
-    {
-        render(renderer);
-        saveFileContent(renderer->text, strlen(renderer->text), snapshotPath);
-    }
-
-    void loadSnapshot() override
-    {
-        Zic_File file(snapshotPath, "r");
-        if (file.isOpen()) {
-            file.seekFromStart(28);
-
-            for (uint8_t i = 0; i < PATTERN_COMPONENT_COUNT * TRACK_COUNT; i++) {
-                file.seekFromCurrent(i % TRACK_COUNT == 0 ? 2 : 1);
-                char pat[3];
-                file.read(pat, 2);
-                pat[2] = '\0';
-                char detune[2];
-                file.read(detune, 2);
-                char condition[2];
-                file.read(condition, 2);
-
-                App_Audio_Track* track = tracks->tracks[i % TRACK_COUNT];
-                Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
-                component->pattern = pat[0] == '-' ? NULL : &patterns[strtol(pat, NULL, 16) - 1];
-                component->setDetune((detune[0] == '-' ? -1 : 1) * alphanumToInt(detune[1]));
-                component->setCondition(condition);
-            }
-
-            file.close();
-        }
-    }
 };
-
-App_View_GridPattern* App_View_GridPattern::instance = NULL;
 
 #endif

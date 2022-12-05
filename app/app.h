@@ -46,6 +46,7 @@ public:
         // NOTE Group menu per decimal number
         (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_GridPattern::getInstance(&tracks, &patterns[0]) },
         (Menu) { 11, "Grid: Instrument seq.", "Instr.", NULL },
+        // instrument macro?
         (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL },
         (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", NULL },
         (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]) },

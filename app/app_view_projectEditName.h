@@ -51,11 +51,13 @@ public:
         return true;
     }
 
+    void selected(App_Renderer* renderer, uint8_t row, uint8_t col) override
+    {
+        renderer->setCursor(1, col == 0 ? 5 : 1);
+    }
+
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        if (selectedRow == row && selectedCol == col) {
-            renderer->setCursor(1, col == 0 ? 5 : 1);
-        }
         if (col == 0) {
             strcat(renderer->text, "    ");
         }
@@ -89,20 +91,18 @@ public:
         return true;
     }
 
+    void selected(App_Renderer* renderer, uint8_t row, uint8_t col) override
+    {
+        if (col == 0) {
+            renderer->setCursor(9, 5);
+        } else {
+            renderer->setCursor(5, 1);
+        }
+    }
+
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
-        bool selected = selectedRow == row && selectedCol == col;
-        if (col == 0) {
-            if (selected) {
-                renderer->setCursor(9, 5);
-            }
-            strcat(renderer->text, "     Backspace");
-        } else {
-            if (selected) {
-                renderer->setCursor(5, 1);
-            }
-            strcat(renderer->text, " Done");
-        }
+        strcat(renderer->text, col == 0 ? "     Backspace" : " Done");
     }
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)

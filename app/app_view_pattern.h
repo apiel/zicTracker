@@ -155,12 +155,14 @@ public:
         return true;
     }
 
+    void selected(App_Renderer* renderer, uint8_t row, uint8_t col) override
+    {
+        renderer->setCursor(col % 4 == 0 ? 3 : 1);
+    }
+
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
         uint8_t inst = col / 4;
-        if (selectedRow == row && selectedCol == col) {
-            renderer->setCursor(col % 4 == 0 ? 3 : 1);
-        }
         uint8_t stepPos = row - VIEW_PATTERN_ROW_HEADERS;
         Zic_Seq_Step* step = &patterns[*currentPatternId].steps[inst][stepPos];
         switch (col % 4) {
@@ -347,6 +349,8 @@ public:
         setLastRow(patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
         return ret;
     }
+
+    // TODO override render to show description of selected field like on the grid view
 
     const char* snapshotPath = "projects/current/patterns/pattern%03d_%02X.zic";
 

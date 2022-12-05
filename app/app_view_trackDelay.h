@@ -102,12 +102,15 @@ public:
         return col != 0;
     }
 
-    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    void selected(App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         uint8_t cursorLen[VIEW_TRACK_DELAY_COL] = { 0, 4, 3, 3 };
-        if (selectedRow == row && selectedCol == col) {
-            renderer->setCursor(cursorLen[col]);
-        }
+        renderer->setCursor(cursorLen[col]);
+    }
+
+    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
+    {
+
         uint8_t delayPos = row - VIEW_TRACK_DELAY_ROW_HEADERS;
         Zic_Effect_Delay* delay = tracks->track->delays[delayPos];
         switch (col) {
