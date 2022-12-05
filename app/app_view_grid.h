@@ -44,18 +44,19 @@ public:
         }
     }
 
-    virtual void renderCol0(App_Renderer* renderer, uint8_t row, uint8_t col) = 0;
-    virtual void renderCol1(App_Renderer* renderer, uint8_t row, uint8_t col) { }
-    virtual void renderCol2(App_Renderer* renderer, uint8_t row, uint8_t col) { }
+    virtual void renderCol0(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected) = 0;
+    virtual void renderCol1(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected) { }
+    virtual void renderCol2(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected) { }
 
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
     {
+        bool isSelected = selectedRow == row && selectedCol == col;
         if (col % 3 == 0) {
-            renderCol0(renderer, row, col);
+            renderCol0(renderer, row, col, isSelected);
         } else if (col % 3 == 1) {
-            renderCol1(renderer, row, col);
+            renderCol1(renderer, row, col, isSelected);
         } else if (col % 3 == 2) {
-            renderCol2(renderer, row, col);
+            renderCol2(renderer, row, col, isSelected);
         }
     }
 

@@ -23,9 +23,9 @@ public:
     {
     }
 
-    Zic_Seq_PatternComponent* getComponent(uint8_t row, uint8_t col)
+    Zic_Seq_PatternComponent* getComponent(uint8_t row, uint8_t col, bool isSelected = true)
     {
-        if (editing) {
+        if (isSelected && editing) {
             return &newComponent;
         }
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
@@ -56,10 +56,10 @@ public:
             SEQ_CONDITIONS_FULLNAMES[component->condition]);
     }
 
-    void renderCol0(App_Renderer* renderer, uint8_t row, uint8_t col)
+    void renderCol0(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected)
     {
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        Zic_Seq_PatternComponent* component = getComponent(row, col);
+        Zic_Seq_PatternComponent* component = getComponent(row, col, isSelected);
         renderer->useColor(row + 1, col / 3 * 7, track->looper.isComponentPlaying(row) ? COLOR_PLAY : COLOR_MARKER);
         strcat(renderer->text,
             track->looper.isComponentPlaying(row) ? ">"
@@ -71,9 +71,9 @@ public:
         }
     }
 
-    void renderCol1(App_Renderer* renderer, uint8_t row, uint8_t col)
+    void renderCol1(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected)
     {
-        Zic_Seq_PatternComponent* component = getComponent(row, col);
+        Zic_Seq_PatternComponent* component = getComponent(row, col, isSelected);
         renderer->useColor(row + 1, col / 3 * 7 + 3, COLOR_LIGHT, 4);
         if (component->detune < 0) {
             sprintf(renderer->text + strlen(renderer->text), "-%c", alphanum[-component->detune]);
@@ -82,9 +82,9 @@ public:
         }
     }
 
-    void renderCol2(App_Renderer* renderer, uint8_t row, uint8_t col)
+    void renderCol2(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected)
     {
-        Zic_Seq_PatternComponent* component = getComponent(row, col);
+        Zic_Seq_PatternComponent* component = getComponent(row, col, isSelected);
         strcat(renderer->text, SEQ_CONDITIONS_NAMES[component->condition]);
     }
 
