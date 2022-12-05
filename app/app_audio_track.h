@@ -10,7 +10,11 @@
 #include <zic_effect_delay.h>
 #include <zic_seq_loopMaster.h>
 
-#define PATTERN_COMPONENT_COUNT 8
+#define APP_TRACK_STATE_SIZE 8
+
+typedef struct {
+    // Zic_Seq_PatternComponent component;
+} TrackState;
 
 class App_Audio_Track {
 protected:
@@ -21,7 +25,8 @@ protected:
 public:
     uint8_t id = 0;
 
-    Zic_Seq_PatternComponent components[PATTERN_COMPONENT_COUNT];
+    Zic_Seq_PatternComponent components[APP_TRACK_STATE_SIZE];
+    TrackState state[APP_TRACK_STATE_SIZE];
 
     Zic_Seq_LoopMaster looper;
     pd::PdBase pd;
@@ -29,7 +34,7 @@ public:
 
     App_Audio_Track(uint8_t _id = 0)
         : pdObject(_id)
-        , looper(&components[0], PATTERN_COMPONENT_COUNT)
+        , looper(&components[0], APP_TRACK_STATE_SIZE)
     {
         id = _id;
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {

@@ -6,8 +6,6 @@
 #include <app_core_util.h>
 #include <app_core_view_table.h>
 
-#define VIEW_GRID_ROW PATTERN_COMPONENT_COUNT
-
 #include "./app_view_grid.h"
 
 class App_View_GridPatternField : public App_View_GridField {
@@ -29,7 +27,7 @@ public:
             return &newComponent;
         }
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        return &track->components[(row) % PATTERN_COMPONENT_COUNT];
+        return &track->components[(row) % APP_TRACK_STATE_SIZE];
     }
 
     void selectCol0(App_Renderer* renderer, uint8_t row, uint8_t col)
@@ -176,7 +174,7 @@ public:
         if (file.isOpen()) {
             file.seekFromStart(28);
 
-            for (uint8_t i = 0; i < PATTERN_COMPONENT_COUNT * TRACK_COUNT; i++) {
+            for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE * TRACK_COUNT; i++) {
                 file.seekFromCurrent(i % TRACK_COUNT == 0 ? 2 : 1);
                 char pat[3];
                 file.read(pat, 2);

@@ -6,9 +6,7 @@
 #include <app_core_util.h>
 #include <app_core_view_table.h>
 
-#ifndef VIEW_GRID_ROW
-#define VIEW_GRID_ROW 8
-#endif
+#define VIEW_GRID_ROW APP_TRACK_STATE_SIZE
 
 #define VIEW_GRID_COL TRACK_COUNT * 3
 
