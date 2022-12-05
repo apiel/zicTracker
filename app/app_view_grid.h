@@ -6,15 +6,17 @@
 #include <app_core_util.h>
 #include <app_core_view_table.h>
 
-#define VIEW_GRID_ROW PATTERN_COMPONENT_COUNT
+#ifndef VIEW_GRID_ROW
+#define VIEW_GRID_ROW 8
+#endif
+
 #define VIEW_GRID_COL TRACK_COUNT * 3
 
 class App_View_GridField : public App_View_TableField {
-protected:
+public:
     App_Tracks* tracks;
     char* description;
 
-public:
     App_View_GridField(App_Tracks* _tracks, char* _description)
         : tracks(_tracks)
         , description(_description)
