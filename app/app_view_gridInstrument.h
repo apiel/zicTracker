@@ -33,10 +33,6 @@ public:
 
     void renderCol0(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected)
     {
-        App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        strcat(renderer->text,
-            track->looper.isComponentPlaying(row) ? ">"
-                                                  : (track->looper.isCurrentComponent(row) ? "*" : " "));
         strcat(renderer->text, "--");
     }
 

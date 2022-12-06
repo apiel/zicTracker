@@ -50,6 +50,12 @@ public:
     {
         bool isSelected = selectedRow == row && selectedCol == col;
         if (col % 3 == 0) {
+            App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+            renderer->useColor(row + 1, col / 3 * 7, track->looper.isComponentPlaying(row) ? COLOR_PLAY : COLOR_HILIGHT);
+            strcat(renderer->text,
+                track->looper.isComponentPlaying(row) ? ">"
+                                                      : (track->looper.isCurrentComponent(row) ? "*" : " "));
+                                                      
             renderCol0(renderer, row, col, isSelected);
         } else if (col % 3 == 1) {
             renderCol1(renderer, row, col, isSelected);
