@@ -9,6 +9,17 @@
 #include "./app_view_grid.h"
 
 class App_View_GridInstrumentField : public App_View_GridField {
+protected:
+    App_Audio_Track* getTrack(uint8_t col)
+    {
+        return tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+    }
+
+    App_Audio_TrackState* getState(uint8_t row, uint8_t col)
+    {
+        return &getTrack(col)->state[(row) % APP_TRACK_STATE_SIZE];
+    }
+
 public:
     App_View_GridInstrumentField(App_Tracks* _tracks, char* _description)
         : App_View_GridField(_tracks, _description)
@@ -33,7 +44,14 @@ public:
 
     void renderCol0(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected)
     {
-        strcat(renderer->text, "--");
+        // char name[40];
+        // snprintf(name, 40, "%s", getState(row, col)->patchFilename);
+        // name[2] = '\0';
+        // // strcat(renderer->text, name);
+        // sprintf(renderer->text, "%s", name);
+
+        char* name = getState(row, col)->patchFilename;
+        sprintf(renderer->text + strlen(renderer->text), "%c%c", name[0], name[1]);
     }
 
     void renderCol1(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected)
@@ -43,7 +61,14 @@ public:
 
     uint8_t updateCol0(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        return VIEW_CHANGED;
+        if (keys->Right || keys->Down) {
+            getState(row, col)->setNextPatch(+1);
+            return VIEW_CHANGED;
+        } else if (keys->Left || keys->Up) {
+            getState(row, col)->setNextPatch(-1);
+            return VIEW_CHANGED;
+        }
+        return VIEW_NONE;
     }
 
     uint8_t updateCol1(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
