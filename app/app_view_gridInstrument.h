@@ -33,7 +33,12 @@ public:
 
     void selectCol0(App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        sprintf(description, "Patch: to be selected");
+        App_Audio_TrackState* state = getState(row, col);
+        if (state->isPatchEmpty()) {
+            sprintf(description, "Patch: to be selected");
+        } else {
+            sprintf(description, "Patch: %s", state->patchFilename);
+        }
     }
 
     void selectCol1(App_Renderer* renderer, uint8_t row, uint8_t col)
@@ -51,7 +56,21 @@ public:
         // sprintf(renderer->text, "%s", name);
 
         char* name = getState(row, col)->patchFilename;
+        // char name2[3];
+        // name2[0] = name[0];
+        // name2[1] = name[1];
+        // name2[2] = '\0';
+
         sprintf(renderer->text + strlen(renderer->text), "%c%c", name[0], name[1]);
+
+        // if (name[1] != '-')
+        //     printf(">>>>>>>>>>>>>>>>>>>>>> %c%c\n", name[0], name[1]);
+
+        // char name2[2]={name[0], name[1]};
+
+        // sprintf(renderer->text + strlen(renderer->text), "00");
+        // strcat(renderer->text, name2);
+        // sprintf(renderer->text, "%s", name2);
     }
 
     void renderCol1(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected)

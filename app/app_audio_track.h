@@ -17,12 +17,7 @@ class App_Audio_TrackState {
 protected:
     void setEmptyPatch()
     {
-        strcpy(patchFilename, "--\0");
-    }
-
-    bool isPatchEmpty()
-    {
-        return patchFilename[0] == '-' && patchFilename[1] == '-';
+        strcpy(patchFilename, "--");
     }
 
 public:
@@ -30,18 +25,23 @@ public:
 
     App_Audio_TrackState()
     {
-        strcpy(patchFilename, "--\0");
+        setEmptyPatch();
     }
 
     void setNextPatch(int8_t direction)
     {
         if (isPatchEmpty()) {
-            if (direction == 1 && !firstFile(patchFilename, "instruments")) {
+            if (direction == 1 && !firstFile(patchFilename, "instruments", 40)) {
                 setEmptyPatch();
             }
-        } else if (!nextFile(patchFilename, "instruments", patchFilename, direction) && direction == -1) {
+        } else if (!nextFile(patchFilename, "instruments", patchFilename, direction, 40) && direction == -1) {
             setEmptyPatch();
         }
+    }
+
+    bool isPatchEmpty()
+    {
+        return patchFilename[0] == '-' && patchFilename[1] == '-';
     }
 };
 
