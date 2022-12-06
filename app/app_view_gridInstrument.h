@@ -58,13 +58,22 @@ public:
         strcat(renderer->text, " -- ");
     }
 
+    void updatePatch(uint8_t row, uint8_t col, int8_t direction) {
+        getState(row, col)->setNextPatch(direction);
+        // isCurrentState(uint8_t pos)
+        App_Audio_Track* track = getTrack(col);
+        if (track->isCurrentState(row)) {
+            track->loadPatch();
+        }
+    }
+
     uint8_t updateCol0(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         if (keys->Right || keys->Down) {
-            getState(row, col)->setNextPatch(+1);
+            updatePatch(row, col, +1);
             return VIEW_CHANGED;
         } else if (keys->Left || keys->Up) {
-            getState(row, col)->setNextPatch(-1);
+            updatePatch(row, col, -1);
             return VIEW_CHANGED;
         }
         return VIEW_NONE;

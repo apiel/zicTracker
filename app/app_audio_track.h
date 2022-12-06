@@ -55,6 +55,7 @@ protected:
 
 public:
     uint8_t id = 0;
+    uint8_t currentState = 0;
 
     Zic_Seq_PatternComponent components[APP_TRACK_STATE_SIZE];
     App_Audio_TrackState state[APP_TRACK_STATE_SIZE];
@@ -72,8 +73,9 @@ public:
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
             APP_LOG("Could not init pd\n");
         }
-        pd.computeAudio(true);
-        patch = pd.openPatch("main.pd", "instruments/02_synth");
+        // pd.computeAudio(true);
+        // patch = pd.openPatch("main.pd", "instruments/02_synth");
+        loadPatch();
         pd.setReceiver(&pdObject);
         pd.setMidiReceiver(&pdObject);
         // pd.sendControlChange(1, 1, 10);
@@ -123,6 +125,28 @@ public:
         // for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE; i++) {
         //     strcpy(state[i].patchFilename, "--\0");
         // }
+    }
+
+    bool isCurrentState(uint8_t pos)
+    {
+        return currentState == pos;
+    }
+
+    void loadPatch()
+    {
+        // TODO skip if different... valid if last one
+        // or if changing of row
+        if (patch.isValid()) {
+            pd.closePatch(patch);
+        }
+        if (state[currentState].isPatchEmpty()) {
+            pd.computeAudio(false);
+            return;
+        }
+        char path[256];
+        sprintf(path, "instruments/%s", state[currentState].patchFilename);
+        pd.computeAudio(true);
+        patch = pd.openPatch("main.pd", path);
     }
 };
 
