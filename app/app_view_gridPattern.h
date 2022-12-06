@@ -58,7 +58,7 @@ public:
     {
         App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
         Zic_Seq_PatternComponent* component = getComponent(row, col, isSelected);
-        renderer->useColor(row + 1, col / 3 * 7, track->looper.isComponentPlaying(row) ? COLOR_PLAY : COLOR_MARKER);
+        renderer->useColor(row + 1, col / 3 * 7, track->looper.isComponentPlaying(row) ? COLOR_PLAY : COLOR_HILIGHT);
         strcat(renderer->text,
             track->looper.isComponentPlaying(row) ? ">"
                                                   : (track->looper.isCurrentComponent(row) ? "*" : " "));
