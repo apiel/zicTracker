@@ -19,7 +19,7 @@ protected:
 
     const char* getConfigFile()
     {
-        return "instruments/synth01/main.cfg";
+        return "instruments/01_synth/main.cfg";
     }
 
     App_View_Instrument(App_Tracks* _tracks)
@@ -53,7 +53,7 @@ protected:
         duk_push_c_function(ctx, App_View_Instrument::duk_updateConfigCC, 2);
         duk_put_global_string(ctx, "updateConfigCC");
 
-        duk_eval_file_extra(ctx, "instruments/synth01/main.js");
+        duk_eval_file_extra(ctx, "instruments/01_synth/main.js");
         duk_pop(ctx);
     }
 

@@ -41,7 +41,7 @@ public:
             APP_LOG("Could not init pd\n");
         }
         pd.computeAudio(true);
-        patch = pd.openPatch("main.pd", "instruments/synth01");
+        patch = pd.openPatch("main.pd", "instruments/01_synth");
         pd.setReceiver(&pdObject);
         pd.setMidiReceiver(&pdObject);
         // pd.sendControlChange(1, 1, 10);
