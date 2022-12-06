@@ -33,9 +33,11 @@ public:
         if (isPatchEmpty()) {
             if (direction == 1 && !firstFile(patchFilename, "instruments", 40)) {
                 setEmptyPatch();
+                return;
             }
         } else if (!nextFile(patchFilename, "instruments", patchFilename, direction, 40) && direction == -1) {
             setEmptyPatch();
+            return;
         }
     }
 
