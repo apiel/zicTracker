@@ -61,7 +61,7 @@ public:
     static App_View_Instrument* instance;
 
     // TODO
-    void updatePlayingPreset() {}
+    void updatePlayingPreset() { }
 
     static App_View_Instrument* getInstance()
     {
@@ -69,6 +69,14 @@ public:
             instance = new App_View_Instrument();
         }
         return instance;
+    }
+
+    void preRender(App_Renderer* renderer) override
+    {
+        // strcpy(renderer->text, "");
+        sprintf(renderer->text, "%26s %s\n", "01_synth", "A1");
+        renderer->useColoredRow(0, COLOR_LIGHT);
+        renderer->useColor(0, 27, COLOR_MEDIUM, 2);
     }
 
     static duk_ret_t duk_updateConfigCC(duk_context* ctx)
