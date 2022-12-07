@@ -10,9 +10,14 @@
 
 class App_View_GridInstrumentField : public App_View_GridField {
 protected:
+    App_Audio_Track* getTrack(uint8_t col)
+    {
+        return tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+    }
+
     App_Audio_TrackState* getState(uint8_t row, uint8_t col)
     {
-        return &tracks->track->state[(row) % APP_TRACK_STATE_SIZE];
+        return &getTrack(col)->state[(row) % APP_TRACK_STATE_SIZE];
     }
 
 public:
@@ -55,8 +60,10 @@ public:
 
     void updatePatch(uint8_t row, uint8_t col, int8_t direction) {
         getState(row, col)->setNextPatch(direction);
-        if (tracks->track->isCurrentState(row)) {
-            tracks->track->loadPatch();
+        // isCurrentState(uint8_t pos)
+        App_Audio_Track* track = getTrack(col);
+        if (track->isCurrentState(row)) {
+            track->loadPatch();
         }
     }
 
@@ -100,6 +107,12 @@ public:
             instance = new App_View_GridInstrument(_tracks);
         }
         return instance;
+    }
+
+    void setGridSelection() override
+    {
+        selectedCol = gridSelectedCol > 1 ? 1 : gridSelectedCol;
+        selectedRow = gridSelectedRow;
     }
 };
 

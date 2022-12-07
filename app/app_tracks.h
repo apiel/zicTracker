@@ -18,9 +18,6 @@ public:
     uint8_t trackId = TRACK_1;
     App_Audio_Track track0, track1, track2, track3;
     App_Audio_Track* tracks[TRACK_COUNT] = { &track0, &track1, &track2, &track3 };
-    App_Audio_Track* track = NULL;
-
-    Zic_Seq_Loop* looper = NULL;
 
     App_Tracks()
         : track0(TRACK_1)
@@ -28,19 +25,6 @@ public:
         , track2(TRACK_3)
         , track3(TRACK_4)
     {
-        select(trackId);
-
-        // just for testing
-        // track0.looper.nextState.play();
-    }
-
-    void select(uint8_t id)
-    {
-        if (track == NULL || id != trackId) {
-            trackId = id % TRACK_COUNT;
-            track = tracks[trackId];
-            looper = &track->looper;
-        }
     }
 
     void next()

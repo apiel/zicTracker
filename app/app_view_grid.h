@@ -55,7 +55,7 @@ public:
             strcat(renderer->text,
                 track->looper.isComponentPlaying(row) ? ">"
                                                       : (track->looper.isCurrentComponent(row) ? "*" : " "));
-                                                      
+
             renderCol0(renderer, row, col, isSelected);
         } else if (col % 3 == 1) {
             renderCol1(renderer, row, col, isSelected);
@@ -99,25 +99,20 @@ protected:
         // clang-format on
     };
 
-    // App_Audio_Track* getTrack(uint8_t col)
-    // {
-    //     return tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-    // }
-
-    // void onSelectRow() override
-    // {
-    //     printf(">>>>>>>>>>>>>>> onSelectRow %d\n", selectedRow);
-    // }
+    void onSelectRow() override
+    {
+        gridSelectedRow = selectedRow;
+    }
 
     void onSelectCol() override
     {
-        // printf(">>>>>>>>>>>>>>> onSelectCol %d\n", selectedCol);
-        tracks->select(uint8_t(selectedCol / 3) % TRACK_COUNT);
+        gridSelectedCol = selectedCol;
     }
-
 
 public:
     char description[30] = "";
+    static uint8_t gridSelectedCol;
+    static uint8_t gridSelectedRow;
 
     App_View_Grid(App_Tracks* _tracks, App_View_TableField* _field)
         : App_View_Table(fields, VIEW_GRID_ROW, VIEW_GRID_COL)
@@ -135,8 +130,15 @@ public:
     {
     }
 
+    virtual void setGridSelection()
+    {
+        selectedCol = gridSelectedCol;
+        selectedRow = gridSelectedRow;
+    }
+
     void render(App_Renderer* renderer)
     {
+        setGridSelection();
         renderer->useColoredRow();
         renderer->useColoredRow(9, COLOR_MEDIUM);
         strcpy(renderer->text, "");
@@ -148,5 +150,8 @@ public:
         sprintf(renderer->text + strlen(renderer->text), " %s", description);
     }
 };
+
+uint8_t App_View_Grid::gridSelectedCol = 0;
+uint8_t App_View_Grid::gridSelectedRow = 0;
 
 #endif
