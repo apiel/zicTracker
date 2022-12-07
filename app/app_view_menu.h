@@ -116,11 +116,15 @@ public:
         }
 
         App_View* view = menu[currentMenu].view;
+        if (view == NULL) {
+            return this;
+        }
+
         if (menuIsVisible) {
             menuIsVisible = false;
             view->focusView();
         }
-        return view ? view : this;
+        return view;
     }
 
     void render(App_Renderer* renderer)

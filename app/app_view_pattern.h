@@ -6,6 +6,8 @@
 #include <app_core_view.h>
 #include <app_core_view_table.h>
 
+#include "./app_view_grid.h"
+
 #define VIEW_PATTERN_ROW_HEADERS 4
 #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + MAX_STEPS_IN_PATTERN)
 // #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + 6)
@@ -338,8 +340,9 @@ public:
 
     void focusView() override
     {
-        // setGridSelection();
-        // App_Audio_Track * track = App_Audio_Track::getInstance();
+        App_Audio_Track * track = App_Tracks::getInstance()->tracks[App_View_Grid::getTrackId()];
+        Zic_Seq_Pattern * pattern = track->components[App_View_Grid::gridSelectedRow].pattern;
+        currentPatternId = pattern == NULL ? 0 : pattern->id;
     }
 
     void initDisplay(App_Renderer* renderer)
