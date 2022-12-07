@@ -20,6 +20,7 @@ class App_View_Menu : public App_View {
 protected:
     uint8_t groups[APP_MENU_SIZE];
     Menu* menu;
+    bool menuIsVisible = false;
 
     void inc(int8_t val)
     {
@@ -109,11 +110,16 @@ public:
     App_View* getView()
     {
         if (keys && keys->Menu) {
+            menuIsVisible = true;
             // return Menu view
             return this;
         }
 
         App_View* view = menu[currentMenu].view;
+        if (menuIsVisible) {
+            menuIsVisible = false;
+            view->focusView();
+        }
         return view ? view : this;
     }
 

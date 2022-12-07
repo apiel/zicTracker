@@ -146,9 +146,13 @@ public:
         selectedRow = gridSelectedRow;
     }
 
-    void render(App_Renderer* renderer)
+    void focusView() override
     {
         setGridSelection();
+    }
+
+    void render(App_Renderer* renderer)
+    {
         renderer->useColoredRow();
         renderer->useColoredRow(9, COLOR_MEDIUM);
         strcpy(renderer->text, "");
