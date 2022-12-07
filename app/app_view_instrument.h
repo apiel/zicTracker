@@ -8,9 +8,9 @@
 
 #include <duktape.h>
 
-#define VIEW_INSTR_ROW 8
-#define VIEW_INSTR_COL 3
-#define VIEW_INSTR_LABELS 7
+// #define VIEW_INSTR_ROW 8
+// #define VIEW_INSTR_COL 3
+// #define VIEW_INSTR_LABELS 7
 
 class App_View_Instrument : public App_View_JS, App_Load_Config {
 protected:

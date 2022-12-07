@@ -345,11 +345,11 @@ public:
         currentPatternId = pattern == NULL ? 0 : pattern->id;
     }
 
-    void initDisplay(App_Renderer* renderer)
+    void preRender(App_Renderer* renderer)
     {
         renderer->useColoredRow(0);
         renderer->useColoredRow(3);
-        App_View_Table::initDisplay(renderer);
+        App_View_Table::preRender(renderer);
     }
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer) override

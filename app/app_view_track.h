@@ -133,11 +133,11 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Renderer* renderer)
+    void preRender(App_Renderer* renderer)
     {
         renderer->useColoredRow();
         renderer->useColor(0, 255, 0, 6);
-        App_View_Table::initDisplay(renderer);
+        App_View_Table::preRender(renderer);
     }
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer)

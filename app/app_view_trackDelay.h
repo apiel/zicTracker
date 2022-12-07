@@ -203,12 +203,12 @@ public:
         initSelection();
     }
 
-    void initDisplay(App_Renderer* renderer)
+    void preRender(App_Renderer* renderer)
     {
         renderer->useColor(0, 1, 0, 5);
         renderer->useColor(0, 255, 0, 1);
         renderer->useColoredRow(2);
-        App_View_Table::initDisplay(renderer);
+        App_View_Table::preRender(renderer);
     }
 
     void snapshot(App_Renderer* renderer) override

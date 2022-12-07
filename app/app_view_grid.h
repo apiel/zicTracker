@@ -134,7 +134,7 @@ public:
         return true;
     }
 
-    void initDisplay(App_Renderer* renderer)
+    void preRender(App_Renderer* renderer)
     {
     }
 
