@@ -15,10 +15,10 @@ public:
     App_Tracks* tracks;
     char* description;
 
-    App_View_GridField(App_Tracks* _tracks, char* _description)
-        : tracks(_tracks)
-        , description(_description)
+    App_View_GridField(char* _description)
+        : description(_description)
     {
+        tracks = App_Tracks::getInstance();
     }
 
     App_Audio_Track* getTrack(uint8_t col)
@@ -88,7 +88,6 @@ public:
 
 class App_View_Grid : public App_View_Table {
 protected:
-    App_Tracks* tracks;
     App_View_TableField* field;
 
     App_View_TableField* fields[VIEW_GRID_ROW * VIEW_GRID_COL] = {
@@ -119,9 +118,8 @@ public:
     static uint8_t gridSelectedCol;
     static uint8_t gridSelectedRow;
 
-    App_View_Grid(App_Tracks* _tracks, App_View_TableField* _field)
+    App_View_Grid(App_View_TableField* _field)
         : App_View_Table(fields, VIEW_GRID_ROW, VIEW_GRID_COL)
-        , tracks(_tracks)
         , field(_field)
     {
     }

@@ -14,17 +14,27 @@ class App_Tracks {
 protected:
     const float mixerDivider = 1.0f / TRACK_COUNT;
 
-public:
-    uint8_t trackId = TRACK_1;
-    App_Audio_Track track0, track1, track2, track3;
-    App_Audio_Track* tracks[TRACK_COUNT] = { &track0, &track1, &track2, &track3 };
-
     App_Tracks()
         : track0(TRACK_1)
         , track1(TRACK_2)
         , track2(TRACK_3)
         , track3(TRACK_4)
     {
+    }
+
+public:
+    uint8_t trackId = TRACK_1;
+    App_Audio_Track track0, track1, track2, track3;
+    App_Audio_Track* tracks[TRACK_COUNT] = { &track0, &track1, &track2, &track3 };
+
+    static App_Tracks* instance;
+
+    static App_Tracks* getInstance()
+    {
+        if (!instance) {
+            instance = new App_Tracks();
+        }
+        return instance;
     }
 
     void next()
@@ -81,5 +91,7 @@ public:
         }
     }
 };
+
+App_Tracks* App_Tracks::instance = NULL;
 
 #endif

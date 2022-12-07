@@ -16,10 +16,10 @@ protected:
     const char* label;
 
 public:
-    App_View_TrackRow(App_Tracks* _tracks, const char* _label)
-        : tracks(_tracks)
-        , label(_label)
+    App_View_TrackRow(const char* _label)
+        :label(_label)
     {
+        tracks = App_Tracks::getInstance();
     }
 
     virtual void renderValue(App_Renderer* renderer, uint8_t trackId, App_Audio_Track* track) = 0;

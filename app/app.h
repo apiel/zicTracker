@@ -27,10 +27,11 @@ protected:
     {
         App::display = _display;
         menuView.initMenu();
+        tracks = App_Tracks::getInstance();
     }
 
 public:
-    App_Tracks tracks;
+    App_Tracks * tracks;
     Zic_Seq_Tempo<> tempo;
     App_Project project;
 
@@ -45,17 +46,17 @@ public:
 
     Menu menu[APP_MENU_SIZE] = {
         // NOTE Group menu per decimal number
-        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_GridPattern::getInstance(&tracks, &patterns[0]) },
-        (Menu) { 11, "Grid: Instrument seq.", "Instr.", App_View_GridInstrument::getInstance(&tracks) },
+        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_GridPattern::getInstance(&patterns[0]) },
+        (Menu) { 11, "Grid: Instrument seq.", "Instr.", App_View_GridInstrument::getInstance() },
         // instrument macro?
         // (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL }, // Do we want custom effect per track OR 2 global effects and effects per patch? 
         (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", NULL },
         (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]) },
-        (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance(&tracks) },
+        (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance() },
         // (Menu) { 22, "Edit: Effect", "IFX", NULL },
         (Menu) { 30, "Scatter effect", "Scatter", NULL },
         (Menu) { 31, "Master filter & effect", "MF+MFX", NULL },
-        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView), true },
+        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &project, &menuView), true },
         (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView) },
     };
 
@@ -74,12 +75,12 @@ public:
         if (tempo.next(SDL_GetTicks64()))
         // if (tempo.next())
         {
-            tracks.next();
+            tracks->next();
             if (menuView.getView()->renderOn(EVENT_VIEW_ON_TEMPO)) {
                 render();
             }
         }
-        tracks.sample(buf, len);
+        tracks->sample(buf, len);
     }
 
     void render()
@@ -104,7 +105,7 @@ public:
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
         if (keys.Menu && keys.Edit) {
-            tracks.togglePlay();
+            tracks->togglePlay();
         } else if (menuView.update(&keys, App::display) != VIEW_NONE) {
             render();
         } else if (menuView.getView()->update(&keys, App::display) != VIEW_NONE) {

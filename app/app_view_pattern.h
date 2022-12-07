@@ -336,6 +336,12 @@ public:
         return instance;
     }
 
+    void focusView() override
+    {
+        // setGridSelection();
+        // App_Audio_Track * track = App_Audio_Track::getInstance();
+    }
+
     void initDisplay(App_Renderer* renderer)
     {
         renderer->useColoredRow(0);

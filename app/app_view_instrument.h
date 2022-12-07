@@ -22,9 +22,9 @@ protected:
         return "instruments/01_synth/main.cfg";
     }
 
-    App_View_Instrument(App_Tracks* _tracks)
-        : tracks(_tracks)
+    App_View_Instrument()
     {
+        tracks = App_Tracks::getInstance();
         load();
         // logCfg();
 
@@ -63,10 +63,10 @@ public:
     // TODO
     void updatePlayingPreset() {}
 
-    static App_View_Instrument* getInstance(App_Tracks* _tracks)
+    static App_View_Instrument* getInstance()
     {
         if (!instance) {
-            instance = new App_View_Instrument(_tracks);
+            instance = new App_View_Instrument();
         }
         return instance;
     }

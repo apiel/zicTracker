@@ -15,8 +15,8 @@ protected:
     bool editing = false;
 
 public:
-    App_View_GridPatternField(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns, char* _description)
-        : App_View_GridField(_tracks, _description)
+    App_View_GridPatternField(Zic_Seq_Pattern* _patterns, char* _description)
+        : App_View_GridField(_description)
         , patterns(_patterns)
     {
     }
@@ -132,13 +132,11 @@ class App_View_GridPattern : public App_View_Grid {
 protected:
     Zic_Seq_Pattern* patterns;
     App_View_GridPatternField field;
-    App_Tracks* tracks;
 
-    App_View_GridPattern(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
-        : App_View_Grid(_tracks, &field)
+    App_View_GridPattern(Zic_Seq_Pattern* _patterns)
+        : App_View_Grid(&field)
         , patterns(_patterns)
-        , field(_tracks, _patterns, description)
-        , tracks(_tracks)
+        , field(_patterns, description)
     {
         initSelection();
     }
@@ -146,10 +144,10 @@ protected:
 public:
     static App_View_GridPattern* instance;
 
-    static App_View_GridPattern* getInstance(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
+    static App_View_GridPattern* getInstance(Zic_Seq_Pattern* _patterns)
     {
         if (!instance) {
-            instance = new App_View_GridPattern(_tracks, _patterns);
+            instance = new App_View_GridPattern(_patterns);
         }
         return instance;
     }
@@ -178,7 +176,7 @@ public:
                 char condition[2];
                 file.read(condition, 2);
 
-                App_Audio_Track* track = tracks->tracks[i % TRACK_COUNT];
+                App_Audio_Track* track = App_Tracks::getInstance()->tracks[i % TRACK_COUNT];
                 Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
                 component->pattern = pat[0] == '-' ? NULL : &patterns[strtol(pat, NULL, 16) - 1];
                 component->setDetune((detune[0] == '-' ? -1 : 1) * alphanumToInt(detune[1]));

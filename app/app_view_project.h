@@ -44,20 +44,16 @@ public:
 };
 
 class App_View_ProjectPlay : public App_View_TableLabeledRow {
-protected:
-    App_Tracks* tracks;
-
 public:
-    App_View_ProjectPlay(App_Tracks* _tracks)
+    App_View_ProjectPlay()
         : App_View_TableLabeledRow("SEQ  ", 5)
-        , tracks(_tracks)
     {
     }
 
     void renderValue(App_Renderer* renderer, uint8_t col)
     {
         if (col == 1) {
-            if (tracks->isPlaying()) {
+            if (App_Tracks::getInstance()->isPlaying()) {
                 strcat(renderer->text, ">PLAY ");
             } else {
                 strcat(renderer->text, "PAUSE ");
@@ -70,9 +66,9 @@ public:
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
         if (col == 1) {
-            tracks->togglePlay();
+            App_Tracks::getInstance()->togglePlay();
         } else {
-            tracks->reset();
+            App_Tracks::getInstance()->reset();
         }
         return VIEW_CHANGED;
     }
@@ -120,10 +116,10 @@ protected:
         // clang-format on
     };
 
-    App_View_Project(Zic_Seq_Tempo<>* _tempo, App_Tracks* tracks, App_Project* _project, App_View_Menu* menu)
+    App_View_Project(Zic_Seq_Tempo<>* _tempo, App_Project* _project, App_View_Menu* menu)
         : App_View_Table(fields, VIEW_PROJECT_ROW, VIEW_PROJECT_COL)
         , bpmField(_tempo)
-        , playField(tracks)
+        , playField()
         , nameField(_project, menu)
         , project(_project)
         , tempo(_tempo)
@@ -134,10 +130,10 @@ protected:
 public:
     static App_View_Project* instance;
 
-    static App_View_Project* getInstance(Zic_Seq_Tempo<>* _tempo, App_Tracks* tracks, App_Project* _project, App_View_Menu* menu)
+    static App_View_Project* getInstance(Zic_Seq_Tempo<>* _tempo, App_Project* _project, App_View_Menu* menu)
     {
         if (!instance) {
-            instance = new App_View_Project(_tempo, tracks, _project, menu);
+            instance = new App_View_Project(_tempo, _project, menu);
         }
         return instance;
     }

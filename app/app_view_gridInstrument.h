@@ -16,8 +16,8 @@ protected:
     }
 
 public:
-    App_View_GridInstrumentField(App_Tracks* _tracks, char* _description)
-        : App_View_GridField(_tracks, _description)
+    App_View_GridInstrumentField(char* _description)
+        : App_View_GridField(_description)
     {
     }
 
@@ -83,12 +83,10 @@ public:
 class App_View_GridInstrument : public App_View_Grid {
 protected:
     App_View_GridInstrumentField field;
-    App_Tracks* tracks;
 
-    App_View_GridInstrument(App_Tracks* _tracks)
-        : App_View_Grid(_tracks, &field)
-        , field(_tracks, description)
-        , tracks(_tracks)
+    App_View_GridInstrument()
+        : App_View_Grid(&field)
+        , field(description)
     {
         initSelection();
     }
@@ -96,10 +94,10 @@ protected:
 public:
     static App_View_GridInstrument* instance;
 
-    static App_View_GridInstrument* getInstance(App_Tracks* _tracks)
+    static App_View_GridInstrument* getInstance()
     {
         if (!instance) {
-            instance = new App_View_GridInstrument(_tracks);
+            instance = new App_View_GridInstrument();
         }
         return instance;
     }
