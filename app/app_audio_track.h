@@ -55,7 +55,6 @@ protected:
 
 public:
     uint8_t id = 0;
-    uint8_t currentState = 0;
 
     Zic_Seq_PatternComponent components[APP_TRACK_STATE_SIZE];
     App_Audio_TrackState state[APP_TRACK_STATE_SIZE];
@@ -129,7 +128,7 @@ public:
 
     bool isCurrentState(uint8_t pos)
     {
-        return currentState == pos;
+        return looper.getCurrentComponent() == pos;
     }
 
     void loadPatch()
@@ -139,6 +138,8 @@ public:
         if (patch.isValid()) {
             pd.closePatch(patch);
         }
+
+        uint8_t currentState = looper.getCurrentComponent();
         if (state[currentState].isPatchEmpty()) {
             pd.computeAudio(false);
             return;

@@ -1,7 +1,7 @@
 #ifndef APP_H_
 #define APP_H_
 
-#define APP_MENU_SIZE 11
+#define APP_MENU_SIZE 9
 
 #include "./app_def.h"
 #include "./app_project.h"
@@ -48,11 +48,11 @@ public:
         (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_GridPattern::getInstance(&tracks, &patterns[0]) },
         (Menu) { 11, "Grid: Instrument seq.", "Instr.", App_View_GridInstrument::getInstance(&tracks) },
         // instrument macro?
-        (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL },
+        // (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL }, // Do we want custom effect per track OR 2 global effects and effects per patch? 
         (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", NULL },
         (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]) },
         (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance(&tracks) },
-        (Menu) { 22, "Edit: Effect", "IFX", NULL },
+        // (Menu) { 22, "Edit: Effect", "IFX", NULL },
         (Menu) { 30, "Scatter effect", "Scatter", NULL },
         (Menu) { 31, "Master filter & effect", "MF+MFX", NULL },
         (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &tracks, &project, &menuView), true },
