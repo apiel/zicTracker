@@ -36,9 +36,11 @@ public:
 
     void select(uint8_t id)
     {
-        trackId = id % TRACK_COUNT;
-        track = tracks[trackId];
-        looper = &track->looper;
+        if (track == NULL || id != trackId) {
+            trackId = id % TRACK_COUNT;
+            track = tracks[trackId];
+            looper = &track->looper;
+        }
     }
 
     void next()

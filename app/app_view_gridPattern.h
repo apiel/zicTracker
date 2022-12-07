@@ -26,8 +26,9 @@ public:
         if (isSelected && editing) {
             return &newComponent;
         }
-        App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        return &track->components[(row) % APP_TRACK_STATE_SIZE];
+        // App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+        // return &track->components[(row) % APP_TRACK_STATE_SIZE];
+        return &tracks->track->components[(row) % APP_TRACK_STATE_SIZE];
     }
 
     void selectCol0(App_Renderer* renderer, uint8_t row, uint8_t col)
@@ -136,7 +137,7 @@ protected:
     App_Tracks* tracks;
 
     App_View_GridPattern(App_Tracks* _tracks, Zic_Seq_Pattern* _patterns)
-        : App_View_Grid(&field)
+        : App_View_Grid(_tracks, &field)
         , patterns(_patterns)
         , field(_tracks, _patterns, description)
         , tracks(_tracks)

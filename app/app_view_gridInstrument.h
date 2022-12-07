@@ -10,14 +10,9 @@
 
 class App_View_GridInstrumentField : public App_View_GridField {
 protected:
-    App_Audio_Track* getTrack(uint8_t col)
-    {
-        return tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-    }
-
     App_Audio_TrackState* getState(uint8_t row, uint8_t col)
     {
-        return &getTrack(col)->state[(row) % APP_TRACK_STATE_SIZE];
+        return &tracks->track->state[(row) % APP_TRACK_STATE_SIZE];
     }
 
 public:
@@ -60,10 +55,8 @@ public:
 
     void updatePatch(uint8_t row, uint8_t col, int8_t direction) {
         getState(row, col)->setNextPatch(direction);
-        // isCurrentState(uint8_t pos)
-        App_Audio_Track* track = getTrack(col);
-        if (track->isCurrentState(row)) {
-            track->loadPatch();
+        if (tracks->track->isCurrentState(row)) {
+            tracks->track->loadPatch();
         }
     }
 
@@ -91,7 +84,7 @@ protected:
     App_Tracks* tracks;
 
     App_View_GridInstrument(App_Tracks* _tracks)
-        : App_View_Grid(&field)
+        : App_View_Grid(_tracks, &field)
         , field(_tracks, description)
         , tracks(_tracks)
     {

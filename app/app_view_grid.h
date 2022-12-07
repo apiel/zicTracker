@@ -83,6 +83,7 @@ public:
 
 class App_View_Grid : public App_View_Table {
 protected:
+    App_Tracks* tracks;
     App_View_TableField* field;
 
     App_View_TableField* fields[VIEW_GRID_ROW * VIEW_GRID_COL] = {
@@ -98,11 +99,29 @@ protected:
         // clang-format on
     };
 
+    // App_Audio_Track* getTrack(uint8_t col)
+    // {
+    //     return tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+    // }
+
+    // void onSelectRow() override
+    // {
+    //     printf(">>>>>>>>>>>>>>> onSelectRow %d\n", selectedRow);
+    // }
+
+    void onSelectCol() override
+    {
+        // printf(">>>>>>>>>>>>>>> onSelectCol %d\n", selectedCol);
+        tracks->select(uint8_t(selectedCol / 3) % TRACK_COUNT);
+    }
+
+
 public:
     char description[30] = "";
 
-    App_View_Grid(App_View_TableField* _field)
+    App_View_Grid(App_Tracks* _tracks, App_View_TableField* _field)
         : App_View_Table(fields, VIEW_GRID_ROW, VIEW_GRID_COL)
+        , tracks(_tracks)
         , field(_field)
     {
     }
