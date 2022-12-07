@@ -21,6 +21,11 @@ public:
     {
     }
 
+    App_Audio_Track* getTrack(uint8_t col)
+    {
+        return tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+    }
+
     virtual bool isSelectable(uint8_t row, uint8_t col) override
     {
         return true;
@@ -119,6 +124,11 @@ public:
         , tracks(_tracks)
         , field(_field)
     {
+    }
+
+    static uint8_t getTrackId()
+    {
+        return uint8_t(gridSelectedCol / 3) % TRACK_COUNT;
     }
 
     bool renderOn(uint8_t event) override

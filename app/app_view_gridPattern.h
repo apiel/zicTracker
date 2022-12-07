@@ -26,8 +26,7 @@ public:
         if (isSelected && editing) {
             return &newComponent;
         }
-        App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-        return &track->components[(row) % APP_TRACK_STATE_SIZE];
+        return &getTrack(col)->components[(row) % APP_TRACK_STATE_SIZE];
     }
 
     void selectCol0(App_Renderer* renderer, uint8_t row, uint8_t col)

@@ -10,11 +10,6 @@
 
 class App_View_GridInstrumentField : public App_View_GridField {
 protected:
-    App_Audio_Track* getTrack(uint8_t col)
-    {
-        return tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
-    }
-
     App_Audio_TrackState* getState(uint8_t row, uint8_t col)
     {
         return &getTrack(col)->state[(row) % APP_TRACK_STATE_SIZE];
@@ -111,7 +106,7 @@ public:
 
     void setGridSelection() override
     {
-        selectedCol = gridSelectedCol > 1 ? 1 : gridSelectedCol;
+        selectedCol = gridSelectedCol % 3 == 2 ? gridSelectedCol - 1 : gridSelectedCol;
         selectedRow = gridSelectedRow;
     }
 };
