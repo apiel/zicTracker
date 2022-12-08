@@ -16,17 +16,18 @@ class App_View_Instrument : public App_View_JS, App_Load_Config {
 protected:
     App_Tracks* tracks;
     bool presetIsPlaying = true;
+    char filepath[256];
 
-    const char* getConfigFile()
+    char * getFile(const char * extension)
     {
-        return "instruments/01_synth/main.cfg";
+        sprintf(filepath, "instruments/01_synth/main.%s", extension);
+        return filepath;
     }
 
     App_View_Instrument()
     {
         tracks = App_Tracks::getInstance();
-        load();
-        // logCfg();
+        loadConfig(getFile("cfg"));
 
         duk_idx_t configIdx = duk_push_array(ctx);
         for (uint8_t i = 0; i < APP_CONFIG_SIZE && config[i][0] != 255; i++) {
@@ -53,7 +54,7 @@ protected:
         duk_push_c_function(ctx, App_View_Instrument::duk_updateConfigCC, 2);
         duk_put_global_string(ctx, "updateConfigCC");
 
-        duk_eval_file_extra(ctx, "instruments/01_synth/main.js");
+        duk_eval_file_extra(ctx, getFile("js"));
         duk_pop(ctx);
     }
 
@@ -122,7 +123,7 @@ public:
             }
             duk_pop(ctx);
         }
-        save();
+        saveConfig(getFile("js"));
     }
 };
 
