@@ -22,6 +22,7 @@ protected:
 
 public:
     char patchFilename[40];
+    uint8_t preset = 0;
 
     App_Audio_TrackState()
     {
@@ -72,12 +73,9 @@ public:
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
             APP_LOG("Could not init pd\n");
         }
-        // pd.computeAudio(true);
-        // patch = pd.openPatch("main.pd", "instruments/02_synth");
         loadPatch();
         pd.setReceiver(&pdObject);
         pd.setMidiReceiver(&pdObject);
-        // pd.sendControlChange(1, 1, 10);
     }
 
     ~App_Audio_Track()

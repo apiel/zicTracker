@@ -10,10 +10,6 @@
 
 #include <duktape.h>
 
-// #define VIEW_INSTR_ROW 8
-// #define VIEW_INSTR_COL 3
-// #define VIEW_INSTR_LABELS 7
-
 class App_View_Instrument : public App_View_JS, App_Load_Config {
 protected:
     App_Tracks* tracks;
@@ -92,7 +88,6 @@ public:
 
     void preRender(App_Renderer* renderer) override
     {
-        // strcpy(renderer->text, "");
         sprintf(renderer->text, "%26s %s\n", state->patchFilename, "A1");
         renderer->useColoredRow(0, COLOR_LIGHT);
         renderer->useColor(0, 27, COLOR_MEDIUM, 2);

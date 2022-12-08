@@ -50,10 +50,15 @@ public:
 
     void renderCol1(App_Renderer* renderer, uint8_t row, uint8_t col, bool isSelected)
     {
-        strcat(renderer->text, " -- ");
+        if (getState(row, col)->isPatchEmpty()) {
+            strcat(renderer->text, " -- ");
+        } else {
+            sprintf(renderer->text + strlen(renderer->text), " %02X ", getState(row, col)->preset);
+        }
     }
 
-    void updatePatch(uint8_t row, uint8_t col, int8_t direction) {
+    void updatePatch(uint8_t row, uint8_t col, int8_t direction)
+    {
         getState(row, col)->setNextPatch(direction);
         // isCurrentState(uint8_t pos)
         App_Audio_Track* track = getTrack(col);
