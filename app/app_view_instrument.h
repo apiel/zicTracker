@@ -6,6 +6,8 @@
 #include <app_core_renderer.h>
 #include <app_core_view_js.h>
 
+#include "./app_view_grid.h"
+
 #include <duktape.h>
 
 // #define VIEW_INSTR_ROW 8
@@ -17,52 +19,23 @@ protected:
     App_Tracks* tracks;
     bool presetIsPlaying = true;
     char filepath[256];
+    App_Audio_Track* track;
+    App_Audio_TrackState* state;
 
-    char * getFile(const char * extension)
+    char* getFile(const char* extension)
     {
-        sprintf(filepath, "instruments/01_synth/main.%s", extension);
+        sprintf(filepath, "instruments/%s/main.%s", state->patchFilename, extension);
         return filepath;
     }
 
     App_View_Instrument()
     {
         tracks = App_Tracks::getInstance();
-        loadConfig(getFile("cfg"));
-
-        duk_idx_t configIdx = duk_push_array(ctx);
-        for (uint8_t i = 0; i < APP_CONFIG_SIZE && config[i][0] != 255; i++) {
-            duk_idx_t subArr_idx = duk_push_array(ctx);
-            if (config[i][0] == *(uint8_t*)"cc") {
-                duk_push_string(ctx, "cc");
-                duk_put_prop_index(ctx, subArr_idx, 0);
-                duk_push_int(ctx, config[i][1]);
-                duk_put_prop_index(ctx, subArr_idx, 1);
-                duk_push_int(ctx, config[i][2]);
-                duk_put_prop_index(ctx, subArr_idx, 2);
-                duk_put_prop_index(ctx, configIdx, i);
-            }
-        }
-        duk_put_global_string(ctx, "CONFIG");
-
-        duk_push_int(ctx, VIEW_NONE);
-        duk_put_global_string(ctx, "VIEW_NONE");
-        duk_push_int(ctx, VIEW_CHANGED);
-        duk_put_global_string(ctx, "VIEW_CHANGED");
-        duk_push_int(ctx, VIEW_STATE_CHANGED);
-        duk_put_global_string(ctx, "VIEW_STATE_CHANGED");
-
-        duk_push_c_function(ctx, App_View_Instrument::duk_updateConfigCC, 2);
-        duk_put_global_string(ctx, "updateConfigCC");
-
-        duk_eval_file_extra(ctx, getFile("js"));
-        duk_pop(ctx);
+        loadPatch();
     }
 
 public:
     static App_View_Instrument* instance;
-
-    // TODO
-    void updatePlayingPreset() { }
 
     static App_View_Instrument* getInstance()
     {
@@ -72,12 +45,66 @@ public:
         return instance;
     }
 
+    void loadPatch()
+    {
+        track = tracks->tracks[App_View_Grid::getTrackId()];
+        state = &track->state[App_View_Grid::gridSelectedRow];
+
+        duk_destroy_heap(ctx);
+        if (!state->isPatchEmpty()) {
+            loadContext();
+            loadConfig(getFile("cfg"));
+
+            duk_idx_t configIdx = duk_push_array(ctx);
+            for (uint8_t i = 0; i < APP_CONFIG_SIZE && config[i][0] != 255; i++) {
+                duk_idx_t subArr_idx = duk_push_array(ctx);
+                if (config[i][0] == *(uint8_t*)"cc") {
+                    duk_push_string(ctx, "cc");
+                    duk_put_prop_index(ctx, subArr_idx, 0);
+                    duk_push_int(ctx, config[i][1]);
+                    duk_put_prop_index(ctx, subArr_idx, 1);
+                    duk_push_int(ctx, config[i][2]);
+                    duk_put_prop_index(ctx, subArr_idx, 2);
+                    duk_put_prop_index(ctx, configIdx, i);
+                }
+            }
+            duk_put_global_string(ctx, "CONFIG");
+
+            duk_push_int(ctx, VIEW_NONE);
+            duk_put_global_string(ctx, "VIEW_NONE");
+            duk_push_int(ctx, VIEW_CHANGED);
+            duk_put_global_string(ctx, "VIEW_CHANGED");
+            duk_push_int(ctx, VIEW_STATE_CHANGED);
+            duk_put_global_string(ctx, "VIEW_STATE_CHANGED");
+
+            duk_push_c_function(ctx, App_View_Instrument::duk_updateConfigCC, 2);
+            duk_put_global_string(ctx, "updateConfigCC");
+
+            duk_eval_file_extra(ctx, getFile("js"));
+            duk_pop(ctx);
+        }
+    }
+
+    void focusView() override
+    {
+        loadPatch();
+    }
+
     void preRender(App_Renderer* renderer) override
     {
         // strcpy(renderer->text, "");
-        sprintf(renderer->text, "%26s %s\n", "01_synth", "A1");
+        sprintf(renderer->text, "%26s %s\n", state->patchFilename, "A1");
         renderer->useColoredRow(0, COLOR_LIGHT);
         renderer->useColor(0, 27, COLOR_MEDIUM, 2);
+    }
+
+    void render(App_Renderer* renderer) override
+    {
+        if (state->isPatchEmpty()) {
+            strcpy(renderer->text, "No patch selected\n");
+        } else {
+            App_View_JS::render(renderer);
+        }
     }
 
     static duk_ret_t duk_updateConfigCC(duk_context* ctx)

@@ -24,13 +24,13 @@ function renderer() {
     useColor(4, 0, pos === 3 ? hilight : COLOR_HIDE);
 
     render(
-        'Envelop:\n* Attack:  ' +
+        'Envelop:\n* Attack2:  ' +
             Math.pow(CONFIG[0][2], 2) +
-            ' ms\n* Decay:   ' +
+            ' ms\n* Decay2:   ' +
             CONFIG[1][2] * 10 +
-            ' ms\n* Sustain: ' +
+            ' ms\n* Sustain2: ' +
             Math.round((CONFIG[2][2] / 127) * 100) +
-            '%\n* Release: ' +
+            '%\n* Release2: ' +
             Math.pow(CONFIG[3][2], 2) +
             ' ms'
     );
