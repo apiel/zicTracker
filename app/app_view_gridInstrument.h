@@ -81,6 +81,21 @@ public:
 
     uint8_t updateCol1(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
+        int8_t direction = 0;
+        if (keys->Right) {
+            direction = +1;
+        } else if (keys->Left) {
+            direction = -1;
+        } else if (keys->Down) {
+            direction = -16;
+        } else if (keys->Up) {
+            direction = +16;
+        }
+        getState(row, col)->preset += direction;
+        App_Audio_Track* track = getTrack(col);
+        if (track->isCurrentState(row)) {
+            track->loadPatch();
+        }
         return VIEW_CHANGED;
     }
 };
