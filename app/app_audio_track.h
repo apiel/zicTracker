@@ -146,6 +146,8 @@ public:
         sprintf(path, "instruments/%s", state[currentState].patchFilename);
         pd.computeAudio(true);
         patch = pd.openPatch("main.pd", path);
+
+        // TODO load preset!!
     }
 };
 

@@ -10,6 +10,7 @@
 #include "./app_view_pattern.h"
 #include "./app_view_project.h"
 #include "./app_view_projectEditName.h"
+#include "./app_view_comingSoon.h"
 // #include "./app_view_track.h"
 // #include "./app_view_trackDelay.h"
 #include "./app_view_menu.h"
@@ -50,12 +51,12 @@ public:
         (Menu) { 11, "Grid: Instrument seq.", "Instr.", App_View_GridInstrument::getInstance() },
         // instrument macro?
         // (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL }, // Do we want custom effect per track OR 2 global effects and effects per patch? 
-        (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", NULL },
+        (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", App_View_ComingSoon::getInstance() },
         (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]) },
         (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance() },
         // (Menu) { 22, "Edit: Effect", "IFX", NULL },
-        (Menu) { 30, "Scatter effect", "Scatter", NULL },
-        (Menu) { 31, "Master filter & effect", "MF+MFX", NULL },
+        (Menu) { 30, "Scatter effect", "Scatter", App_View_ComingSoon::getInstance() },
+        (Menu) { 31, "Master filter & effect", "MF+MFX", App_View_ComingSoon::getInstance() },
         (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &project, &menuView), true },
         (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView) },
     };

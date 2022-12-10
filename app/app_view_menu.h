@@ -117,10 +117,12 @@ public:
 
         App_View* view = menu[currentMenu].view;
         if (view == NULL) {
+            printf("Menu %d has no view\n", currentMenu);
             return this;
         }
 
         if (menuIsVisible) {
+            printf("Menu focus %d\n", currentMenu);
             menuIsVisible = false;
             view->focusView();
         }
