@@ -56,6 +56,7 @@ protected:
 
 public:
     uint8_t id = 0;
+    char statePath[50];
 
     Zic_Seq_PatternComponent components[APP_TRACK_STATE_SIZE];
     App_Audio_TrackState state[APP_TRACK_STATE_SIZE];
@@ -69,6 +70,7 @@ public:
         , looper(&components[0], APP_TRACK_STATE_SIZE)
     {
         id = _id;
+        sprintf(statePath, "projects/current/track_%d.zic", id);
         loadState();
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
             APP_LOG("Could not init pd\n");
@@ -122,6 +124,39 @@ public:
         // for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE; i++) {
         //     strcpy(state[i].patchFilename, "--\0");
         // }
+    }
+
+    void saveState()
+    {
+        APP_LOG("save state %s\n", statePath);
+
+        Zic_File file(statePath, "w");
+        if (!file.isOpen()) {
+            APP_LOG("Could not open file %s\n", statePath);
+            return;
+        }
+
+        char buffer[256];
+        for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE; i++) {
+            sprintf(buffer, "%-40s\n", state[i].patchFilename);
+            file.write(buffer, 41);
+            sprintf(buffer, "%3d\n", state[i].preset);
+            file.write(buffer, 4);
+            if (components[i].pattern) {
+                sprintf(buffer, "%02X\n", components[i].pattern->id);
+            } else {
+                sprintf(buffer, "--\n");
+            }
+            file.write(buffer, 3);
+            sprintf(buffer, "%2d\n", components[i].detune);
+            file.write(buffer, 3);
+            sprintf(buffer, "%2d\n", components[i].condition);
+            file.write(buffer, 3);
+
+            file.write((void*)"\n", 1);
+        }
+
+        file.close();
     }
 
     bool isCurrentState(uint8_t pos)

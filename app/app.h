@@ -125,6 +125,8 @@ public:
                 // menu[i].view->snapshot(&renderer);
             }
         }
+
+        tracks->quit();
     }
 
     void start()

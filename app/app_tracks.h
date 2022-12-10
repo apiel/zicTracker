@@ -90,6 +90,13 @@ public:
             tracks[i]->cc(num, val);
         }
     }
+
+    void quit()
+    {
+        for (uint8_t i = 0; i < TRACK_COUNT; i++) {
+            tracks[i]->saveState();
+        }
+    }
 };
 
 App_Tracks* App_Tracks::instance = NULL;
