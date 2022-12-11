@@ -2,6 +2,7 @@
 #define APP_VIEW_PROJECT_EDIT_NAME_H_
 
 #include "./app_project.h"
+#include "./app_state.h"
 #include "./app_view_menu.h"
 #include <app_core_renderer.h>
 #include <app_core_view_table.h>
@@ -11,18 +12,15 @@
 
 class App_View_EditedProjectName : public App_View_TableLabeledRow {
 protected:
-    App_Project* project;
-
 public:
-    App_View_EditedProjectName(App_Project* _project)
+    App_View_EditedProjectName()
         : App_View_TableLabeledRow("Name ", PROJECT_NAME_LEN)
-        , project(_project)
     {
     }
 
     void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, project->name);
+        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, App_State::getInstance()->project.name);
     }
 
     bool isSelectable(uint8_t row, uint8_t col) override
@@ -34,7 +32,6 @@ public:
 class App_View_EditProjectKeyboard : public App_View_TableField {
 protected:
     const char* alphanum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-.!@$+&";
-    App_Project* project;
 
     char getChar(uint8_t row, uint8_t col)
     {
@@ -42,8 +39,7 @@ protected:
     }
 
 public:
-    App_View_EditProjectKeyboard(App_Project* _project)
-        : project(_project)
+    App_View_EditProjectKeyboard()
     {
     }
     bool isSelectable(uint8_t row, uint8_t col) override
@@ -66,6 +62,7 @@ public:
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
+        App_Project* project = &App_State::getInstance()->project;
         if (strlen(project->name) < PROJECT_NAME_LEN - 1) {
             sprintf(project->name + strlen(project->name), "%c", getChar(row, col));
             return VIEW_CHANGED;
@@ -76,13 +73,11 @@ public:
 
 class App_View_EditProjectAction : public App_View_TableField {
 protected:
-    App_Project* project;
     App_View_Menu* menu;
 
 public:
-    App_View_EditProjectAction(App_Project* _project, App_View_Menu* _menu)
-        : project(_project)
-        , menu(_menu)
+    App_View_EditProjectAction(App_View_Menu* _menu)
+        : menu(_menu)
     {
     }
 
@@ -108,6 +103,7 @@ public:
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         if (col == 0) {
+            App_Project* project = &App_State::getInstance()->project;
             project->name[strlen(project->name) - 1] = '\0';
             return VIEW_CHANGED;
         } else {
@@ -139,11 +135,9 @@ protected:
         // clang-format on
     };
 
-    App_View_ProjectEditName(App_Project* project, App_View_Menu* menu)
+    App_View_ProjectEditName(App_View_Menu* menu)
         : App_View_Table(fields, VIEW_PROJECT_EDIT_NAME_ROW, VIEW_PROJECT_EDIT_NAME_COL)
-        , nameField(project)
-        , kbField(project)
-        , actionField(project, menu)
+        , actionField(menu)
     {
         initSelection();
     }
@@ -151,10 +145,10 @@ protected:
 public:
     static App_View_ProjectEditName* instance;
 
-    static App_View_ProjectEditName* getInstance(App_Project* project, App_View_Menu* menu)
+    static App_View_ProjectEditName* getInstance(App_View_Menu* menu)
     {
         if (!instance) {
-            instance = new App_View_ProjectEditName(project, menu);
+            instance = new App_View_ProjectEditName(menu);
         }
         return instance;
     }

@@ -4,7 +4,6 @@
 #define APP_MENU_SIZE 9
 
 #include "./app_def.h"
-#include "./app_project.h"
 #include "./app_tracks.h"
 #include "./app_view_instrument.h"
 #include "./app_view_pattern.h"
@@ -34,7 +33,6 @@ protected:
 public:
     App_Tracks * tracks;
     Zic_Seq_Tempo<> tempo;
-    App_Project project;
 
     App_Display* display;
     UiKeys keys;
@@ -55,8 +53,8 @@ public:
         // (Menu) { 22, "Edit: Effect", "IFX", NULL },
         (Menu) { 30, "Scatter effect", "Scatter", App_View_ComingSoon::getInstance() },
         (Menu) { 31, "Master filter & effect", "MF+MFX", App_View_ComingSoon::getInstance() },
-        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &project, &menuView), true },
-        (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&project, &menuView) },
+        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &menuView), true },
+        (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&menuView) },
     };
 
     static App* instance;

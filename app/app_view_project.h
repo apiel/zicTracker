@@ -3,6 +3,7 @@
 
 #include <zic_seq_tempo.h>
 
+#include "./app_state.h"
 #include "./app_project.h"
 #include "./app_view_menu.h"
 #include <app_core_renderer.h>
@@ -76,25 +77,22 @@ public:
 
 class App_View_ProjectName : public App_View_TableLabeledRow {
 protected:
-    App_Project* project;
     App_View_Menu* menu;
 
 public:
-    App_View_ProjectName(App_Project* _project, App_View_Menu* _menu)
+    App_View_ProjectName(App_View_Menu* _menu)
         : App_View_TableLabeledRow("Name ", PROJECT_NAME_LEN)
-        , project(_project)
         , menu(_menu)
     {
     }
 
     void renderValue(App_Renderer* renderer, uint8_t col)
     {
-        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, project->name);
+        sprintf(renderer->text + strlen(renderer->text), "%-*s", PROJECT_NAME_LEN, App_State::getInstance()->project.name);
     }
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
-        printf(">>>>>>>>>>>>>>>>>>>>>>>update name\n");
         menu->setView(41);
         return VIEW_CHANGED;
     }
@@ -105,7 +103,6 @@ protected:
     App_View_ProjectBpm bpmField;
     App_View_ProjectPlay playField;
     App_View_ProjectName nameField;
-    App_Project* project;
     Zic_Seq_Tempo<>* tempo;
 
     App_View_TableField* fields[VIEW_PROJECT_ROW * VIEW_PROJECT_COL] = {
@@ -116,12 +113,10 @@ protected:
         // clang-format on
     };
 
-    App_View_Project(Zic_Seq_Tempo<>* _tempo, App_Project* _project, App_View_Menu* menu)
+    App_View_Project(Zic_Seq_Tempo<>* _tempo, App_View_Menu* menu)
         : App_View_Table(fields, VIEW_PROJECT_ROW, VIEW_PROJECT_COL)
         , bpmField(_tempo)
-        , playField()
-        , nameField(_project, menu)
-        , project(_project)
+        , nameField(menu)
         , tempo(_tempo)
     {
         initSelection();
@@ -130,10 +125,10 @@ protected:
 public:
     static App_View_Project* instance;
 
-    static App_View_Project* getInstance(Zic_Seq_Tempo<>* _tempo, App_Project* _project, App_View_Menu* menu)
+    static App_View_Project* getInstance(Zic_Seq_Tempo<>* _tempo, App_View_Menu* menu)
     {
         if (!instance) {
-            instance = new App_View_Project(_tempo, _project, menu);
+            instance = new App_View_Project(_tempo, menu);
         }
         return instance;
     }
@@ -158,8 +153,8 @@ public:
         Zic_File file(snapshotPath, "r");
         if (file.isOpen()) {
             file.seekFromStart(5);
-            file.read(project->name, PROJECT_NAME_LEN);
-            project->name[PROJECT_NAME_LEN - 1] = '\0';
+            file.read(App_State::getInstance()->project.name, PROJECT_NAME_LEN);
+            App_State::getInstance()->project.name[PROJECT_NAME_LEN - 1] = '\0';
             file.seekFromCurrent(6);
             char bpm[3];
             file.read(bpm, 3);
