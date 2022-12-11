@@ -1,0 +1,140 @@
+#ifndef APP_STATE_TRACK_H_
+#define APP_STATE_TRACK_H_
+
+#include "./app_def.h"
+#include "./app_state.h"
+#include <app_core_file.h>
+#include <zic_seq_loopMaster.h>
+
+#define APP_TRACK_STATE_SIZE 8
+#define APP_STATE_BUFFER 64
+
+#define APP_NEXT 0
+#define APP_NULL 1
+#define APP_STRING 2
+#define APP_NUMBER 3
+
+class App_State_Track {
+protected:
+    // Do not change order or remove state keys!!
+    enum {
+        APP_STATE_PATCH_FILENAME = 0,
+        APP_STATE_PRESET,
+        APP_STATE_PATTERN,
+        APP_STATE_DETUNE,
+        APP_STATE_CONDITION
+    };
+
+    void setEmptyPatch()
+    {
+        strcpy(patchFilename, "--");
+    }
+
+    void write(Zic_File* file, uint8_t type, uint16_t key = 0, void* ptr = NULL)
+    {
+        // Fill empty space from buffer with empty space
+        // to allow to change variable format without breaking
+        char buffer[APP_STATE_BUFFER];
+        memset(buffer, ' ', APP_STATE_BUFFER);
+        buffer[APP_STATE_BUFFER - 1] = '\n';
+        int len = -1;
+
+        if (type != APP_NEXT) {
+            if (ptr == NULL || type == APP_NULL) {
+                len = sprintf(buffer, "%03d --", key);
+            } else if (type == APP_STRING) {
+                len = sprintf(buffer, "%03d %s", key, (char*)ptr);
+            } else if (type == APP_NUMBER) {
+                len = sprintf(buffer, "%03d %d", key, *(uint8_t*)ptr);
+            }
+            if (len > 0 && len < APP_STATE_BUFFER) {
+                buffer[len] = ' ';
+            }
+        }
+
+        file->write(buffer, APP_STATE_BUFFER);
+    }
+
+public:
+    char patchFilename[40];
+    uint8_t preset = 0;
+    Zic_Seq_PatternComponent component;
+
+    App_State_Track()
+    {
+        setEmptyPatch();
+    }
+
+    void setNextPatch(int8_t direction)
+    {
+        if (isPatchEmpty()) {
+            if (direction == 1 && !firstFile(patchFilename, "instruments", 40)) {
+                setEmptyPatch();
+                return;
+            }
+        } else if (!nextFile(patchFilename, "instruments", patchFilename, direction, 40) && direction == -1) {
+            setEmptyPatch();
+            return;
+        }
+    }
+
+    bool isPatchEmpty()
+    {
+        return patchFilename[0] == '-' && patchFilename[1] == '-';
+    }
+
+    void load(char* buffer)
+    {
+        char key[4];
+        memcpy(key, buffer, 3);
+        key[3] = '\0';
+
+        switch (atoi(key)) {
+        case APP_STATE_PATCH_FILENAME:
+            memcpy(patchFilename, buffer + 4, sizeof(patchFilename) - 1);
+            removeTrailingSpaces(patchFilename);
+            break;
+
+        case APP_STATE_PRESET:
+            preset = atoi(buffer + 4);
+            break;
+
+        case APP_STATE_PATTERN: {
+            if (buffer[4] == '-') {
+                component.pattern = NULL;
+            } else {
+                component.pattern = &App_State::getInstance()->patterns[atoi(buffer + 4)];
+            }
+            break;
+        }
+
+        case APP_STATE_DETUNE:
+            component.detune = atoi(buffer + 4);
+            break;
+
+        case APP_STATE_CONDITION:
+            component.condition = atoi(buffer + 4);
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    void save(Zic_File* file)
+    {
+        write(file, APP_STRING, APP_STATE_PATCH_FILENAME, patchFilename);
+        write(file, APP_NUMBER, APP_STATE_PRESET, &preset);
+        if (component.pattern) {
+            write(file, APP_NUMBER, APP_STATE_PATTERN, &component.pattern->id);
+        } else {
+            write(file, APP_NULL, APP_STATE_PATTERN);
+        }
+        write(file, APP_NUMBER, APP_STATE_DETUNE, &component.detune);
+        write(file, APP_NUMBER, APP_STATE_CONDITION, &component.condition);
+
+        write(file, APP_NEXT);
+    }
+};
+
+#endif

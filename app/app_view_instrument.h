@@ -16,7 +16,7 @@ protected:
     bool presetIsPlaying = true;
     char filepath[256];
     App_Audio_Track* track;
-    App_Audio_TrackState* state;
+    App_State_Track* state;
 
     char* getFile(const char* extension)
     {

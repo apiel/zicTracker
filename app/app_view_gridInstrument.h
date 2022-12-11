@@ -10,7 +10,7 @@
 
 class App_View_GridInstrumentField : public App_View_GridField {
 protected:
-    App_Audio_TrackState* getState(uint8_t row, uint8_t col)
+    App_State_Track* getState(uint8_t row, uint8_t col)
     {
         return &getTrack(col)->state[(row) % APP_TRACK_STATE_SIZE];
     }
@@ -28,7 +28,7 @@ public:
 
     void selectCol0(App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        App_Audio_TrackState* state = getState(row, col);
+        App_State_Track* state = getState(row, col);
         if (state->isPatchEmpty()) {
             sprintf(description, "Patch: to be selected");
         } else {

@@ -25,7 +25,7 @@ public:
         if (isSelected && editing) {
             return &newComponent;
         }
-        return &getTrack(col)->components[(row) % APP_TRACK_STATE_SIZE];
+        return &getTrack(col)->state[(row) % APP_TRACK_STATE_SIZE].component;
     }
 
     void selectCol0(App_Renderer* renderer, uint8_t row, uint8_t col)

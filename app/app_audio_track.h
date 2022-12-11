@@ -4,56 +4,14 @@
 #include "./app_def.h"
 #include "./app_instrument.h"
 
+#include "./app_state.h"
+#include "./app_state_track.h"
 #include <PdBase.hpp>
 #include <PdObject.h>
 #include <app_core_file.h>
 #include <wavetables/wavetable_Bank.h>
 #include <zic_effect_delay.h>
 #include <zic_seq_loopMaster.h>
-#include "./app_state.h"
-
-#define APP_TRACK_STATE_SIZE 8
-#define APP_STATE_BUFFER 64
-
-#define APP_NEXT 0
-#define APP_NULL 1
-#define APP_STRING 2
-#define APP_NUMBER 3
-
-class App_Audio_TrackState {
-protected:
-    void setEmptyPatch()
-    {
-        strcpy(patchFilename, "--");
-    }
-
-public:
-    char patchFilename[40];
-    uint8_t preset = 0;
-
-    App_Audio_TrackState()
-    {
-        setEmptyPatch();
-    }
-
-    void setNextPatch(int8_t direction)
-    {
-        if (isPatchEmpty()) {
-            if (direction == 1 && !firstFile(patchFilename, "instruments", 40)) {
-                setEmptyPatch();
-                return;
-            }
-        } else if (!nextFile(patchFilename, "instruments", patchFilename, direction, 40) && direction == -1) {
-            setEmptyPatch();
-            return;
-        }
-    }
-
-    bool isPatchEmpty()
-    {
-        return patchFilename[0] == '-' && patchFilename[1] == '-';
-    }
-};
 
 class App_Audio_Track {
 protected:
@@ -61,37 +19,17 @@ protected:
     const float tickDivider = 1.0f / (256.0f * APP_CHANNELS);
     PdObject pdObject;
 
-    void writeState(Zic_File* file, uint8_t type, uint16_t key = 0, void* ptr = NULL)
-    {
-        // Fill empty space from buffer with empty space
-        // to allow to change variable format without breaking
-        char buffer[APP_STATE_BUFFER];
-        memset(buffer, ' ', APP_STATE_BUFFER);
-        buffer[APP_STATE_BUFFER - 1] = '\n';
-        int len = -1;
-
-        if (type != APP_NEXT) {
-            if (ptr == NULL || type == APP_NULL) {
-                len = sprintf(buffer, "%03d --", key);
-            } else if (type == APP_STRING) {
-                len = sprintf(buffer, "%03d %s", key, (char*)ptr);
-            } else if (type == APP_NUMBER) {
-                len = sprintf(buffer, "%03d %d", key, *(uint8_t*)ptr);
-            }
-            if (len > 0 && len < APP_STATE_BUFFER) {
-                buffer[len] = ' ';
-            }
-        }
-
-        file->write(buffer, APP_STATE_BUFFER);
-    }
-
 public:
     uint8_t id = 0;
     char statePath[50];
 
-    Zic_Seq_PatternComponent components[APP_TRACK_STATE_SIZE];
-    App_Audio_TrackState state[APP_TRACK_STATE_SIZE];
+    App_State_Track state[APP_TRACK_STATE_SIZE];
+    Zic_Seq_PatternComponent* components[APP_TRACK_STATE_SIZE] = {
+        &state[0].component,
+        &state[1].component,
+        &state[2].component,
+        &state[3].component
+    };
 
     Zic_Seq_LoopMaster looper;
     pd::PdBase pd;
@@ -99,7 +37,7 @@ public:
 
     App_Audio_Track(uint8_t _id = 0)
         : pdObject(_id)
-        , looper(&components[0], APP_TRACK_STATE_SIZE)
+        , looper(components[0], APP_TRACK_STATE_SIZE)
     {
         id = _id;
         sprintf(statePath, "projects/current/track_%d.zic", id);
@@ -151,15 +89,6 @@ public:
         pd.sendControlChange(1, num, val);
     }
 
-    // Do not change order or remove state keys!!
-    enum {
-        APP_STATE_PATCH_FILENAME = 0,
-        APP_STATE_PRESET,
-        APP_STATE_PATTERN,
-        APP_STATE_DETUNE,
-        APP_STATE_CONDITION
-    };
-
     void loadState()
     {
         APP_LOG("Load state %s\n", statePath);
@@ -177,40 +106,7 @@ public:
                 idx++;
                 continue;
             }
-            char key[4];
-            memcpy(key, buffer, 3);
-            key[3] = '\0';
-
-            switch (atoi(key)) {
-            case APP_STATE_PATCH_FILENAME:
-                memcpy(state[idx].patchFilename, buffer + 4, sizeof(state[idx].patchFilename) - 1);
-                removeTrailingSpaces(state[idx].patchFilename);
-                break;
-
-            case APP_STATE_PRESET:
-                state[idx].preset = atoi(buffer + 4);
-                break;
-
-            case APP_STATE_PATTERN: {
-                if (buffer[4] == '-') {
-                    components[idx].pattern = NULL;
-                } else {
-                    components[idx].pattern = &App_State::getInstance()->patterns[atoi(buffer + 4)];
-                }
-                break;
-            }
-
-            case APP_STATE_DETUNE:
-                components[idx].detune = atoi(buffer + 4);
-                break;
-
-            case APP_STATE_CONDITION:
-                components[idx].condition = atoi(buffer + 4);
-                break;
-            
-            default:
-                break;
-            }
+            state[idx].load(buffer);
         }
 
         file.close();
@@ -227,17 +123,7 @@ public:
         }
 
         for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE; i++) {
-            writeState(&file, APP_STRING, APP_STATE_PATCH_FILENAME, state[i].patchFilename);
-            writeState(&file, APP_NUMBER, APP_STATE_PRESET, &state[i].preset);
-            if (components[i].pattern) {
-                writeState(&file, APP_NUMBER, APP_STATE_PATTERN, &components[i].pattern->id);
-            } else {
-                writeState(&file, APP_NULL, APP_STATE_PATTERN);
-            }
-            writeState(&file, APP_NUMBER, APP_STATE_DETUNE, &components[i].detune);
-            writeState(&file, APP_NUMBER, APP_STATE_CONDITION, &components[i].condition);
-
-            writeState(&file, APP_NEXT);
+            state[i].save(&file);
         }
 
         file.close();
