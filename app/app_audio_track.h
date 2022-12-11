@@ -59,7 +59,7 @@ protected:
     const float tickDivider = 1.0f / (256.0f * APP_CHANNELS);
     PdObject pdObject;
 
-    void writeState(Zic_File * file, void* ptr, uint8_t type)
+    void writeState(Zic_File* file, void* ptr, uint8_t type, uint16_t key)
     {
         // Fill empty space from buffer with empty space
         // to allow to change variable format without breaking
@@ -69,12 +69,11 @@ protected:
         int len = -1;
 
         if (ptr == NULL || type == 0) {
-            buffer[0] = '-';
-            buffer[1] = '-';
+            len = sprintf(buffer, "%03d --", key);
         } else if (type == 1) {
-            len = sprintf(buffer, "%s", (char*)ptr);
+            len = sprintf(buffer, "%03d %s", key, (char*)ptr);
         } else if (type == 2) {
-            len = sprintf(buffer, "%d", *(uint8_t*)ptr);
+            len = sprintf(buffer, "%03d %d", key, *(uint8_t*)ptr);
         }
         if (len > 0 && len < APP_STATE_BUFFER) {
             buffer[len] = ' ';
@@ -155,6 +154,15 @@ public:
         // }
     }
 
+    // Do not change order or remove state keys!!
+    enum {
+        APP_STATE_PATCH_FILENAME = 0,
+        APP_STATE_PRESET,
+        APP_STATE_PATTERN,
+        APP_STATE_DETUNE,
+        APP_STATE_CONDITION
+    };
+
     void saveState()
     {
         APP_LOG("save state %s\n", statePath);
@@ -166,15 +174,15 @@ public:
         }
 
         for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE; i++) {
-            writeState(&file, state[i].patchFilename, APP_STRING);
-            writeState(&file, &state[i].preset, APP_NUMBER);
+            writeState(&file, state[i].patchFilename, APP_STRING, APP_STATE_PATCH_FILENAME);
+            writeState(&file, &state[i].preset, APP_NUMBER, APP_STATE_PRESET);
             if (components[i].pattern) {
-                writeState(&file, &components[i].pattern->id, APP_NUMBER);
+                writeState(&file, &components[i].pattern->id, APP_NUMBER, APP_STATE_PATTERN);
             } else {
-                writeState(&file, NULL, APP_NULL);
+                writeState(&file, NULL, APP_NULL, APP_STATE_PATTERN);
             }
-            writeState(&file, &components[i].detune, APP_NUMBER);
-            writeState(&file, &components[i].condition, APP_NUMBER);
+            writeState(&file, &components[i].detune, APP_NUMBER, APP_STATE_DETUNE);
+            writeState(&file, &components[i].condition, APP_NUMBER, APP_STATE_CONDITION);
 
             file.write((void*)"\n", 1);
         }
