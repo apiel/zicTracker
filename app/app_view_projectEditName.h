@@ -1,7 +1,7 @@
 #ifndef APP_VIEW_PROJECT_EDIT_NAME_H_
 #define APP_VIEW_PROJECT_EDIT_NAME_H_
 
-#include "./app_project.h"
+#include "./app_state_project.h"
 #include "./app_state.h"
 #include "./app_view_menu.h"
 #include <app_core_renderer.h>
@@ -62,7 +62,7 @@ public:
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
-        App_Project* project = &App_State::getInstance()->project;
+        App_State_Project* project = &App_State::getInstance()->project;
         if (strlen(project->name) < PROJECT_NAME_LEN - 1) {
             sprintf(project->name + strlen(project->name), "%c", getChar(row, col));
             return VIEW_CHANGED;
@@ -103,7 +103,7 @@ public:
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
     {
         if (col == 0) {
-            App_Project* project = &App_State::getInstance()->project;
+            App_State_Project* project = &App_State::getInstance()->project;
             project->name[strlen(project->name) - 1] = '\0';
             return VIEW_CHANGED;
         } else {

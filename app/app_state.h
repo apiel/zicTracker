@@ -2,7 +2,7 @@
 #define APP_STATE_H_
 
 #include "./app_def.h"
-#include "./app_project.h"
+#include "./app_state_project.h"
 
 #include <zic_seq_pattern.h>
 
@@ -22,7 +22,7 @@ public:
     }
 
     Zic_Seq_Pattern patterns[PATTERN_COUNT];
-    App_Project project;
+    App_State_Project project;
 };
 
 App_State* App_State::instance = NULL;

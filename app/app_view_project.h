@@ -2,7 +2,7 @@
 #define APP_VIEW_PROJECT_H_
 
 #include "./app_state.h"
-#include "./app_project.h"
+#include "./app_state_project.h"
 #include "./app_tempo.h"
 #include "./app_view_menu.h"
 #include <app_core_renderer.h>
