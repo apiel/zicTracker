@@ -12,6 +12,11 @@
 #include <zic_seq_loopMaster.h>
 
 #define APP_TRACK_STATE_SIZE 8
+#define APP_STATE_BUFFER 64
+
+#define APP_NULL 0
+#define APP_STRING 1
+#define APP_NUMBER 2
 
 class App_Audio_TrackState {
 protected:
@@ -53,6 +58,30 @@ protected:
     Zic_Seq_Step* stepOff[INSTRUMENT_COUNT];
     const float tickDivider = 1.0f / (256.0f * APP_CHANNELS);
     PdObject pdObject;
+
+    void writeState(Zic_File * file, void* ptr, uint8_t type)
+    {
+        // Fill empty space from buffer with empty space
+        // to allow to change variable format without breaking
+        char buffer[APP_STATE_BUFFER];
+        memset(buffer, ' ', APP_STATE_BUFFER);
+        buffer[APP_STATE_BUFFER - 1] = '\n';
+        int len = -1;
+
+        if (ptr == NULL || type == 0) {
+            buffer[0] = '-';
+            buffer[1] = '-';
+        } else if (type == 1) {
+            len = sprintf(buffer, "%s", (char*)ptr);
+        } else if (type == 2) {
+            len = sprintf(buffer, "%d", *(uint8_t*)ptr);
+        }
+        if (len > 0 && len < APP_STATE_BUFFER) {
+            buffer[len] = ' ';
+        }
+
+        file->write(buffer, APP_STATE_BUFFER);
+    }
 
 public:
     uint8_t id = 0;
@@ -136,22 +165,16 @@ public:
             return;
         }
 
-        char buffer[256];
         for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE; i++) {
-            sprintf(buffer, "%-40s\n", state[i].patchFilename);
-            file.write(buffer, 41);
-            sprintf(buffer, "%3d\n", state[i].preset);
-            file.write(buffer, 4);
+            writeState(&file, state[i].patchFilename, APP_STRING);
+            writeState(&file, &state[i].preset, APP_NUMBER);
             if (components[i].pattern) {
-                sprintf(buffer, "%02X\n", components[i].pattern->id);
+                writeState(&file, &components[i].pattern->id, APP_NUMBER);
             } else {
-                sprintf(buffer, "--\n");
+                writeState(&file, NULL, APP_NULL);
             }
-            file.write(buffer, 3);
-            sprintf(buffer, "%2d\n", components[i].detune);
-            file.write(buffer, 3);
-            sprintf(buffer, "%2d\n", components[i].condition);
-            file.write(buffer, 3);
+            writeState(&file, &components[i].detune, APP_NUMBER);
+            writeState(&file, &components[i].condition, APP_NUMBER);
 
             file.write((void*)"\n", 1);
         }
