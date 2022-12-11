@@ -36,8 +36,6 @@ public:
     Zic_Seq_Tempo<> tempo;
     App_Project project;
 
-    Zic_Seq_Pattern patterns[PATTERN_COUNT];
-
     static App_Display* display;
     UiKeys keys;
 
@@ -47,12 +45,12 @@ public:
 
     Menu menu[APP_MENU_SIZE] = {
         // NOTE Group menu per decimal number
-        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_GridPattern::getInstance(&patterns[0]) },
+        (Menu) { 10, "Grid: Pattern sequencer", "Pattern", App_View_GridPattern::getInstance() },
         (Menu) { 11, "Grid: Instrument seq.", "Instr.", App_View_GridInstrument::getInstance() },
         // instrument macro?
         // (Menu) { 12, "Grid: Effect sequencer", "IFX", NULL }, // Do we want custom effect per track OR 2 global effects and effects per patch? 
         (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", App_View_ComingSoon::getInstance() },
-        (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance(&patterns[0]) },
+        (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance() },
         (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance() },
         // (Menu) { 22, "Edit: Effect", "IFX", NULL },
         (Menu) { 30, "Scatter effect", "Scatter", App_View_ComingSoon::getInstance() },

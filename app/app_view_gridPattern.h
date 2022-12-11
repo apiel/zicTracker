@@ -7,17 +7,16 @@
 #include <app_core_view_table.h>
 
 #include "./app_view_grid.h"
+#include "./app_state.h"
 
 class App_View_GridPatternField : public App_View_GridField {
 protected:
-    Zic_Seq_Pattern* patterns;
     Zic_Seq_PatternComponent newComponent;
     bool editing = false;
 
 public:
-    App_View_GridPatternField(Zic_Seq_Pattern* _patterns, char* _description)
+    App_View_GridPatternField(char* _description)
         : App_View_GridField(_description)
-        , patterns(_patterns)
     {
     }
 
@@ -97,7 +96,7 @@ public:
         int8_t direction = getDirection(keys, 16);
         int16_t id = newComponent.pattern == NULL ? -1 : newComponent.pattern->id;
         id = (id + direction) % PATTERN_COUNT;
-        newComponent.pattern = id < 0 ? NULL : &patterns[id];
+        newComponent.pattern = id < 0 ? NULL : &App_State::getInstance()->patterns[id];
         return VIEW_CHANGED;
     }
     uint8_t updateCol1(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)
@@ -130,13 +129,11 @@ public:
 
 class App_View_GridPattern : public App_View_Grid {
 protected:
-    Zic_Seq_Pattern* patterns;
     App_View_GridPatternField field;
 
-    App_View_GridPattern(Zic_Seq_Pattern* _patterns)
+    App_View_GridPattern()
         : App_View_Grid(&field)
-        , patterns(_patterns)
-        , field(_patterns, description)
+        , field(description)
     {
         initSelection();
     }
@@ -144,10 +141,10 @@ protected:
 public:
     static App_View_GridPattern* instance;
 
-    static App_View_GridPattern* getInstance(Zic_Seq_Pattern* _patterns)
+    static App_View_GridPattern* getInstance()
     {
         if (!instance) {
-            instance = new App_View_GridPattern(_patterns);
+            instance = new App_View_GridPattern();
         }
         return instance;
     }
@@ -162,6 +159,7 @@ public:
 
     void loadSnapshot() override
     {
+        printf("Loading snapshot\n");
         Zic_File file(snapshotPath, "r");
         if (file.isOpen()) {
             file.seekFromStart(28);
@@ -178,7 +176,7 @@ public:
 
                 App_Audio_Track* track = App_Tracks::getInstance()->tracks[i % TRACK_COUNT];
                 Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
-                component->pattern = pat[0] == '-' ? NULL : &patterns[strtol(pat, NULL, 16) - 1];
+                component->pattern = pat[0] == '-' ? NULL : &App_State::getInstance()->patterns[strtol(pat, NULL, 16) - 1];
                 component->setDetune((detune[0] == '-' ? -1 : 1) * alphanumToInt(detune[1]));
                 component->setCondition(condition);
             }

@@ -7,6 +7,7 @@
 #include <app_core_view_table.h>
 
 #include "./app_view_grid.h"
+#include "./app_state.h"
 
 #define VIEW_PATTERN_ROW_HEADERS 4
 #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + MAX_STEPS_IN_PATTERN)
@@ -28,10 +29,10 @@ protected:
     }
 
 public:
-    App_View_PatternHeader(Zic_Seq_Pattern* _patterns, uint8_t* _currentPatternId)
-        : patterns(_patterns)
-        , currentPatternId(_currentPatternId)
+    App_View_PatternHeader(uint8_t* _currentPatternId)
+        : currentPatternId(_currentPatternId)
     {
+        patterns = App_State::getInstance()->patterns;
     }
 
     // TODO by default select pattern base on the last selected track
@@ -146,10 +147,10 @@ protected:
     }
 
 public:
-    App_View_PatternStep(Zic_Seq_Pattern* _patterns, uint8_t* _currentPatternId)
-        : patterns(_patterns)
-        , currentPatternId(_currentPatternId)
+    App_View_PatternStep(uint8_t* _currentPatternId)
+        : currentPatternId(_currentPatternId)
     {
+        patterns = App_State::getInstance()->patterns;
     }
 
     bool isSelectable(uint8_t row, uint8_t col) override
@@ -237,7 +238,6 @@ public:
 
 class App_View_Pattern : public App_View_Table {
 protected:
-    Zic_Seq_Pattern* patterns;
     uint8_t currentPatternId = 0;
 
     App_View_PatternHeader headerField;
@@ -318,11 +318,10 @@ protected:
         // clang-format on
     };
 
-    App_View_Pattern(Zic_Seq_Pattern* _patterns)
+    App_View_Pattern()
         : App_View_Table(fields, VIEW_PATTERN_ROW, VIEW_PATTERN_COL)
-        , patterns(_patterns)
-        , headerField(_patterns, &currentPatternId)
-        , stepField(_patterns, &currentPatternId)
+        , headerField(&currentPatternId)
+        , stepField(&currentPatternId)
     {
         initSelection();
     }
@@ -330,18 +329,18 @@ protected:
 public:
     static App_View_Pattern* instance;
 
-    static App_View_Pattern* getInstance(Zic_Seq_Pattern* _patterns)
+    static App_View_Pattern* getInstance()
     {
         if (!instance) {
-            instance = new App_View_Pattern(_patterns);
+            instance = new App_View_Pattern();
         }
         return instance;
     }
 
     void focusView() override
     {
-        App_Audio_Track * track = App_Tracks::getInstance()->tracks[App_View_Grid::getTrackId()];
-        Zic_Seq_Pattern * pattern = track->components[App_View_Grid::gridSelectedRow].pattern;
+        App_Audio_Track* track = App_Tracks::getInstance()->tracks[App_View_Grid::getTrackId()];
+        Zic_Seq_Pattern* pattern = track->components[App_View_Grid::gridSelectedRow].pattern;
         currentPatternId = pattern == NULL ? 0 : pattern->id;
     }
 
@@ -355,7 +354,7 @@ public:
     uint8_t update(UiKeys* keys, App_Renderer* renderer) override
     {
         uint8_t ret = App_View_Table::update(keys, renderer);
-        setLastRow(patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
+        setLastRow(App_State::getInstance()->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
         return ret;
     }
 
@@ -368,7 +367,7 @@ public:
         uint8_t id = currentPatternId;
         for (currentPatternId = 0; currentPatternId < PATTERN_COUNT; currentPatternId++) {
             renderer->startRow = 0;
-            setLastRow(patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
+            setLastRow(App_State::getInstance()->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
             for (uint8_t row = 0; row < lastRow; row += TABLE_VISIBLE_ROWS, renderer->startRow += TABLE_VISIBLE_ROWS) {
                 render(renderer);
                 saveFileContent(row == 0 ? "w" : "a", renderer->text, strlen(renderer->text),
@@ -387,7 +386,7 @@ public:
             snprintf(filename, MAX_FILENAME, snapshotPath, id + 1, id + 1);
             Zic_File file(filename, "r");
             if (file.isOpen()) {
-                Zic_Seq_Pattern* pattern = &patterns[id];
+                Zic_Seq_Pattern* pattern = &App_State::getInstance()->patterns[id];
                 pattern->id = id;
                 file.seekFromStart(13);
                 char lenStr[3];

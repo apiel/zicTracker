@@ -10,6 +10,7 @@
 #include <wavetables/wavetable_Bank.h>
 #include <zic_effect_delay.h>
 #include <zic_seq_loopMaster.h>
+// #include "./app_state.h"
 
 #define APP_TRACK_STATE_SIZE 8
 #define APP_STATE_BUFFER 64
@@ -182,20 +183,23 @@ public:
 
             switch (atoi(key)) {
             case APP_STATE_PATCH_FILENAME:
-                memcpy(state[idx].patchFilename, buffer + 4, sizeof(state[idx].patchFilename) - 1);
+                // TODO remove trailling space
+                // memcpy(state[idx].patchFilename, buffer + 4, sizeof(state[idx].patchFilename) - 1);
                 break;
 
-            case APP_STATE_PRESET: 
-                state[idx].preset = atoi(buffer + 4);
+            case APP_STATE_PRESET:
+                // state[idx].preset = atoi(buffer + 4);
                 break;
 
             case APP_STATE_PATTERN: {
                 if (buffer[4] == '-') {
-                    components[idx].pattern = NULL;
+                    // components[idx].pattern = NULL;
                     printf("pattern %d is null\n", idx);
                 } else {
                     // components[idx].pattern = atoi(buffer + 4);
+                    // components[idx].pattern = &App_State::getInstance()->patterns[atoi(buffer + 4)];
                     printf("pattern %d is %d\n", idx, atoi(buffer + 4));
+                    // printf("pattern %d is %d\n", idx, components[idx].pattern->id);
                 }
                 break;
             }
