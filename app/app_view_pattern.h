@@ -340,7 +340,7 @@ public:
     void focusView() override
     {
         App_Audio_Track* track = App_Tracks::getInstance()->tracks[App_View_Grid::getTrackId()];
-        Zic_Seq_Pattern* pattern = track->components[App_View_Grid::gridSelectedRow]->pattern;
+        Zic_Seq_Pattern* pattern = track->state[App_View_Grid::gridSelectedRow].component.pattern;
         currentPatternId = pattern == NULL ? 0 : pattern->id;
     }
 
