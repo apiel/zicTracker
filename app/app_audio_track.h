@@ -172,7 +172,7 @@ public:
         char buffer[APP_STATE_BUFFER];
         uint8_t idx = 0;
         while (file.read(buffer, APP_STATE_BUFFER) > 0) {
-            if (buffer[0] == '\n') {
+            if (buffer[0] == ' ') {
                 idx++;
                 continue;
             }
@@ -182,7 +182,11 @@ public:
 
             switch (atoi(key)) {
             case APP_STATE_PATCH_FILENAME:
-                printf("patch %i %s\n", idx, buffer);
+                memcpy(state[idx].patchFilename, buffer + 4, sizeof(state[idx].patchFilename) - 1);
+                break;
+
+            case APP_STATE_PRESET: 
+                state[idx].preset = atoi(buffer + 4);
                 break;
 
             default:
