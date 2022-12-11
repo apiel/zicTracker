@@ -134,33 +134,6 @@ public:
         renderer->useColor(0, 255, 0, 4, COLOR_MEDIUM);
         App_View_Table::preRender(renderer);
     }
-
-    const char* snapshotPath = "projects/current/project.zic";
-
-    // void snapshot(App_Renderer* renderer) override
-    // {
-    //     render(renderer);
-    //     // printf("Saving snapshot:\n%s", renderer->text);
-    //     saveFileContent(renderer->text, strlen(renderer->text), snapshotPath);
-    // }
-
-    // void loadSnapshot() override
-    // {
-    //     Zic_File file(snapshotPath, "r");
-    //     if (file.isOpen()) {
-    //         file.seekFromStart(5);
-    //         file.read(App_State::getInstance()->project.name, PROJECT_NAME_LEN);
-    //         App_State::getInstance()->project.name[PROJECT_NAME_LEN - 1] = '\0';
-    //         file.seekFromCurrent(6);
-    //         char bpm[3];
-    //         file.read(bpm, 3);
-    //         // printf("yoyoyo BPM: %s\n", bpm);
-    //         trimToNumeric(bpm);
-    //         App_Tempo::getInstance()->set(atoi(bpm));
-
-    //         file.close();
-    //     }
-    // }
 };
 
 App_View_Project* App_View_Project::instance = NULL;
