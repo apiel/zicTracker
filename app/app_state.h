@@ -23,6 +23,14 @@ public:
 
     Zic_Seq_Pattern patterns[PATTERN_COUNT];
     App_State_Project project;
+
+    void save() {
+        project.save();
+    }
+
+    void load() {
+        project.load();
+    }
 };
 
 App_State* App_State::instance = NULL;

@@ -126,10 +126,13 @@ public:
         }
 
         tracks->quit();
+        App_State::getInstance()->save();
     }
 
     void start()
     {
+        App_State::getInstance()->load();
+
         for (uint8_t i; i < APP_MENU_SIZE; i++) {
             if (menu[i].view) {
                 menu[i].view->loadSnapshot();
