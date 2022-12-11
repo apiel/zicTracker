@@ -14,9 +14,10 @@
 #define APP_TRACK_STATE_SIZE 8
 #define APP_STATE_BUFFER 64
 
-#define APP_NULL 0
-#define APP_STRING 1
-#define APP_NUMBER 2
+#define APP_NEXT 0
+#define APP_NULL 1
+#define APP_STRING 2
+#define APP_NUMBER 3
 
 class App_Audio_TrackState {
 protected:
@@ -59,7 +60,7 @@ protected:
     const float tickDivider = 1.0f / (256.0f * APP_CHANNELS);
     PdObject pdObject;
 
-    void writeState(Zic_File* file, void* ptr, uint8_t type, uint16_t key)
+    void writeState(Zic_File* file, uint8_t type, uint16_t key = 0, void* ptr = NULL)
     {
         // Fill empty space from buffer with empty space
         // to allow to change variable format without breaking
@@ -68,15 +69,17 @@ protected:
         buffer[APP_STATE_BUFFER - 1] = '\n';
         int len = -1;
 
-        if (ptr == NULL || type == 0) {
-            len = sprintf(buffer, "%03d --", key);
-        } else if (type == 1) {
-            len = sprintf(buffer, "%03d %s", key, (char*)ptr);
-        } else if (type == 2) {
-            len = sprintf(buffer, "%03d %d", key, *(uint8_t*)ptr);
-        }
-        if (len > 0 && len < APP_STATE_BUFFER) {
-            buffer[len] = ' ';
+        if (type != APP_NEXT) {
+            if (ptr == NULL || type == APP_NULL) {
+                len = sprintf(buffer, "%03d --", key);
+            } else if (type == APP_STRING) {
+                len = sprintf(buffer, "%03d %s", key, (char*)ptr);
+            } else if (type == APP_NUMBER) {
+                len = sprintf(buffer, "%03d %d", key, *(uint8_t*)ptr);
+            }
+            if (len > 0 && len < APP_STATE_BUFFER) {
+                buffer[len] = ' ';
+            }
         }
 
         file->write(buffer, APP_STATE_BUFFER);
@@ -147,13 +150,6 @@ public:
         pd.sendControlChange(1, num, val);
     }
 
-    void loadState()
-    {
-        // for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE; i++) {
-        //     strcpy(state[i].patchFilename, "--\0");
-        // }
-    }
-
     // Do not change order or remove state keys!!
     enum {
         APP_STATE_PATCH_FILENAME = 0,
@@ -163,9 +159,43 @@ public:
         APP_STATE_CONDITION
     };
 
+    void loadState()
+    {
+        APP_LOG("Load state %s\n", statePath);
+
+        Zic_File file(statePath, "r");
+        if (!file.isOpen()) {
+            APP_LOG("Could not open file %s\n", statePath);
+            return;
+        }
+
+        char buffer[APP_STATE_BUFFER];
+        uint8_t idx = 0;
+        while (file.read(buffer, APP_STATE_BUFFER) > 0) {
+            if (buffer[0] == '\n') {
+                idx++;
+                continue;
+            }
+            char key[4];
+            memcpy(key, buffer, 3);
+            key[3] = '\0';
+
+            switch (atoi(key)) {
+            case APP_STATE_PATCH_FILENAME:
+                printf("patch %i %s\n", idx, buffer);
+                break;
+
+            default:
+                break;
+            }
+        }
+
+        file.close();
+    }
+
     void saveState()
     {
-        APP_LOG("save state %s\n", statePath);
+        APP_LOG("Save state %s\n", statePath);
 
         Zic_File file(statePath, "w");
         if (!file.isOpen()) {
@@ -174,17 +204,17 @@ public:
         }
 
         for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE; i++) {
-            writeState(&file, state[i].patchFilename, APP_STRING, APP_STATE_PATCH_FILENAME);
-            writeState(&file, &state[i].preset, APP_NUMBER, APP_STATE_PRESET);
+            writeState(&file, APP_STRING, APP_STATE_PATCH_FILENAME, state[i].patchFilename);
+            writeState(&file, APP_NUMBER, APP_STATE_PRESET, &state[i].preset);
             if (components[i].pattern) {
-                writeState(&file, &components[i].pattern->id, APP_NUMBER, APP_STATE_PATTERN);
+                writeState(&file, APP_NUMBER, APP_STATE_PATTERN, &components[i].pattern->id);
             } else {
-                writeState(&file, NULL, APP_NULL, APP_STATE_PATTERN);
+                writeState(&file, APP_NULL, APP_STATE_PATTERN);
             }
-            writeState(&file, &components[i].detune, APP_NUMBER, APP_STATE_DETUNE);
-            writeState(&file, &components[i].condition, APP_NUMBER, APP_STATE_CONDITION);
+            writeState(&file, APP_NUMBER, APP_STATE_DETUNE, &components[i].detune);
+            writeState(&file, APP_NUMBER, APP_STATE_CONDITION, &components[i].condition);
 
-            file.write((void*)"\n", 1);
+            writeState(&file, APP_NEXT);
         }
 
         file.close();
