@@ -10,7 +10,7 @@
 #include <wavetables/wavetable_Bank.h>
 #include <zic_effect_delay.h>
 #include <zic_seq_loopMaster.h>
-// #include "./app_state.h"
+#include "./app_state.h"
 
 #define APP_TRACK_STATE_SIZE 8
 #define APP_STATE_BUFFER 64
@@ -183,23 +183,19 @@ public:
 
             switch (atoi(key)) {
             case APP_STATE_PATCH_FILENAME:
-                // TODO remove trailling space
-                // memcpy(state[idx].patchFilename, buffer + 4, sizeof(state[idx].patchFilename) - 1);
+                memcpy(state[idx].patchFilename, buffer + 4, sizeof(state[idx].patchFilename) - 1);
+                removeTrailingSpaces(state[idx].patchFilename);
                 break;
 
             case APP_STATE_PRESET:
-                // state[idx].preset = atoi(buffer + 4);
+                state[idx].preset = atoi(buffer + 4);
                 break;
 
             case APP_STATE_PATTERN: {
                 if (buffer[4] == '-') {
-                    // components[idx].pattern = NULL;
-                    printf("pattern %d is null\n", idx);
+                    components[idx].pattern = NULL;
                 } else {
-                    // components[idx].pattern = atoi(buffer + 4);
-                    // components[idx].pattern = &App_State::getInstance()->patterns[atoi(buffer + 4)];
-                    printf("pattern %d is %d\n", idx, atoi(buffer + 4));
-                    // printf("pattern %d is %d\n", idx, components[idx].pattern->id);
+                    components[idx].pattern = &App_State::getInstance()->patterns[atoi(buffer + 4)];
                 }
                 break;
             }
@@ -261,6 +257,8 @@ public:
         sprintf(path, "instruments/%s", state[currentState].patchFilename);
         pd.computeAudio(true);
         patch = pd.openPatch("main.pd", path);
+
+        // FIXME if patch does not exist then crash!!
 
         // TODO load preset!!
     }
