@@ -200,6 +200,14 @@ public:
                 break;
             }
 
+            case APP_STATE_DETUNE:
+                components[idx].detune = atoi(buffer + 4);
+                break;
+
+            case APP_STATE_CONDITION:
+                components[idx].condition = atoi(buffer + 4);
+                break;
+            
             default:
                 break;
             }

@@ -148,42 +148,6 @@ public:
         }
         return instance;
     }
-
-    const char* snapshotPath = "projects/current/sequencer.zic";
-
-    void snapshot(App_Renderer* renderer) override
-    {
-        render(renderer);
-        saveFileContent(renderer->text, strlen(renderer->text), snapshotPath);
-    }
-
-    void loadSnapshot() override
-    {
-        printf("Loading snapshot\n");
-        Zic_File file(snapshotPath, "r");
-        if (file.isOpen()) {
-            file.seekFromStart(28);
-
-            for (uint8_t i = 0; i < APP_TRACK_STATE_SIZE * TRACK_COUNT; i++) {
-                file.seekFromCurrent(i % TRACK_COUNT == 0 ? 2 : 1);
-                char pat[3];
-                file.read(pat, 2);
-                pat[2] = '\0';
-                char detune[2];
-                file.read(detune, 2);
-                char condition[2];
-                file.read(condition, 2);
-
-                App_Audio_Track* track = App_Tracks::getInstance()->tracks[i % TRACK_COUNT];
-                Zic_Seq_PatternComponent* component = &track->components[i / TRACK_COUNT];
-                component->pattern = pat[0] == '-' ? NULL : &App_State::getInstance()->patterns[strtol(pat, NULL, 16) - 1];
-                component->setDetune((detune[0] == '-' ? -1 : 1) * alphanumToInt(detune[1]));
-                component->setCondition(condition);
-            }
-
-            file.close();
-        }
-    }
 };
 
 App_View_GridPattern* App_View_GridPattern::instance = NULL;
