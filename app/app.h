@@ -36,7 +36,7 @@ public:
     Zic_Seq_Tempo<> tempo;
     App_Project project;
 
-    static App_Display* display;
+    App_Display* display;
     UiKeys keys;
 
     App_View_Menu menuView;
@@ -137,7 +137,6 @@ public:
     }
 };
 
-App_Display* App::display = NULL;
 App* App::instance = NULL;
 
 #endif
