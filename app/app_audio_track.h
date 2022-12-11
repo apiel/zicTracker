@@ -189,6 +189,17 @@ public:
                 state[idx].preset = atoi(buffer + 4);
                 break;
 
+            case APP_STATE_PATTERN: {
+                if (buffer[4] == '-') {
+                    components[idx].pattern = NULL;
+                    printf("pattern %d is null\n", idx);
+                } else {
+                    // components[idx].pattern = atoi(buffer + 4);
+                    printf("pattern %d is %d\n", idx, atoi(buffer + 4));
+                }
+                break;
+            }
+
             default:
                 break;
             }
