@@ -1,10 +1,9 @@
 #ifndef APP_VIEW_PROJECT_H_
 #define APP_VIEW_PROJECT_H_
 
-#include <zic_seq_tempo.h>
-
 #include "./app_state.h"
 #include "./app_project.h"
+#include "./app_tempo.h"
 #include "./app_view_menu.h"
 #include <app_core_renderer.h>
 #include <app_core_util.h>
@@ -15,13 +14,13 @@
 
 class App_View_ProjectBpm : public App_View_TableLabeledRow {
 protected:
-    Zic_Seq_Tempo<>* tempo;
+    App_Tempo* tempo;
 
 public:
-    App_View_ProjectBpm(Zic_Seq_Tempo<>* _tempo)
+    App_View_ProjectBpm()
         : App_View_TableLabeledRow("BPM  ", 3)
-        , tempo(_tempo)
     {
+        tempo = App_Tempo::getInstance();
     }
 
     void renderValue(App_Renderer* renderer, uint8_t col)
@@ -103,7 +102,6 @@ protected:
     App_View_ProjectBpm bpmField;
     App_View_ProjectPlay playField;
     App_View_ProjectName nameField;
-    Zic_Seq_Tempo<>* tempo;
 
     App_View_TableField* fields[VIEW_PROJECT_ROW * VIEW_PROJECT_COL] = {
         // clang-format off
@@ -113,11 +111,9 @@ protected:
         // clang-format on
     };
 
-    App_View_Project(Zic_Seq_Tempo<>* _tempo, App_View_Menu* menu)
+    App_View_Project(App_View_Menu* menu)
         : App_View_Table(fields, VIEW_PROJECT_ROW, VIEW_PROJECT_COL)
-        , bpmField(_tempo)
         , nameField(menu)
-        , tempo(_tempo)
     {
         initSelection();
     }
@@ -125,10 +121,10 @@ protected:
 public:
     static App_View_Project* instance;
 
-    static App_View_Project* getInstance(Zic_Seq_Tempo<>* _tempo, App_View_Menu* menu)
+    static App_View_Project* getInstance(App_View_Menu* menu)
     {
         if (!instance) {
-            instance = new App_View_Project(_tempo, menu);
+            instance = new App_View_Project(menu);
         }
         return instance;
     }
@@ -160,7 +156,7 @@ public:
             file.read(bpm, 3);
             // printf("yoyoyo BPM: %s\n", bpm);
             trimToNumeric(bpm);
-            tempo->set(atoi(bpm));
+            App_Tempo::getInstance()->set(atoi(bpm));
 
             file.close();
         }

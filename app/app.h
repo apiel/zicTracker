@@ -17,27 +17,30 @@
 #include "./app_view_gridInstrument.h"
 #include <app_core_display.h>
 #include <app_core_renderer.h>
-#include <zic_seq_tempo.h>
+#include "./app_tempo.h"
 
 class App {
 
 protected:
+    App_Tempo * tempo;
+
     App(App_Display* _display)
         : menuView(&menu[0])
     {
         App::display = _display;
+        tempo = App_Tempo::getInstance();
         menuView.initMenu();
         tracks = App_Tracks::getInstance();
     }
 
 public:
     App_Tracks * tracks;
-    Zic_Seq_Tempo<> tempo;
 
     App_Display* display;
     UiKeys keys;
 
     App_View_Menu menuView;
+
 
     bool rendered = false;
 
@@ -53,7 +56,7 @@ public:
         // (Menu) { 22, "Edit: Effect", "IFX", NULL },
         (Menu) { 30, "Scatter effect", "Scatter", App_View_ComingSoon::getInstance() },
         (Menu) { 31, "Master filter & effect", "MF+MFX", App_View_ComingSoon::getInstance() },
-        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&tempo, &menuView), true },
+        (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&menuView), true },
         (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&menuView) },
     };
 
@@ -69,7 +72,7 @@ public:
 
     void sample(float* buf, int len)
     {
-        if (tempo.next(SDL_GetTicks64()))
+        if (tempo->next(SDL_GetTicks64()))
         // if (tempo.next())
         {
             tracks->next();
