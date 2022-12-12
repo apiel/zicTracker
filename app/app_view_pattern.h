@@ -221,7 +221,7 @@ public:
                 break;
             }
             case 2:
-                step->setCondition((step->condition + direction + STEP_CONDITION_MAX) % STEP_CONDITION_MAX);
+                step->setCondition(step->condition + direction);
                 break;
             }
         }
