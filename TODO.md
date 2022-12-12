@@ -1,5 +1,7 @@
 ## TODO
 
+in pattern, we need to be able to add randomize feature!!
+
 MAIN: SCATTER MFX VCF
 GRID: MIDI PAT INST IFX MFX+VOL
 EDIT: PAT  PAT INST IFX

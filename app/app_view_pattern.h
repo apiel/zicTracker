@@ -6,10 +6,10 @@
 #include <app_core_view.h>
 #include <app_core_view_table.h>
 
-#include "./app_view_grid.h"
 #include "./app_state.h"
+#include "./app_view_grid.h"
 
-#define VIEW_PATTERN_ROW_HEADERS 4
+#define VIEW_PATTERN_ROW_HEADERS 3
 #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + MAX_STEPS_IN_PATTERN)
 // #define VIEW_PATTERN_ROW (VIEW_PATTERN_ROW_HEADERS + 6)
 #define VIEW_PATTERN_COL 4 * INSTRUMENT_COUNT
@@ -116,18 +116,6 @@ public:
     }
 };
 
-class App_View_PatternStepHeader : public App_View_TableField {
-protected:
-    // const char* headers[5] = { "STP ", "I ", "NOT ", "VEL ", "SLID" };
-
-public:
-    void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
-    {
-        // strcat(renderer->text, headers[col]);
-        sprintf(renderer->text + strlen(renderer->text), "Inst.%c ", col + 'A');
-    }
-};
-
 class App_View_PatternStep : public App_View_TableField {
 protected:
     Zic_Seq_Pattern* patterns;
@@ -160,7 +148,9 @@ public:
 
     void selected(App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
-        renderer->setCursor(col % 4 == 0 ? 3 : 1);
+        renderer->setCursor(col % 4 == 0 ? 3
+                : col % 4 == 2           ? 2
+                                         : 1);
     }
 
     void render(App_Renderer* renderer, uint8_t row, uint8_t col, uint8_t selectedRow, uint8_t selectedCol)
@@ -182,14 +172,17 @@ public:
             strcat(renderer->text, charLevel(getVel(step) + 1));
             break;
 
-        case 2:
-            sprintf(renderer->text + strlen(renderer->text), "%d", step->condition);
+        case 2: {
+            char condition[3];
+            step->getConditionName(condition);
+            sprintf(renderer->text + strlen(renderer->text), "%s", condition);
             break;
+        }
 
         case 3:
             // FIXME len differ between "⤦" and " " "♪" " "
             // strcat(renderer->text, step->slide ? "⤸" : " ");
-            strcat(renderer->text, step->slide ? "⤸ " : "  ");
+            strcat(renderer->text, step->slide ? "⤸" : " ");
             // strcat(renderer->text, step->slide ? "_" : " ");
             break;
         }
@@ -203,7 +196,7 @@ public:
         if (col == 3) {
             step->slide = !step->slide;
         } else {
-            int8_t directions[] = { 12, 1, 1, 0 };
+            int8_t directions[] = { 12, 1, 5, 0 };
             int8_t direction = 0;
             if (keys->Right) {
                 direction = 1;
@@ -228,7 +221,7 @@ public:
                 break;
             }
             case 2:
-                step->condition = range(step->condition + direction, 1, 9);
+                step->setCondition((step->condition + direction + STEP_CONDITION_MAX) % STEP_CONDITION_MAX);
                 break;
             }
         }
@@ -241,7 +234,6 @@ protected:
     uint8_t currentPatternId = 0;
 
     App_View_PatternHeader headerField;
-    App_View_PatternStepHeader stepHeaderField;
     App_View_PatternStep stepField;
 
     App_View_TableField* fields[VIEW_PATTERN_ROW * VIEW_PATTERN_COL] = {
@@ -249,7 +241,6 @@ protected:
         &headerField, &headerField, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         &headerField, &headerField, &headerField, &headerField, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL,  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-        &stepHeaderField, &stepHeaderField, &stepHeaderField, &stepHeaderField, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
         &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
         &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField, &stepField,
@@ -347,7 +338,6 @@ public:
     void preRender(App_Renderer* renderer)
     {
         renderer->useColoredRow(0);
-        renderer->useColoredRow(3);
         App_View_Table::preRender(renderer);
     }
 
