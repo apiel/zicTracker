@@ -96,7 +96,7 @@ public:
         int8_t direction = getDirection(keys, 16);
         int16_t id = newComponent.pattern == NULL ? -1 : newComponent.pattern->id;
         id = (id + direction) % PATTERN_COUNT;
-        newComponent.pattern = id < 0 ? NULL : &App_State::getInstance()->patterns[id];
+        newComponent.pattern = id < 0 ? NULL : &App_State::getInstance()->pattern.patterns[id];
         return VIEW_CHANGED;
     }
     uint8_t updateCol1(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col)

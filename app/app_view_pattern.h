@@ -32,7 +32,7 @@ public:
     App_View_PatternHeader(uint8_t* _currentPatternId)
         : currentPatternId(_currentPatternId)
     {
-        patterns = App_State::getInstance()->patterns;
+        patterns = App_State::getInstance()->pattern.patterns;
     }
 
     // TODO by default select pattern base on the last selected track
@@ -138,7 +138,7 @@ public:
     App_View_PatternStep(uint8_t* _currentPatternId)
         : currentPatternId(_currentPatternId)
     {
-        patterns = App_State::getInstance()->patterns;
+        patterns = App_State::getInstance()->pattern.patterns;
     }
 
     bool isSelectable(uint8_t row, uint8_t col) override
@@ -344,7 +344,7 @@ public:
     uint8_t update(UiKeys* keys, App_Renderer* renderer) override
     {
         uint8_t ret = App_View_Table::update(keys, renderer);
-        setLastRow(App_State::getInstance()->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
+        setLastRow(App_State::getInstance()->pattern.patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
         return ret;
     }
 
@@ -357,7 +357,7 @@ public:
         uint8_t id = currentPatternId;
         for (currentPatternId = 0; currentPatternId < PATTERN_COUNT; currentPatternId++) {
             renderer->startRow = 0;
-            setLastRow(App_State::getInstance()->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
+            setLastRow(App_State::getInstance()->pattern.patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
             for (uint8_t row = 0; row < lastRow; row += TABLE_VISIBLE_ROWS, renderer->startRow += TABLE_VISIBLE_ROWS) {
                 render(renderer);
                 saveFileContent(row == 0 ? "w" : "a", renderer->text, strlen(renderer->text),
@@ -376,7 +376,7 @@ public:
             snprintf(filename, MAX_FILENAME, snapshotPath, id + 1, id + 1);
             Zic_File file(filename, "r");
             if (file.isOpen()) {
-                Zic_Seq_Pattern* pattern = &App_State::getInstance()->patterns[id];
+                Zic_Seq_Pattern* pattern = &App_State::getInstance()->pattern.patterns[id];
                 pattern->id = id;
                 file.seekFromStart(13);
                 char lenStr[3];

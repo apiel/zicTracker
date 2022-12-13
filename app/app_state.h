@@ -3,8 +3,7 @@
 
 #include "./app_def.h"
 #include "./app_state_project.h"
-
-#include <zic_seq_pattern.h>
+#include "./app_state_pattern.h"
 
 class App_State {
     protected:
@@ -21,15 +20,17 @@ public:
         return instance;
     }
 
-    Zic_Seq_Pattern patterns[PATTERN_COUNT];
     App_State_Project project;
+    App_State_Pattern pattern;
 
     void save() {
         project.save();
+        pattern.save();
     }
 
     void load() {
         project.load();
+        pattern.load();
     }
 };
 

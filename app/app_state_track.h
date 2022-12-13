@@ -73,7 +73,7 @@ public:
             if (buffer[4] == '-') {
                 component.pattern = NULL;
             } else {
-                component.pattern = &App_State::getInstance()->patterns[atoi(buffer + 4)];
+                component.pattern = &App_State::getInstance()->pattern.patterns[atoi(buffer + 4)];
             }
             break;
         }

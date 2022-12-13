@@ -1,5 +1,7 @@
 ## TODO
 
+- add help view (using JS?)
+
 in pattern, we need to be able to add randomize feature!!
 
 MAIN: SCATTER MFX VCF
