@@ -35,21 +35,10 @@ public:
         APP_LOG("Save state %s\n", statePath);
 
         for (uint8_t id = 0; id < PATTERN_COUNT; id++) {
-            // renderer->startRow = 0;
-            // setLastRow(App_State::getInstance()->patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
-            // for (uint8_t row = 0; row < lastRow; row += TABLE_VISIBLE_ROWS, renderer->startRow += TABLE_VISIBLE_ROWS) {
-            //     render(renderer);
-            // saveFileContent(row == 0 ? "w" : "a", renderer->text, strlen(renderer->text),
-            //     snapshotPath, currentPatternId + 1, currentPatternId + 1);
-            // }
-
-            // sprintf(text + strlen(text), statePath, id + 1, id + 1);
-
             char filepath[100];
             sprintf(filepath, statePath, id + 1, id + 1);
 
             Zic_Seq_Pattern* pattern = &patterns[id];
-            // printf("Save pattern (%d) %s\n", pattern->stepCount, filepath);
             Zic_File file(filepath, "w");
             for (uint8_t s = 0; s < pattern->stepCount; s++) {
                 char text[64] = "";
@@ -74,6 +63,40 @@ public:
 
     void load()
     {
+        APP_LOG("Load state %s\n", statePath);
+
+        for (uint8_t id = 0; id < PATTERN_COUNT; id++) {
+            char filepath[100];
+            sprintf(filepath, statePath, id + 1, id + 1);
+
+            Zic_File file(filepath, "r");
+            if (file.isOpen()) {
+                Zic_Seq_Pattern* pattern = &patterns[id];
+                pattern->id = id;
+                char stepStr[11];
+                uint8_t s = 0;
+                for (; s < MAX_STEPS_IN_PATTERN; s++) {
+                    for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
+                        if (!file.read(stepStr, 11)) {
+                            goto exitloop;
+                        }
+                        Zic_Seq_Step* step = &pattern->steps[i][s];
+                        char condition[3];
+                        memcpy(condition, stepStr + 6, 2);
+                        condition[2] = 0;
+                        step->setCondition(condition);
+                        step->slide = stepStr[9] == -92;
+                        step->velocity = velocity[getLevel(*(uint16_t*)(stepStr + 4))];
+                        step->note = stepStr[0] == '-' ? 0 : Zic::charNotetoInt(stepStr[0], stepStr[1], stepStr[2]);
+                    }
+                    file.seekFromCurrent(1);
+                }
+                exitloop:
+                printf("Loaded %d steps in pattern %d\n", s, id);
+                pattern->stepCount = s;
+                file.close();
+            }
+        }
     }
 };
 
