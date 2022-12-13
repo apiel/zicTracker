@@ -92,7 +92,6 @@ public:
                     file.seekFromCurrent(1);
                 }
                 exitloop:
-                printf("Loaded %d steps in pattern %d\n", s, id);
                 pattern->stepCount = s;
                 file.close();
             }
