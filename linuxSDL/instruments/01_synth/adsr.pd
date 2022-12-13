@@ -9,10 +9,10 @@
 #X obj 393 425 0;
 #X obj 34 542 pack 0 0;
 #X obj 87 518 nbx 5 14 0 10000 0 1 empty empty Release 0 -8 0 10 #c6ffc7
-#000000 #000000 1116 256;
+#000000 #000000 50 256;
 #X obj 324 425 pack 1 0;
 #X obj 238 316 nbx 5 14 0 5000 0 1 empty empty Attack 0 -8 0 10 #c6ffc7
-#000000 #000000 49 256;
+#000000 #000000 1 256;
 #X obj 221 374 + 1;
 #X obj 174 565 pack 0 0 0;
 #X obj 174 598 route 0;
