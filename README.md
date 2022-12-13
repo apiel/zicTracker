@@ -42,7 +42,7 @@ There is 4 assignable notes per step. Those notes can be assign to one instrumen
 
 `E_3⠾1⤸`
 
-The first 3 char `E_3` is the note. The 4th char is the velocity `⠾`. The 5th char is the conditional to play the pattern. The 6th char `⤸` is the slide to the next step.
+The first 3 char `E_3` is the note. The 4th char is the velocity `⠾`. The 5th char is the conditional to play the pattern. The 6th char `⤸` is the tie to the next step.
 
 ### Step condition
 

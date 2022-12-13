@@ -2,43 +2,29 @@
 
 in pattern, we need to be able to add randomize feature!!
 
+- we might be able to use 8 track?
+
 - use TypeScript for JS file so we can define available type for the UI!!
 
 - Audio usb host to mixer, so we could route mc-101 and circuit track audio into zic mixer (eventually add effect)
 
-- doc!!
+- doc!!  
 
+- use supercollider (from JS file, instead to load PD file)
+
+- vital in headless mode!! `./vital --headless` and only use macro from preset
+
+- clap plugin ? https://github.com/free-audio/clap
 - /usr/lib/lv2
     - https://github.com/zynthian/zynthian-sys/issues/200
-    
-
-- vital in headless mode!! `./vital --headless` 
 
 - fix audio mixer
 - fix wavetable from vital
-
-- TODO rename slide to tie!
-
-- should pattern include also the instrument settings
-    - or should there be a way to save different instrument combination for a given pattern
-    then the sequencer is using this combination instead of the pattern
-
-- poly instrument, since pattern support multiple instrument playing at once
-    we should do some like:
-    - if instrument A set to wavetable (or sample once sample can be pitched)
-    - and B set to poly, then instrument B replicate instrument A
 
 - sort files for .wav
 
 - effect: distortion, bitcrusher... waveshaper: overdrive, distortion, fuzz, clipping, expo converters, phase inversion
     - https://books.google.at/books?id=v0ulUYdhgXYC&pg=PA497&lpg=PA497&dq=Waveshaper+c%2B%2B+example&source=bl&ots=WVmstQmof2&sig=ACfU3U0LdpOVCUCtMP_zlnzEaXAZkCI-Qg&hl=en&sa=X&ved=2ahUKEwi31rmXisz5AhVW_bsIHRkhDM8Q6AF6BAgiEAM#v=onepage&q=Waveshaper%20c%2B%2B%20example&f=false
-    
-- assignable modulation to (1 or more? -> polyphony) track or instrument for selectable param:
-    - 10? envelop 
-    - 5? LFO
-    - we could create wavetable to apply either on 1 or n steps
-    - maybe there would be a way to make no difference between envelop and LFO, just need to find a good way to apply a modulation for a specific phase
-    - SHOULD modulation be assignable or should it be fixed per synth? Maybe easier to have it fix per synth...
 
 - save project!!!
     - save & restore
@@ -46,8 +32,6 @@ in pattern, we need to be able to add randomize feature!!
     If click save, create new state that can be restored...
 
 - conditional mute for x bar
-
-- use craft synth as midi controller
 
 - step probability
 
@@ -62,8 +46,6 @@ in pattern, we need to be able to add randomize feature!!
 
 - in sequencer, give possibility to return to -1 -2 -3 -4 -5 pattern, jump back to previous pattern
 
-- App_View_InstrumentWavetable select end start if sample
-
 - sampler:
     - should be able to record sound from tracks into a new sample
     - should be able to record sound from input channel (using usb-c sound card)
@@ -72,26 +54,9 @@ in pattern, we need to be able to add randomize feature!!
 - audio input mixer
 
 - doc within app
-    -> base on markdown? or simplified one using a converter...
-
-- Use soundfont as alternative synth engine to wav table/sample
-    - sf2 is work in progress in zic_file_soundfont.h. However still have a lot to do, see comment in top of the file
-    - sf2 is too complexe, maybe we can think about a more simple alternative: 
-        a big wav file with one chunk per note (a bit like the morphable wavetable)
-        ZICK 0060 268945
-        ZICK 0062 368945
-        ...
-        or ZKC4 268945
-           ZKD4 368945
-        it might a way to also define looping point
+    -> base on markdown? or just JS...
 
 - drum/kick engine
-
-- Use audio block processing instead of indiviual sample processing?? maybe :p
-
-- should snapshot system not be base on rendered view but on custom format so changing the UI doesnt impact the snapshot?
-
-- should rename all those synth to instrument
 
 - fully use keyboard --> be able to map more key than just A and B, this can also be usefull for midi controller
     At least be able to map midi controller!
@@ -127,10 +92,3 @@ in pattern, we need to be able to add randomize feature!!
 
 - info bull 
     only work with SDL display (so not in text mode)
-
-
-## ESP32 or rpi zero
-
-- make a random synth generator base on the type of music (1 or 2 voice) 
-    - with 4 pot to change the sound setting
-    - few button to switch of sound preset

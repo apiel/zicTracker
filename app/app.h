@@ -122,8 +122,6 @@ public:
             if (menu[i].view) {
                 renderer.reset();
                 renderer.startRow = 0;
-                // TODO need to use different way to save project
-                // menu[i].view->snapshot(&renderer);
             }
         }
 
@@ -134,12 +132,6 @@ public:
     void start()
     {
         App_State::getInstance()->load();
-
-        for (uint8_t i; i < APP_MENU_SIZE; i++) {
-            if (menu[i].view) {
-                menu[i].view->loadSnapshot();
-            }
-        }
     }
 };
 

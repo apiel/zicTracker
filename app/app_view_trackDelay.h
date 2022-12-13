@@ -210,12 +210,6 @@ public:
         renderer->useColoredRow(2);
         App_View_Table::preRender(renderer);
     }
-
-    void snapshot(App_Renderer* renderer) override
-    {
-        render(renderer);
-        saveFileContent(renderer->text, strlen(renderer->text), "projects/current/delay.zic");
-    }
 };
 
 #endif

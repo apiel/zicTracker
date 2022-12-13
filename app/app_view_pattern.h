@@ -181,9 +181,9 @@ public:
 
         case 3:
             // FIXME len differ between "⤦" and " " "♪" " "
-            // strcat(renderer->text, step->slide ? "⤸" : " ");
-            strcat(renderer->text, step->slide ? "⤸" : " ");
-            // strcat(renderer->text, step->slide ? "_" : " ");
+            // strcat(renderer->text, step->tie ? "⤸" : " ");
+            strcat(renderer->text, step->tie ? "⤸" : " ");
+            // strcat(renderer->text, step->tie ? "_" : " ");
             break;
         }
     }
@@ -194,7 +194,7 @@ public:
         Zic_Seq_Step* step = &patterns[*currentPatternId].steps[inst][row - VIEW_PATTERN_ROW_HEADERS];
         col %= 4;
         if (col == 3) {
-            step->slide = !step->slide;
+            step->tie = !step->tie;
         } else {
             int8_t directions[] = { 12, 1, 5, 0 };
             int8_t direction = 0;

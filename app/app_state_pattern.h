@@ -52,7 +52,7 @@ public:
                     }
                     char condition[3];
                     step->getConditionName(condition);
-                    len += sprintf(text + strlen(text), "%s%s%s", charLevel(getVel(step) + 1), condition, step->slide ? "⤸" : " ");
+                    len += sprintf(text + strlen(text), "%s%s%s", charLevel(getVel(step) + 1), condition, step->tie ? "⤸" : " ");
                 }
                 len += sprintf(text + strlen(text), "\n");
                 file.write(text, len);
@@ -85,7 +85,7 @@ public:
                         memcpy(condition, stepStr + 6, 2);
                         condition[2] = 0;
                         step->setCondition(condition);
-                        step->slide = stepStr[9] == -92;
+                        step->tie = stepStr[9] == -92;
                         step->velocity = velocity[getLevel(*(uint16_t*)(stepStr + 4))];
                         step->note = stepStr[0] == '-' ? 0 : Zic::charNotetoInt(stepStr[0], stepStr[1], stepStr[2]);
                     }

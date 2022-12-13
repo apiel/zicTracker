@@ -60,9 +60,9 @@ public:
     {
         looper.next();
 
-        // TODO need to handle slide
+        // TODO need to handle tie
         for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
-            if (stepOff[i] && !stepOff[i]->slide) {
+            if (stepOff[i] && !stepOff[i]->tie) {
                 // printf("note off %d\n", stepOff[i]->note);
                 pd.sendNoteOn(1, stepOff[i]->note, 0);
                 stepOff[i] = NULL;
