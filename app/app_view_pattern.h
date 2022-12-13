@@ -347,62 +347,6 @@ public:
         setLastRow(App_State::getInstance()->pattern.patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
         return ret;
     }
-
-    // TODO override render to show description of selected field like on the grid view
-
-    const char* snapshotPath = "projects/current/patterns/pattern%03d_%02X.zic";
-
-    void snapshot(App_Renderer* renderer) override
-    {
-        uint8_t id = currentPatternId;
-        for (currentPatternId = 0; currentPatternId < PATTERN_COUNT; currentPatternId++) {
-            renderer->startRow = 0;
-            setLastRow(App_State::getInstance()->pattern.patterns[currentPatternId].stepCount + VIEW_PATTERN_ROW_HEADERS);
-            for (uint8_t row = 0; row < lastRow; row += TABLE_VISIBLE_ROWS, renderer->startRow += TABLE_VISIBLE_ROWS) {
-                render(renderer);
-                saveFileContent(row == 0 ? "w" : "a", renderer->text, strlen(renderer->text),
-                    snapshotPath, currentPatternId + 1, currentPatternId + 1);
-            }
-        }
-        currentPatternId = id;
-    }
-
-    void loadSnapshot() override
-    {
-        VELOCITY_ARR
-
-        for (uint8_t id = 0; id < PATTERN_COUNT; id++) {
-            // char filename[MAX_FILENAME];
-            // snprintf(filename, MAX_FILENAME, snapshotPath, id + 1, id + 1);
-            // Zic_File file(filename, "r");
-            // if (file.isOpen()) {
-            //     Zic_Seq_Pattern* pattern = &App_State::getInstance()->pattern.patterns[id];
-            //     pattern->id = id;
-            //     file.seekFromStart(13);
-            //     char lenStr[3];
-            //     file.read(lenStr, 2);
-            //     lenStr[2] = 0;
-            //     pattern->stepCount = atoi(lenStr);
-            //     file.seekFromCurrent(44);
-            //     char stepStr[11];
-            //     for (uint8_t s = 0; s < pattern->stepCount; s++) {
-            //         for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
-            //             if (!file.read(stepStr, 11)) {
-            //                 break;
-            //             }
-            //             stepStr[10] = 0;
-            //             Zic_Seq_Step* step = &pattern->steps[i][s];
-            //             step->condition = stepStr[6] - '0';
-            //             step->slide = stepStr[8] == -92;
-            //             step->velocity = velocity[getLevel(*(uint16_t*)(stepStr + 4))];
-            //             step->note = stepStr[0] == '-' ? 0 : Zic::charNotetoInt(stepStr[0], stepStr[1], stepStr[2]);
-            //         }
-            //         file.seekFromCurrent(1);
-            //     }
-            //     file.close();
-            // }
-        }
-    }
 };
 
 App_View_Pattern* App_View_Pattern::instance = NULL;

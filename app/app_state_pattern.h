@@ -28,7 +28,7 @@ protected:
 public:
     Zic_Seq_Pattern patterns[PATTERN_COUNT];
 
-    const char* statePath = "projects/current/patterns/pattern%03d_%02X_.zic";
+    const char* statePath = "projects/current/patterns/pattern%03d_%02X.zic";
 
     void save()
     {
