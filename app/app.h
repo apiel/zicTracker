@@ -1,7 +1,7 @@
 #ifndef APP_H_
 #define APP_H_
 
-#define APP_MENU_SIZE 9
+#define APP_MENU_SIZE 10
 
 #include "./app_def.h"
 #include "./app_tracks.h"
@@ -15,6 +15,7 @@
 #include "./app_view_menu.h"
 #include "./app_view_gridPattern.h"
 #include "./app_view_gridInstrument.h"
+#include "./app_view_help.h"
 #include <app_core_display.h>
 #include <app_core_renderer.h>
 #include "./app_tempo.h"
@@ -58,6 +59,7 @@ public:
         (Menu) { 31, "Master filter & effect", "MF+MFX", App_View_ComingSoon::getInstance() },
         (Menu) { 40, "Project", "Project", App_View_Project::getInstance(&menuView), true },
         (Menu) { 41, "Edit project name", "Name", App_View_ProjectEditName::getInstance(&menuView) },
+        (Menu) { 50, "Help", "Help", App_View_Help::getInstance() },
     };
 
     static App* instance;

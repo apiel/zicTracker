@@ -1,22 +1,8 @@
 ## TODO
 
-- add help view (using JS?)
-
 in pattern, we need to be able to add randomize feature!!
 
-MAIN: SCATTER MFX VCF
-GRID: MIDI PAT INST IFX MFX+VOL
-EDIT: PAT  PAT INST IFX
-      Project Name
-
-
 - use TypeScript for JS file so we can define available type for the UI!!
-
-- sequencer layout
-    sequencer seminote volume instrument
-    instrument_1 2 3 4
-    pattern
-    project name
 
 - Audio usb host to mixer, so we could route mc-101 and circuit track audio into zic mixer (eventually add effect)
 

@@ -149,6 +149,12 @@ public:
         }
         renderer->useColor(row + 2, 1, COLOR_HILIGHT, 2);
         sprintf(renderer->text + strlen(renderer->text), "\n\n >> %s", menu[currentMenu].name);
+        renderer->useColor(row + 4, 0, COLOR_PRIMARY);
+        renderer->useColor(row + 4, 7, COLOR_PRIMARY);
+        renderer->useColor(row + 4, 14, COLOR_PRIMARY, 3);
+        renderer->useColor(row + 5, 0, COLOR_PRIMARY);
+        renderer->useColor(row + 5, 9, COLOR_PRIMARY, 5);
+        strcat(renderer->text, "\n\nB=menu A=edit A+B=play\nY=action START=exit");
     }
 
     uint8_t update(UiKeys* _keys, App_Renderer* renderer)
