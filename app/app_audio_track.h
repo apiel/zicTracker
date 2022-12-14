@@ -15,7 +15,7 @@
 
 class App_Audio_Track {
 protected:
-    Zic_Seq_Step* stepOff[INSTRUMENT_COUNT];
+    Zic_Seq_Step* stepOff[VOICE_COUNT];
     const float tickDivider = 1.0f / (256.0f * APP_CHANNELS);
     PdObject pdObject;
 
@@ -61,7 +61,7 @@ public:
         looper.next();
 
         // TODO need to handle tie
-        for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
+        for (uint8_t i = 0; i < VOICE_COUNT; i++) {
             if (stepOff[i] && !stepOff[i]->tie) {
                 // printf("note off %d\n", stepOff[i]->note);
                 pd.sendNoteOn(1, stepOff[i]->note, 0);

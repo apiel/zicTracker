@@ -17,11 +17,11 @@ enum {
 
 enum {
     // TODO rename this to voice
-    INSTRUMENT_1,
-    INSTRUMENT_2,
-    INSTRUMENT_3,
-    INSTRUMENT_4,
-    INSTRUMENT_COUNT
+    VOICE_1,
+    VOICE_2,
+    VOICE_3,
+    VOICE_4,
+    VOICE_COUNT
 };
 
 enum {

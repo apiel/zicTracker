@@ -76,7 +76,7 @@ public:
                 char stepStr[11];
                 uint8_t s = 0;
                 for (; s < MAX_STEPS_IN_PATTERN; s++) {
-                    for (uint8_t i = 0; i < INSTRUMENT_COUNT; i++) {
+                    for (uint8_t i = 0; i < VOICE_COUNT; i++) {
                         if (!file.read(stepStr, 11)) {
                             goto exitloop;
                         }
