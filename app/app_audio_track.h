@@ -13,6 +13,9 @@
 #include <zic_effect_delay.h>
 #include <zic_seq_loopMaster.h>
 
+// https://puredata.info/docs/tutorials/TipsAndTricks#undocumented-pd-internal-messages
+// https://www.youtube.com/watch?v=HQ-IeWU4PyY
+
 class App_Audio_Track {
 protected:
     Zic_Seq_Step* stepOff[VOICE_COUNT];
@@ -42,6 +45,9 @@ public:
         id = _id;
         sprintf(statePath, "projects/current/track_%d.zic", id);
         loadState();
+        if (id != 0) {
+           return;
+        }
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
             APP_LOG("Could not init pd\n");
         }
