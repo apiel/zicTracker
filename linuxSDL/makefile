@@ -14,10 +14,10 @@ ZIC_TARGET=0
 # and then compile everything again, finally rename it as libpd_arm.so
 # PUREDATA=-DPD -DHAVE_UNISTD_H -DUSEAPI_DUMMY ./libpd.so -I../../libpd/pure-data/src \
 #          -I../../libpd/libpd_wrapper -I../../libpd/cpp
-# LIBPD_DIR=../../libpd
-# PUREDATA = -I$(LIBPD_DIR)/libpd_wrapper -I$(LIBPD_DIR)/libpd_wrapper/util \
-#            -I$(LIBPD_DIR)/pure-data/src -I$(LIBPD_DIR)/cpp \
-# 		   ./libpd.so -DPDINSTANCE
+LIBPD_DIR=../../libpd
+PUREDATA = -I$(LIBPD_DIR)/libpd_wrapper -I$(LIBPD_DIR)/libpd_wrapper/util \
+           -I$(LIBPD_DIR)/pure-data/src -I$(LIBPD_DIR)/cpp \
+		   ./libpd.so -DPDINSTANCE
 
 #JSAMALGAM=../../jerryscript/amalgam
 #JERRYSCRIPT = $(JSAMALGAM)/jerryscript.c $(JSAMALGAM)/jerryscript-port.c -I$(JSAMALGAM)/
@@ -28,7 +28,6 @@ JERRYSCRIPT = `pkg-config --cflags --libs libjerry-core libjerry-port libjerry-m
 # Build with shared lib
 DUKTAPE= -I../../duktape-2.7.0/src ./libduktaped.so.207
 JS_ENGINE=$(DUKTAPE)
-# JS_ENGINE= 
 
 RG351_IP=192.168.1.108
 
@@ -78,6 +77,13 @@ rg351Kill:
 
 rg351Log:
 	sshpass -p "ark" ssh ark@$(RG351_IP) tail -f /roms/ports/zic/zic.log
+
+rg351CatLog:
+	sshpass -p "ark" ssh ark@$(RG351_IP) cat /roms/ports/zic/zic.log
+
+rg351Project:
+	sshpass -p "ark" ssh ark@$(RG351_IP) rm -rf /roms/ports/zic/projects
+	sshpass -p "ark" scp -r projects/ ark@$(RG351_IP):/roms/ports/zic/projects
 
 build:
 	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) -I$(ZIC_APP_CORE_LIB) \

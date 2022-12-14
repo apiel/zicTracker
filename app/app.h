@@ -10,8 +10,6 @@
 #include "./app_view_project.h"
 #include "./app_view_projectEditName.h"
 #include "./app_view_comingSoon.h"
-// #include "./app_view_track.h"
-// #include "./app_view_trackDelay.h"
 #include "./app_view_menu.h"
 #include "./app_view_gridPattern.h"
 #include "./app_view_gridInstrument.h"
@@ -54,6 +52,7 @@ public:
         (Menu) { 13, "Grid: Volume & Master FX", "VOL+MFX", App_View_ComingSoon::getInstance() },
         (Menu) { 20, "Edit: Pattern", "Pattern", App_View_Pattern::getInstance() },
         (Menu) { 21, "Edit: Instrument", "Instr.", App_View_Instrument::getInstance() },
+        // (Menu) { 21, "Edit: Instrument", "Instr.", NULL },
         // (Menu) { 22, "Edit: Effect", "IFX", NULL },
         (Menu) { 30, "Scatter effect", "Scatter", App_View_ComingSoon::getInstance() },
         (Menu) { 31, "Master filter & effect", "MF+MFX", App_View_ComingSoon::getInstance() },

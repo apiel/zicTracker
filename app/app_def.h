@@ -16,6 +16,7 @@ enum {
 };
 
 enum {
+    // TODO rename this to voice
     INSTRUMENT_1,
     INSTRUMENT_2,
     INSTRUMENT_3,
