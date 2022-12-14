@@ -91,6 +91,10 @@ git clone https://github.com/apiel/zicTracker.git
 cd zicTracker/linuxSDL
 make
 ```
+
+Might want to use shared library for duktape to make compilation quicker: `make -f Makefile.sharedlibrary`.
+For rg351, need to chroot...
+
 ## Toolchain
 
 ### anbernic rg351

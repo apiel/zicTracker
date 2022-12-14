@@ -14,17 +14,21 @@ ZIC_TARGET=0
 # and then compile everything again, finally rename it as libpd_arm.so
 # PUREDATA=-DPD -DHAVE_UNISTD_H -DUSEAPI_DUMMY ./libpd.so -I../../libpd/pure-data/src \
 #          -I../../libpd/libpd_wrapper -I../../libpd/cpp
-LIBPD_DIR=../../libpd
-PUREDATA = -I$(LIBPD_DIR)/libpd_wrapper -I$(LIBPD_DIR)/libpd_wrapper/util \
-           -I$(LIBPD_DIR)/pure-data/src -I$(LIBPD_DIR)/cpp \
-		   ./libpd.so -DPDINSTANCE
-        #    -std=c++11 -DLIBPD_USE_STD_MUTEX -O3
+# LIBPD_DIR=../../libpd
+# PUREDATA = -I$(LIBPD_DIR)/libpd_wrapper -I$(LIBPD_DIR)/libpd_wrapper/util \
+#            -I$(LIBPD_DIR)/pure-data/src -I$(LIBPD_DIR)/cpp \
+# 		   ./libpd.so -DPDINSTANCE
 
 #JSAMALGAM=../../jerryscript/amalgam
 #JERRYSCRIPT = $(JSAMALGAM)/jerryscript.c $(JSAMALGAM)/jerryscript-port.c -I$(JSAMALGAM)/
 JERRYSCRIPT = `pkg-config --cflags --libs libjerry-core libjerry-port libjerry-math`
-DUKTAPE= -I../../duktape-2.7.0/src ../../duktape-2.7.0/src/duktape.c
+
+# Build without shared lib
+# DUKTAPE= -I../../duktape-2.7.0/src ../../duktape-2.7.0/src/duktape.c
+# Build with shared lib
+DUKTAPE= -I../../duktape-2.7.0/src ./libduktaped.so.207
 JS_ENGINE=$(DUKTAPE)
+# JS_ENGINE= 
 
 RG351_IP=192.168.1.108
 
@@ -32,7 +36,14 @@ RG351_IP=192.168.1.108
 # https://github.com/christianhaitian/arkos/wiki/Building
 # or https://github.com/mica-angeli/retrooz_dev_docker
 
-linux: puredata build run
+linux: puredata duk build run
+
+# in case we use shared lib for duktape
+duk:
+	cp ../../duktape-2.7.0/libduktaped.so.207.20700 ./libduktaped.so.207
+
+rg351Duk:
+	cp ../../duktape-2.7.0/libduktaped.so.207.20700.arm ./libduktaped.so.207
 
 puredata:
 	cp ../../libpd/libs/libpd.so .
@@ -44,7 +55,7 @@ rg351:
 	make rg351MountChroot rg351Next
 
 rg351Next:
-	make rg351Puredata rg351Chroot rg351SCP rg351Run
+	make rg351Puredata rg351Duk rg351Chroot rg351SCP
 	
 rg351MountChroot:
 	sudo mount --bind /home/alex/Music/zic /mnt/data/arm64/home/alex/zic
@@ -78,4 +89,4 @@ build:
 
 run:
 	echo start zicTracker
-	./zicTracker
+	LD_LIBRARY_PATH=. ./zicTracker
