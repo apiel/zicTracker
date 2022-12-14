@@ -74,7 +74,8 @@ public:
 
     void sample(float* buf, int len)
     {
-        if (tempo->next(SDL_GetTicks64()))
+        if (tempo->next(SDL_GetTicks()))
+        // if (tempo->next(SDL_GetTicks64()))
         // if (tempo.next())
         {
             tracks->next();

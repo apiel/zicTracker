@@ -68,7 +68,7 @@ public:
         for (uint8_t id = 0; id < PATTERN_COUNT; id++) {
             char filepath[100];
             sprintf(filepath, statePath, id + 1, id + 1);
-
+// SDL_Log("Load pattern %s\n", filepath);
             Zic_File file(filepath, "r");
             if (file.isOpen()) {
                 Zic_Seq_Pattern* pattern = &patterns[id];
@@ -95,6 +95,7 @@ public:
                 pattern->stepCount = s;
                 file.close();
             }
+// SDL_Log("Load done pattern %s\n", filepath);
         }
     }
 };

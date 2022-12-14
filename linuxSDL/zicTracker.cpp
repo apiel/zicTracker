@@ -1,3 +1,8 @@
+// // THIS MUST BE ON TOP
+// // this include must be before initilizing zic lib, to be sure to override zic_file.h!
+// #include <zic_file_sdl.h>
+#include <zic_file_linux.h>
+
 #include <APP_SDL/sdl2.h>
 
 #include "../app/app.h"
