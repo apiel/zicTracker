@@ -1,4 +1,4 @@
-#N canvas 666 131 683 707 12;
+#N canvas 1174 132 683 707 12;
 #X obj 175 626 dac~;
 #X obj 174 114 notein;
 #X obj 174 343 pack 0 0 0;
@@ -22,6 +22,7 @@
 #X obj 372 72 ctlin 2;
 #X obj 438 72 ctlin 3;
 #X obj 526 72 ctlin 4;
+#X obj 31 121 ../ZICnotein;
 #X connect 1 0 3 0;
 #X connect 1 1 4 0;
 #X connect 2 0 16 0;
