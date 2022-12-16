@@ -1,5 +1,26 @@
 ## TODO
 
+lets forget about audio embedded in zic and just use zic as sequencer and brain... ??? or not :p
+use jack to connect pd and other stuff, like vital or supercollidier
+
+https://github.com/chriskiefer/OpenFrameworks-Supercollider-Host
+https://github.com/chriskiefer/OpenFrameworks-Supercollider-Host/blob/master/src/embeddedSC.cpp
+https://github.com/supercollider/SuperColliderAU
+
+os https://blokas.io/patchbox-os/
+
+There could be only one instance of PD, but accessible from anytrack,
+the JS script would take care to load the pd file, and still any track could send midi note
+as long the script set which track can send midi note to it.
+
+With the other tracks, maybe call supercollidier or custom synth...
+Custom synth can be patched using JS, so no need of fancy c++ logic
+
+Should there be a bootstrap js file? set per project
+Should zic use jack? and if yes, should jack be controllable from js?
+
+
+
 in pattern, we need to be able to add randomize feature!!
 
 - we might be able to use 8 track?
