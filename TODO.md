@@ -1,5 +1,7 @@
 ## TODO
 
+DAC Hat Raspberry Pi I2S input (LRCK - GPIO19, BCK - GPIO18, DATA - GPIO21, GND)
+
 lets forget about audio embedded in zic and just use zic as sequencer and brain... ??? or not :p
 use jack to connect pd and other stuff, like vital or supercollidier
 
@@ -18,7 +20,13 @@ Custom synth can be patched using JS, so no need of fancy c++ logic
 
 Should there be a bootstrap js file? set per project
 Should zic use jack? and if yes, should jack be controllable from js?
+use https://github.com/TheTechnobear/Orac
 
+
+Controller:
+- https://gamesx.com/wiki/doku.php?id=controls:nes_snes_controller
+- https://bitluni.net/gamepad
+- https://github.com/bitluni/ArduinoGameController/blob/master/GameControllerExample/GameControllers.h
 
 
 in pattern, we need to be able to add randomize feature!!

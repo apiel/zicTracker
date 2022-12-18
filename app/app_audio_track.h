@@ -45,9 +45,9 @@ public:
         id = _id;
         sprintf(statePath, "projects/current/track_%d.zic", id);
         loadState();
-        if (id != 0) {
-           return;
-        }
+        // if (id != 0) {
+        //     return;
+        // }
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
             APP_LOG("Could not init pd\n");
         }
@@ -157,6 +157,8 @@ public:
         sprintf(path, "instruments/%s", state[currentState].patchFilename);
         pd.computeAudio(true);
         patch = pd.openPatch("main.pd", path);
+        // patch = pd.openPatch("main.pd", "instruments/02_kick");
+        // pd.openPatch("main.pd", "instruments/01_synth");
 
         // FIXME if patch does not exist then crash!!
 

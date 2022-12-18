@@ -29,7 +29,8 @@ JERRYSCRIPT = `pkg-config --cflags --libs libjerry-core libjerry-port libjerry-m
 DUKTAPE= -I../../duktape-2.7.0/src ./libduktaped.so.207
 JS_ENGINE=$(DUKTAPE)
 
-RG351_IP=192.168.1.108
+#RG351_IP=192.168.1.108
+RG351_IP=192.168.1.109
 
 #rg351
 # https://github.com/christianhaitian/arkos/wiki/Building
@@ -84,6 +85,10 @@ rg351CatLog:
 rg351Project:
 	sshpass -p "ark" ssh ark@$(RG351_IP) rm -rf /roms/ports/zic/projects
 	sshpass -p "ark" scp -r projects/ ark@$(RG351_IP):/roms/ports/zic/projects
+
+rg351Libpd:
+	sshpass -p "ark" ssh ark@$(RG351_IP) rm -rf /roms/ports/zic/libpd.so
+	sshpass -p "ark" scp -r libpd.so ark@$(RG351_IP):/roms/ports/zic/libpd.so
 
 build:
 	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) -I$(ZIC_APP_CORE_LIB) \

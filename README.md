@@ -92,6 +92,7 @@ cd zicTracker/linuxSDL
 make
 ```
 
+Need to download https://duktape.org/download.html (and not clone got repo)
 Might want to use shared library for duktape to make compilation quicker: `make -f Makefile.sharedlibrary`.
 For rg351, need to chroot...
 
