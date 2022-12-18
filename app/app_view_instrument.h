@@ -46,38 +46,40 @@ public:
         track = tracks->tracks[App_View_Grid::getTrackId()];
         state = &track->state[App_View_Grid::gridSelectedRow];
 
-        duk_destroy_heap(ctx);
         if (!state->isPatchEmpty()) {
-            loadContext();
-            loadConfig(getFile("cfg"));
+            duk_destroy_heap(ctx);
+            if (!state->isPatchEmpty()) {
+                loadContext();
+                loadConfig(getFile("cfg"));
 
-            duk_idx_t configIdx = duk_push_array(ctx);
-            for (uint8_t i = 0; i < APP_CONFIG_SIZE && config[i][0] != 255; i++) {
-                duk_idx_t subArr_idx = duk_push_array(ctx);
-                if (config[i][0] == *(uint8_t*)"cc") {
-                    duk_push_string(ctx, "cc");
-                    duk_put_prop_index(ctx, subArr_idx, 0);
-                    duk_push_int(ctx, config[i][1]);
-                    duk_put_prop_index(ctx, subArr_idx, 1);
-                    duk_push_int(ctx, config[i][2]);
-                    duk_put_prop_index(ctx, subArr_idx, 2);
-                    duk_put_prop_index(ctx, configIdx, i);
+                duk_idx_t configIdx = duk_push_array(ctx);
+                for (uint8_t i = 0; i < APP_CONFIG_SIZE && config[i][0] != 255; i++) {
+                    duk_idx_t subArr_idx = duk_push_array(ctx);
+                    if (config[i][0] == *(uint8_t*)"cc") {
+                        duk_push_string(ctx, "cc");
+                        duk_put_prop_index(ctx, subArr_idx, 0);
+                        duk_push_int(ctx, config[i][1]);
+                        duk_put_prop_index(ctx, subArr_idx, 1);
+                        duk_push_int(ctx, config[i][2]);
+                        duk_put_prop_index(ctx, subArr_idx, 2);
+                        duk_put_prop_index(ctx, configIdx, i);
+                    }
                 }
+                duk_put_global_string(ctx, "CONFIG");
+
+                duk_push_int(ctx, VIEW_NONE);
+                duk_put_global_string(ctx, "VIEW_NONE");
+                duk_push_int(ctx, VIEW_CHANGED);
+                duk_put_global_string(ctx, "VIEW_CHANGED");
+                duk_push_int(ctx, VIEW_STATE_CHANGED);
+                duk_put_global_string(ctx, "VIEW_STATE_CHANGED");
+
+                duk_push_c_function(ctx, App_View_Instrument::duk_updateConfigCC, 2);
+                duk_put_global_string(ctx, "updateConfigCC");
+
+                duk_eval_file_extra(ctx, getFile("js"));
+                duk_pop(ctx);
             }
-            duk_put_global_string(ctx, "CONFIG");
-
-            duk_push_int(ctx, VIEW_NONE);
-            duk_put_global_string(ctx, "VIEW_NONE");
-            duk_push_int(ctx, VIEW_CHANGED);
-            duk_put_global_string(ctx, "VIEW_CHANGED");
-            duk_push_int(ctx, VIEW_STATE_CHANGED);
-            duk_put_global_string(ctx, "VIEW_STATE_CHANGED");
-
-            duk_push_c_function(ctx, App_View_Instrument::duk_updateConfigCC, 2);
-            duk_put_global_string(ctx, "updateConfigCC");
-
-            duk_eval_file_extra(ctx, getFile("js"));
-            duk_pop(ctx);
         }
     }
 

@@ -2,25 +2,22 @@
 
 DAC Hat Raspberry Pi I2S input (LRCK - GPIO19, BCK - GPIO18, DATA - GPIO21, GND)
 
-lets forget about audio embedded in zic and just use zic as sequencer and brain... ??? or not :p
-use jack to connect pd and other stuff, like vital or supercollidier
-
 https://github.com/chriskiefer/OpenFrameworks-Supercollider-Host
 https://github.com/chriskiefer/OpenFrameworks-Supercollider-Host/blob/master/src/embeddedSC.cpp
 https://github.com/supercollider/SuperColliderAU
 
-os https://blokas.io/patchbox-os/
+There could be only one instance of PD accessible from anytrack,
+libpd can load multiple patch at the same, but at the same output stream.
+We would therefor need to have a pd mixer, where each patch send their output to...
+Each track would use a specific midi channel and we would have to find a way to set midi
+channel for given patch and track output...
+use https://github.com/TheTechnobear/Orac ?
+// https://puredata.info/docs/tutorials/TipsAndTricks#undocumented-pd-internal-messages
 
-There could be only one instance of PD, but accessible from anytrack,
-the JS script would take care to load the pd file, and still any track could send midi note
-as long the script set which track can send midi note to it.
-
-With the other tracks, maybe call supercollidier or custom synth...
+Use supercollidier or custom synth...
 Custom synth can be patched using JS, so no need of fancy c++ logic
 
 Should there be a bootstrap js file? set per project
-Should zic use jack? and if yes, should jack be controllable from js?
-use https://github.com/TheTechnobear/Orac
 
 
 Controller:

@@ -13,9 +13,6 @@
 #include <zic_effect_delay.h>
 #include <zic_seq_loopMaster.h>
 
-// https://puredata.info/docs/tutorials/TipsAndTricks#undocumented-pd-internal-messages
-// https://www.youtube.com/watch?v=HQ-IeWU4PyY
-
 class App_Audio_Track {
 protected:
     Zic_Seq_Step* stepOff[VOICE_COUNT];
