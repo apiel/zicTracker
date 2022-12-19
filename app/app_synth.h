@@ -30,6 +30,7 @@ public:
     void noteOn(uint8_t note, uint8_t velocity)
     {
         wavetable[0].setFrequency(Zic::NOTE_FREQ[note]);
+        printf("App_Synth::noteOn: %f\n", Zic::NOTE_FREQ[note]);
         adsr[0].on();
     }
 

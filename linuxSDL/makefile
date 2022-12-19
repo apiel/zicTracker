@@ -29,6 +29,8 @@ JERRYSCRIPT = `pkg-config --cflags --libs libjerry-core libjerry-port libjerry-m
 DUKTAPE= -I../../duktape-2.7.0/src ./libduktaped.so.207
 JS_ENGINE=$(DUKTAPE)
 
+LIDSND=-L . -I ../../libsndfile/include -lsndfile
+
 #RG351_IP=192.168.1.108
 RG351_IP=192.168.1.109
 
@@ -93,7 +95,7 @@ rg351Libpd:
 build:
 	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) -I$(ZIC_APP_CORE_LIB) \
 	`sdl2-config --cflags --libs` $(LV2)  -DZIC_TARGET=$(ZIC_TARGET) \
-	 $(PUREDATA) $(JS_ENGINE)
+	 $(PUREDATA) $(JS_ENGINE) $(LIDSND)
 
 # -fopenmp for soundTouch "warning: ignoring #pragma omp parallel"
 # -Wno-narrowing for font.h:62:56: warning: narrowing conversion of ‘(8 * ((int)size))’ from ‘int’ to ‘Uint16’ {aka ‘short unsigned int’} inside { } [-Wnarrowing]
