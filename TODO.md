@@ -1,6 +1,7 @@
 ## TODO
 
 Make each track assignable to one type of synth engine and must stick to it (pd, internal synth, sample player)
+OR should tracks be dedicated to a specific synth engine?
 
 DAC Hat Raspberry Pi I2S input (LRCK - GPIO19, BCK - GPIO18, DATA - GPIO21, GND)
 
@@ -20,6 +21,9 @@ Use supercollidier or custom synth...
 Custom synth can be patched using JS, so no need of fancy c++ logic
 
 Should there be a bootstrap js file? set per project
+
+App_Synth could have multiple layout using JS: a normal synth layout, but could also be a kick layout
+However, for kick, we might need a more complex envelop generator or to provide a way to create a custom LFO waveshap that would run only once....
 
 
 Controller:

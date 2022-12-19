@@ -6,6 +6,7 @@
 
 #include "./app_state.h"
 #include "./app_state_track.h"
+#include "./app_synth.h"
 #include <PdBase.hpp>
 #include <PdObject.h>
 #include <app_core_file.h>
@@ -35,6 +36,8 @@ public:
     pd::PdBase pd;
     pd::Patch patch;
 
+    App_Synth synth;
+
     App_Audio_Track(uint8_t _id = 0)
         : pdObject(_id)
         , looper(components[0], APP_TRACK_STATE_SIZE)
@@ -42,9 +45,9 @@ public:
         id = _id;
         sprintf(statePath, "projects/current/track_%d.zic", id);
         loadState();
-        // if (id != 0) {
-        //     return;
-        // }
+        if (id != 0) {
+            return;
+        }
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
             APP_LOG("Could not init pd\n");
         }
@@ -68,6 +71,7 @@ public:
             if (stepOff[i] && !stepOff[i]->tie) {
                 // printf("note off %d\n", stepOff[i]->note);
                 pd.sendNoteOn(1, stepOff[i]->note, 0);
+                synth.adsr[0].off();
                 stepOff[i] = NULL;
             }
             if (looper.state.playing && looper.stepOn != 255) {
@@ -75,6 +79,7 @@ public:
                 if (step->note > 0) {
                     // printf("note on %d (%d)\n", step->note, step->velocity);
                     pd.sendNoteOn(1, step->note, step->velocity);
+                    synth.adsr[0].on();
                     stepOff[i] = step;
                 }
             }
@@ -84,6 +89,14 @@ public:
     void sample(float* buf, int len)
     {
         int ticks = len * tickDivider;
+        if (id != 0) {
+            // int count = len / (4 * APP_CHANNELS);
+            for (int i = 0; i < ticks; i++) {
+                buf[i] = synth.sample();
+            }
+
+            return;
+        }
         pd.processFloat(ticks, NULL, buf);
     }
 
