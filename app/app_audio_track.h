@@ -14,6 +14,9 @@
 #include <zic_effect_delay.h>
 #include <zic_seq_loopMaster.h>
 
+// #define APP_TEST_SKIP 4
+#define APP_TEST_SKIP 0
+
 class App_Audio_Track {
 protected:
     Zic_Seq_Step* stepOff[VOICE_COUNT];
@@ -45,7 +48,7 @@ public:
         id = _id;
         sprintf(statePath, "projects/current/track_%d.zic", id);
         loadState();
-        if (id != 0) {
+        if (id > APP_TEST_SKIP) {
             return;
         }
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {
@@ -71,7 +74,7 @@ public:
             if (stepOff[i] && !stepOff[i]->tie) {
                 // printf("note off %d\n", stepOff[i]->note);
                 pd.sendNoteOn(1, stepOff[i]->note, 0);
-                synth.adsr[0].off();
+                synth.noteOff(stepOff[i]->note);
                 stepOff[i] = NULL;
             }
             if (looper.state.playing && looper.stepOn != 255) {
@@ -79,7 +82,7 @@ public:
                 if (step->note > 0) {
                     // printf("note on %d (%d)\n", step->note, step->velocity);
                     pd.sendNoteOn(1, step->note, step->velocity);
-                    synth.adsr[0].on();
+                    synth.noteOn(step->note, step->velocity);
                     stepOff[i] = step;
                 }
             }
@@ -88,15 +91,19 @@ public:
 
     void sample(float* buf, int len)
     {
-        int ticks = len * tickDivider;
-        if (id != 0) {
-            // int count = len / (4 * APP_CHANNELS);
-            for (int i = 0; i < ticks; i++) {
+        if (id > APP_TEST_SKIP) {
+            int count = len / 4;
+            for (int i = 0; i < count; i++) {
                 buf[i] = synth.sample();
+#if APP_CHANNELS == 2
+                buf[i + 1] = buf[i];
+                i++;
+#endif
             }
 
             return;
         }
+        int ticks = len * tickDivider;
         pd.processFloat(ticks, NULL, buf);
     }
 

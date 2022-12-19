@@ -23,8 +23,19 @@ public:
 
         // might need to convert to float!!!!
         // return filter.next(oscOut * envOut);
-        
+
         return oscOut * envOut;
+    }
+
+    void noteOn(uint8_t note, uint8_t velocity)
+    {
+        wavetable[0].setFrequency(Zic::NOTE_FREQ[note]);
+        adsr[0].on();
+    }
+
+    void noteOff(uint8_t note)
+    {
+        adsr[0].off();
     }
 };
 
