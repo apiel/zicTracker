@@ -96,6 +96,10 @@ public:
             for (int i = 0; i < count; i++) {
                 buf[i] = synth.sample();
 #if APP_CHANNELS == 2
+// TODO
+// FIXME
+// or not ?? if sample is mono, then it's ok
+// but if it's stereo, then it's not :p
                 buf[i + 1] = buf[i];
                 i++;
 #endif
