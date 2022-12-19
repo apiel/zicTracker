@@ -1,5 +1,7 @@
 ## TODO
 
+Make each track assignable to one type of synth engine and must stick to it (pd, internal synth, sample player)
+
 DAC Hat Raspberry Pi I2S input (LRCK - GPIO19, BCK - GPIO18, DATA - GPIO21, GND)
 
 https://github.com/chriskiefer/OpenFrameworks-Supercollider-Host
@@ -7,11 +9,11 @@ https://github.com/chriskiefer/OpenFrameworks-Supercollider-Host/blob/master/src
 https://github.com/supercollider/SuperColliderAU
 
 There could be only one instance of PD accessible from anytrack,
-libpd can load multiple patch at the same, but at the same output stream.
+libpd can load multiple patches at the same, but using the same output stream.
 We would therefor need to have a pd mixer, where each patch send their output to...
 Each track would use a specific midi channel and we would have to find a way to set midi
 channel for given patch and track output...
-use https://github.com/TheTechnobear/Orac ?
+or use https://github.com/TheTechnobear/Orac ?
 // https://puredata.info/docs/tutorials/TipsAndTricks#undocumented-pd-internal-messages
 
 Use supercollidier or custom synth...
@@ -118,3 +120,5 @@ in pattern, we need to be able to add randomize feature!!
 
 - info bull 
     only work with SDL display (so not in text mode)
+
+https://github.com/free-audio/clap
