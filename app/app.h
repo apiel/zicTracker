@@ -104,6 +104,7 @@ public:
         keys.Right = (keysBin >> UI_KEY_RIGHT) & 1;
         keys.Edit = (keysBin >> UI_KEY_EDIT) & 1;
         keys.Menu = (keysBin >> UI_KEY_MENU) & 1;
+        keys.Action = (keysBin >> UI_KEY_ACTION) & 1;
         // SDL_Log("%d%d%d%d%d%d\n", keys.Up, keys.Down, keys.Left, keys.Right, keys.A, keys.Y);
 
         if (keys.Menu && keys.Edit) {

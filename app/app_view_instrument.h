@@ -104,6 +104,18 @@ public:
         }
     }
 
+    uint8_t update(UiKeys* keys, App_Renderer* renderer) override
+    {
+        // There should be a way to skip this from js...
+        if (keys->Action) {
+            track->synth.adsr[0].on();
+        } else if (track->synth.adsr[0].isOn()) {
+            track->synth.adsr[0].off();
+        }
+
+        return App_View_JS::update(keys, renderer);
+    }
+
     static duk_ret_t duk_updateConfigCC(duk_context* ctx)
     {
         // if (current patch is playing)
