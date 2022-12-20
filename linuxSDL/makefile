@@ -29,7 +29,7 @@ JERRYSCRIPT = `pkg-config --cflags --libs libjerry-core libjerry-port libjerry-m
 DUKTAPE= -I../../duktape-2.7.0/src ./libduktaped.so.207
 JS_ENGINE=$(DUKTAPE)
 
-LIDSND=-L . -I ../../libsndfile/include -lsndfile
+LIDSND=-L . -I ../../libsndfile/include -lsndfile -DZIC_USE_LIBSNDFILE=1
 
 #RG351_IP=192.168.1.108
 RG351_IP=192.168.1.109

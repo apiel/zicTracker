@@ -108,9 +108,9 @@ public:
     {
         // There should be a way to skip this from js...
         if (keys->Action) {
-            track->synth.adsr[0].on();
+            track->synth.noteOn(Zic::_NOTE_C3, 127);
         } else if (track->synth.adsr[0].isOn()) {
-            track->synth.adsr[0].off();
+            track->synth.noteOff(Zic::_NOTE_C3);
         }
 
         return App_View_JS::update(keys, renderer);

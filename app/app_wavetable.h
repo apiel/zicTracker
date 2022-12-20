@@ -13,7 +13,7 @@ protected:
         char filepath[270];
         snprintf(filepath, 270, "%s/%s", APP_WAVETABLES_FOLDER, filename);
         open(filepath, true);
-        printf("App_Wavetable::openCurrentFilename: %s\n", filepath);
+        // printf("App_Wavetable::openCurrentFilename: %s\n", filepath);
     }
 
 public:
