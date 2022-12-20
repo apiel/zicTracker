@@ -2,6 +2,8 @@
 #define APP_TRACKS_H_
 
 #include "./app_audio_track.h"
+#include "./app_audio_trackPd.h"
+#include "./app_audio_trackSynth.h"
 #include "./app_def.h"
 
 #include <stdlib.h>
@@ -9,6 +11,8 @@
 #include <wavetables/wavetable_Bank.h>
 #include <zic_seq_loop.h>
 #include <zic_synth_file.h>
+
+#define APP_PD_TRACKS 1
 
 class App_Tracks {
 protected:
@@ -24,7 +28,15 @@ protected:
 
 public:
     uint8_t trackId = TRACK_1;
-    App_Audio_Track track0, track1, track2, track3;
+
+#if APP_PD_TRACKS == 1
+    App_Audio_TrackPd track0;
+    App_Audio_TrackSynth track1, track2, track3;
+#else
+    App_Audio_TrackPd track0, track1;
+    App_Audio_TrackSynth track2, track3;
+#endif
+
     App_Audio_Track* tracks[TRACK_COUNT] = { &track0, &track1, &track2, &track3 };
 
     static App_Tracks* instance;
