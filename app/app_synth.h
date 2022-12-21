@@ -43,7 +43,7 @@ protected:
             modSumIntensity[i] = 0.0;
             for (int j = 0; j < MOD_TARGET_COUNT; j++) {
                 modSumIntensity[i] += modIntensity[i][j];
-                printf("modIntensity[%d][%d] is %f\n", i, j, modIntensity[i][j]);
+                // printf("modIntensity[%d][%d] is %f\n", i, j, modIntensity[i][j]);
             }
             if (modSumIntensity[i] > 0.0) {
                 // printf("modSumIntensity[%d] is %f become %f\n", i, modSumIntensity[i], 1 / modSumIntensity[i]);
@@ -79,7 +79,9 @@ public:
         // filter.setResonance(0.99);
 
         updateModIntensity();
-        setModIntensity(MOD_SRC_ENV_1, MOD_TARGET_AMP_1, 1.0);
+        // setModIntensity(MOD_SRC_ENV_1, MOD_TARGET_AMP_1, 1.0);
+        setModIntensity(MOD_SRC_LFO_1, MOD_TARGET_AMP_1, 0.5);
+        lfo->setFrequency(0.5);
     }
 
     void setModIntensity(int src, int target, float intensity)
@@ -91,7 +93,13 @@ public:
     float sample()
     {
         resetModValue();
-        updateModValue(MOD_SRC_ENV_1, adsr[0].next());
+
+        // Use the first envelope to modulate the signal output
+        // and this cannot be changed, however, modulation can
+        // still be use with other targets
+        float envOut = adsr[0].next();
+
+        updateModValue(MOD_SRC_ENV_1, envOut);
         updateModValue(MOD_SRC_ENV_2, adsr[1].next());
         updateModValue(MOD_SRC_LFO_1, lfo[0].next());
         updateModValue(MOD_SRC_LFO_2, lfo[1].next());
@@ -105,7 +113,13 @@ public:
         // if (modValue[MOD_TARGET_AMP_1] > 1.0) {
         //     printf("App_Synth::sample: %f\n", modValue[MOD_TARGET_AMP_1]);
         // }
-        return filter.next(osc[0].next() * modValue[MOD_TARGET_AMP_1] * modSumIntensity[MOD_SRC_ENV_1]);
+        // return filter.next(osc[0].next() * modValue[MOD_TARGET_AMP_1] * modSumIntensity[MOD_SRC_ENV_1]) * envOut;
+        return filter.next(
+                   osc[0].next(
+                       modValue[MOD_TARGET_AMP_1] * modSumIntensity[MOD_SRC_ENV_1],
+                       modValue[MOD_TARGET_PITCH_1] * modSumIntensity[MOD_SRC_ENV_1],
+                       modValue[MOD_TARGET_MORPH_1] * modSumIntensity[MOD_SRC_ENV_1]))
+            * envOut;
     }
 
     void noteOn(uint8_t note, uint8_t velocity)
