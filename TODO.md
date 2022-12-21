@@ -3,7 +3,7 @@
 Make each track assignable to one type of synth engine and must stick to it (pd, internal synth, sample player)
 OR should tracks be dedicated to a specific synth engine?
 
-DAC Hat Raspberry Pi I2S input (LRCK - GPIO19, BCK - GPIO18, DATA - GPIO21, GND)
+Need to make an LFO in memory
 
 https://github.com/chriskiefer/OpenFrameworks-Supercollider-Host
 https://github.com/chriskiefer/OpenFrameworks-Supercollider-Host/blob/master/src/embeddedSC.cpp
@@ -126,3 +126,15 @@ in pattern, we need to be able to add randomize feature!!
     only work with SDL display (so not in text mode)
 
 https://github.com/free-audio/clap
+
+## RPi
+
+Might want to use an HDMI audio convertor:
+- https://www.amazon.de/dp/B09JLSBWDN/
+- https://www.amazon.de/dp/B092VR953Z/
+- https://www.amazon.de/-/en/gp/product/B07QLTDDHT/
+
+However, would need to first get HDMI audio working...
+
+Or use a DAC hat but a bit annoying to setup:
+- https://www.amazon.de/-/en/gp/product/B07R8M3XFQ/
