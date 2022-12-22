@@ -104,16 +104,6 @@ public:
         updateModValue(MOD_SRC_LFO_1, lfo[0].next());
         updateModValue(MOD_SRC_LFO_2, lfo[1].next());
 
-        // might need to convert to float!!!!
-        // return filter.next(oscOut * envOut);
-
-        // return (osc[0].next() * 0.5 + osc[1].next() * 0.5) * envOut;
-        // return osc[0].next() * envOut;
-
-        // if (modValue[MOD_TARGET_AMP_1] > 1.0) {
-        //     printf("App_Synth::sample: %f\n", modValue[MOD_TARGET_AMP_1]);
-        // }
-        // return filter.next(osc[0].next() * modValue[MOD_TARGET_AMP_1] * modSumIntensity[MOD_SRC_ENV_1]) * envOut;
         return filter.next(
                    osc[0].next(
                        modValue[MOD_TARGET_AMP_1] * modSumIntensity[MOD_SRC_ENV_1],

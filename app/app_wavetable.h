@@ -2,11 +2,13 @@
 #define APP_WAVETABLE_H_
 
 #include <app_core_file.h>
-#include <zic_wave_file.h>
+// #include <zic_wave_file.h>
+#include <zic_wavetable_file.h>
 
 #define APP_WAVETABLES_FOLDER "wavetables"
 
-class App_Wavetable : public Zic_Wave_File {
+// class App_Wavetable : public Zic_Wave_File {
+class App_Wavetable : public Zic_Wavetable_File {
 protected:
     void openCurrentFilename()
     {
