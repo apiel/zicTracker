@@ -80,8 +80,8 @@ public:
 
         updateModIntensity();
         // setModIntensity(MOD_SRC_ENV_1, MOD_TARGET_AMP_1, 1.0);
-        setModIntensity(MOD_SRC_LFO_1, MOD_TARGET_AMP_1, 0.5);
-        lfo->setFrequency(0.5);
+        setModIntensity(MOD_SRC_LFO_1, MOD_TARGET_AMP_1, 1.0);
+        lfo[0].setFrequency(0.5);
     }
 
     void setModIntensity(int src, int target, float intensity)
