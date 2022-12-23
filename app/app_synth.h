@@ -25,6 +25,17 @@ protected:
         MOD_TARGET_COUNT
     };
 
+    const char * modTargetName[MOD_TARGET_COUNT] = {
+        "Cutoff",
+        "Resonance",
+        "Pitch 1",
+        "Pitch 2",
+        "Amp 1",
+        "Amp 2",
+        "Morph 1",
+        "Morph 2"
+    };
+
     enum {
         MOD_SRC_ENV_1 = 0,
         MOD_SRC_ENV_2,
@@ -34,29 +45,27 @@ protected:
     };
 
     float modValue[MOD_TARGET_COUNT];
-    float modIntensity[MOD_SRC_COUNT][MOD_TARGET_COUNT];
-    float modSumIntensity[MOD_SRC_COUNT];
+    float modIntensity[MOD_TARGET_COUNT][MOD_SRC_COUNT];
+    float modSumIntensity[MOD_TARGET_COUNT] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     void updateModIntensity()
     {
-        for (int i = 0; i < MOD_SRC_COUNT; i++) {
+        for (uint8_t i = 0; i < MOD_TARGET_COUNT; i++) {
             modSumIntensity[i] = 0.0;
-            for (int j = 0; j < MOD_TARGET_COUNT; j++) {
+            for (uint8_t j = 0; j < MOD_SRC_COUNT; j++) {
                 modSumIntensity[i] += modIntensity[i][j];
-                // printf("modIntensity[%d][%d] is %f\n", i, j, modIntensity[i][j]);
             }
             if (modSumIntensity[i] > 0.0) {
-                // printf("modSumIntensity[%d] is %f become %f\n", i, modSumIntensity[i], 1 / modSumIntensity[i]);
-                modSumIntensity[i] = 1 / modSumIntensity[i];
+                modSumIntensity[i] = 1.0 / modSumIntensity[i];
             }
-            // printf("modSumIntensity[%d] is %f\n", i, modSumIntensity[i]);
+            // printf("modSum %s is %f\n", modTargetName[i], modSumIntensity[i]);
         }
     }
 
     void updateModValue(uint8_t src, float value)
     {
         for (uint8_t i = 0; i < MOD_TARGET_COUNT; i++) {
-            modValue[i] += value * modIntensity[src][i];
+            modValue[i] += value * modIntensity[i][src];
         }
     }
 
@@ -78,15 +87,14 @@ public:
         // filter.setFrequency(8000);
         // filter.setResonance(0.99);
 
-        updateModIntensity();
         // setModIntensity(MOD_SRC_ENV_1, MOD_TARGET_AMP_1, 1.0);
         setModIntensity(MOD_SRC_LFO_1, MOD_TARGET_AMP_1, 1.0);
         lfo[0].setFrequency(0.5);
     }
 
-    void setModIntensity(int src, int target, float intensity)
+    void setModIntensity(uint8_t src, uint8_t target, float intensity)
     {
-        modIntensity[src][target] = intensity;
+        modIntensity[target][src] = intensity;
         updateModIntensity();
     }
 
@@ -104,11 +112,13 @@ public:
         updateModValue(MOD_SRC_LFO_1, lfo[0].next());
         updateModValue(MOD_SRC_LFO_2, lfo[1].next());
 
+// printf("modValue[MOD_TARGET_AMP_1] is %f intensity %f\n", modValue[MOD_TARGET_AMP_1], modSumIntensity[MOD_TARGET_AMP_1]);
+
         return filter.next(
                    osc[0].next(
-                       modValue[MOD_TARGET_AMP_1] * modSumIntensity[MOD_SRC_ENV_1],
-                       modValue[MOD_TARGET_PITCH_1] * modSumIntensity[MOD_SRC_ENV_1],
-                       modValue[MOD_TARGET_MORPH_1] * modSumIntensity[MOD_SRC_ENV_1]))
+                       modValue[MOD_TARGET_AMP_1] * modSumIntensity[MOD_TARGET_AMP_1],
+                       modValue[MOD_TARGET_PITCH_1] * modSumIntensity[MOD_TARGET_PITCH_1],
+                       modValue[MOD_TARGET_MORPH_1] * modSumIntensity[MOD_TARGET_MORPH_1]))
             * envOut;
     }
 
