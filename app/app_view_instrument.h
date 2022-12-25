@@ -108,9 +108,9 @@ public:
     {
         // There should be a way to skip this from js...
         if (keys->Action) {
-            track->noteOn(Zic::_NOTE_C3, 127);
+            track->noteOn(Zic::_NOTE_C3, 127, 0);
         } else if (track->isOn()) {
-            track->noteOff(Zic::_NOTE_C3);
+            track->noteOff(Zic::_NOTE_C3, 0);
         }
 
         return App_View_JS::update(keys, renderer);

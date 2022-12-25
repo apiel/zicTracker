@@ -33,14 +33,14 @@ public:
         pd.clear();
     }
 
-    void noteOn(uint8_t note, uint8_t velocity)
+    void noteOn(uint8_t note, uint8_t velocity, uint8_t voice)
     {
-        pd.sendNoteOn(1, note, velocity);
+        pd.sendNoteOn(voice + 1, note, velocity);
     }
 
-    void noteOff(uint8_t note)
+    void noteOff(uint8_t note, uint8_t voice)
     {
-        pd.sendNoteOn(1, note, 0);
+        pd.sendNoteOn(voice + 1, note, 0);
     }
 
     void sample(float* buf, int len)

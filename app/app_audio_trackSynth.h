@@ -13,12 +13,12 @@ public:
     {
     }
 
-    void noteOn(uint8_t note, uint8_t velocity)
+    void noteOn(uint8_t note, uint8_t velocity, uint8_t voice)
     {
         synth.noteOn(note, velocity);
     }
 
-    void noteOff(uint8_t note)
+    void noteOff(uint8_t note, uint8_t voice)
     {
         synth.noteOff(note);
     }

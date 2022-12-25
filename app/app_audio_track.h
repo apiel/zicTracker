@@ -58,8 +58,8 @@ public:
         loadState();
     }
 
-    virtual void noteOn(uint8_t note, uint8_t velocity) = 0;
-    virtual void noteOff(uint8_t note) = 0;
+    virtual void noteOn(uint8_t note, uint8_t velocity, uint8_t voice) = 0;
+    virtual void noteOff(uint8_t note, uint8_t voice) = 0;
     virtual void sample(float* buf, int len) = 0;
 
     virtual void cc(uint8_t num, uint8_t val) { }
@@ -100,13 +100,13 @@ public:
         for (uint8_t i = 0; i < VOICE_COUNT; i++) {
             if (stepOff[i] && !stepOff[i]->tie) {
                 // printf("note off %d\n", stepOff[i]->note);
-                noteOff(stepOff[i]->note);
+                noteOff(stepOff[i]->note, i);
                 stepOff[i] = NULL;
             }
             if (looper.state.playing && looper.stepOn != 255) {
                 Zic_Seq_Step* step = &looper.state.pattern->steps[i][looper.stepOn];
                 if (step->note > 0) {
-                    noteOn(step->note, step->velocity);
+                    noteOn(step->note, step->velocity, i);
                     stepOff[i] = step;
                 }
             }
