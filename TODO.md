@@ -1,5 +1,11 @@
 ## TODO
 
+Synth, should there even be an envelop? Enverything could be wavetable base, using LFO as an envelop,
+where one specific point could be sustain...
+Should LFO be morphable? If not, let's just close te file...
+
+For the moment, synth is single OSC, one day make dual OSC?
+
 Make each track assignable to one type of synth engine and must stick to it (pd, internal synth, sample player)
 OR should tracks be dedicated to a specific synth engine?
 
