@@ -48,7 +48,6 @@ protected:
             if (modSumIntensity[i] > 0.0) {
                 modSumIntensity[i] = 1.0 / modSumIntensity[i];
             }
-            // printf("modSum %s is %f\n", modTargetName[i], modSumIntensity[i]);
         }
     }
 
@@ -74,9 +73,6 @@ public:
 
     App_Synth()
     {
-        // filter.setFrequency(8000);
-        // filter.setResonance(0.99);
-
         setModIntensity(MOD_SRC_LFO_1, MOD_TARGET_AMP, 1.0);
         lfo[0].setFrequency(0.5);
     }
@@ -100,8 +96,6 @@ public:
         updateModValue(MOD_SRC_LFO_1, lfo[0].next());
         updateModValue(MOD_SRC_LFO_2, lfo[1].next());
 
-        // printf("modValue[MOD_TARGET_AMP_1] is %f intensity %f\n", modValue[MOD_TARGET_AMP_1], modSumIntensity[MOD_TARGET_AMP_1]);
-
         return filter.next(
                    osc.next(
                        modValue[MOD_TARGET_AMP] * modSumIntensity[MOD_TARGET_AMP],
@@ -113,7 +107,6 @@ public:
     void noteOn(uint8_t note, uint8_t velocity)
     {
         osc.setFrequency(Zic::NOTE_FREQ[note]);
-        // printf("App_Synth::noteOn: %f\n", Zic::NOTE_FREQ[note]);
         adsr.on();
     }
 

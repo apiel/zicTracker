@@ -62,6 +62,8 @@ public:
                         duk_put_prop_index(ctx, subArr_idx, 1);
                         duk_push_int(ctx, config[i][2]);
                         duk_put_prop_index(ctx, subArr_idx, 2);
+                        duk_push_int(ctx, config[i][3]);
+                        duk_put_prop_index(ctx, subArr_idx, 3);
                         duk_put_prop_index(ctx, configIdx, i);
                     }
                 }
@@ -74,7 +76,7 @@ public:
                 duk_push_int(ctx, VIEW_STATE_CHANGED);
                 duk_put_global_string(ctx, "VIEW_STATE_CHANGED");
 
-                duk_push_c_function(ctx, App_View_Instrument::duk_updateConfigCC, 2);
+                duk_push_c_function(ctx, App_View_Instrument::duk_updateConfigCC, 3);
                 duk_put_global_string(ctx, "updateConfigCC");
 
                 duk_eval_file_extra(ctx, getFile("js"));
@@ -122,9 +124,10 @@ public:
 
         uint8_t cc = duk_get_int(ctx, 0);
         uint8_t val = duk_get_int(ctx, 1);
-        printf(">>>>>>>>>>>>> cc: %d, val: %d\n", cc, val);
+        uint8_t voice = duk_get_int(ctx, 2);
+        // printf(">>>>>>>>>>>>> cc: %d, val: %d voice: %d\n", cc, val, voice);
 
-        instance->tracks->cc(cc, val);
+        instance->tracks->cc(cc, val, voice);
 
         return 0;
     }

@@ -49,9 +49,9 @@ public:
         pd.processFloat(ticks, NULL, buf);
     }
 
-    void cc(uint8_t num, uint8_t val)
+    void cc(uint8_t num, uint8_t val, uint8_t voice) override
     {
-        pd.sendControlChange(1, num, val);
+        pd.sendControlChange(voice + 1, num, val);
     }
 
     void loadPatch()
