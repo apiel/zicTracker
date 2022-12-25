@@ -38,11 +38,11 @@ public:
     void setNextPatch(int8_t direction)
     {
         if (isPatchEmpty()) {
-            if (direction == 1 && !firstFile(patchFilename, "instruments", 40)) {
+            if (direction == 1 && !firstFile(patchFilename, "instruments/pd", 40)) {
                 setEmptyPatch();
                 return;
             }
-        } else if (!nextFile(patchFilename, "instruments", patchFilename, direction, 40) && direction == -1) {
+        } else if (!nextFile(patchFilename, "instruments/pd", patchFilename, direction, 40) && direction == -1) {
             setEmptyPatch();
             return;
         }

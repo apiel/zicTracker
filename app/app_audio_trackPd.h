@@ -68,11 +68,11 @@ public:
             return;
         }
         char path[256];
-        sprintf(path, "instruments/%s", state[currentState].patchFilename);
+        sprintf(path, "instruments/pd/%s", state[currentState].patchFilename);
         pd.computeAudio(true);
         patch = pd.openPatch("main.pd", path);
-        // patch = pd.openPatch("main.pd", "instruments/02_kick");
-        // pd.openPatch("main.pd", "instruments/01_synth");
+        // patch = pd.openPatch("main.pd", "instruments/pd/02_kick");
+        // pd.openPatch("main.pd", "instruments/pd/01_synth");
 
         // FIXME if patch does not exist then crash!!
 

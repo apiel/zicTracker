@@ -38,6 +38,35 @@ public:
 #endif
         }
     }
+
+    void cc(uint8_t num, uint8_t val, uint8_t voice) override
+    {
+        if (num == 1) {
+            // synth set wavetable
+        } else if (num == 2) {
+            // synth.osc.morph
+        } else if (num == 3) {
+            // synth.osc.setFrequency();
+        } else if (num == 4) {
+            // synth.osc.setAmplitude(val / 127.0f);
+        } else if (num == 5) {
+            synth.adsr.setAttack(val / 127.0f);
+        } else if (num == 6) {
+            synth.adsr.setDecay(val / 127.0f);
+        } else if (num == 7) {
+            synth.adsr.setSustain(val / 127.0f);
+        } else if (num == 8) {
+            synth.adsr.setRelease(val / 127.0f);
+        } else if (num == 9) {
+        } else if (num == 10) {
+        } else if (num == 11) {
+        } else if (num == 12) {
+        } else if (num == 13) {
+        } else if (num == 14) {
+        } else if (num == 15) {
+        } else if (num == 16) {
+        }
+    }
 };
 
 #endif

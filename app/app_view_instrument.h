@@ -20,7 +20,7 @@ protected:
 
     char* getFile(const char* extension)
     {
-        sprintf(filepath, "instruments/%s/main.%s", state->patchFilename, extension);
+        sprintf(filepath, "instruments/pd/%s/main.%s", state->patchFilename, extension);
         return filepath;
     }
 
