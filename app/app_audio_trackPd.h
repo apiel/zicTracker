@@ -54,6 +54,11 @@ public:
         pd.sendControlChange(voice + 1, num, val);
     }
 
+    const char * getPatchDirectory() override
+    {
+        return "instruments/pd";
+    }
+
     void loadPatch()
     {
         // TODO skip if different... valid if last one
@@ -68,7 +73,7 @@ public:
             return;
         }
         char path[256];
-        sprintf(path, "instruments/pd/%s", state[currentState].patchFilename);
+        sprintf(path, "%s/%s", getPatchDirectory(), state[currentState].patchFilename);
         pd.computeAudio(true);
         patch = pd.openPatch("main.pd", path);
         // patch = pd.openPatch("main.pd", "instruments/pd/02_kick");

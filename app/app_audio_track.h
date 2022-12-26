@@ -58,6 +58,7 @@ public:
         loadState();
     }
 
+    virtual const char * getPatchDirectory() = 0;
     virtual void noteOn(uint8_t note, uint8_t velocity, uint8_t voice) = 0;
     virtual void noteOff(uint8_t note, uint8_t voice) = 0;
     virtual void cc(uint8_t num, uint8_t val, uint8_t voice) { }

@@ -35,14 +35,14 @@ public:
         setEmptyPatch();
     }
 
-    void setNextPatch(int8_t direction)
+    void setNextPatch(int8_t direction, const char * folder)
     {
         if (isPatchEmpty()) {
-            if (direction == 1 && !firstFile(patchFilename, "instruments/pd", 40)) {
+            if (direction == 1 && !firstFile(patchFilename, folder, 40)) {
                 setEmptyPatch();
                 return;
             }
-        } else if (!nextFile(patchFilename, "instruments/pd", patchFilename, direction, 40) && direction == -1) {
+        } else if (!nextFile(patchFilename, folder, patchFilename, direction, 40) && direction == -1) {
             setEmptyPatch();
             return;
         }

@@ -81,6 +81,11 @@ public:
         } else if (num == 18) {
         }
     }
+
+    const char * getPatchDirectory() override
+    {
+        return "instruments/zic";
+    }
 };
 
 #endif

@@ -59,9 +59,9 @@ public:
 
     void updatePatch(uint8_t row, uint8_t col, int8_t direction)
     {
-        getState(row, col)->setNextPatch(direction);
-        // isCurrentState(uint8_t pos)
         App_Audio_Track* track = getTrack(col);
+        getState(row, col)->setNextPatch(direction, track->getPatchDirectory());
+        // isCurrentState(uint8_t pos)
         if (track->isCurrentState(row)) {
             track->loadPatch();
         }
