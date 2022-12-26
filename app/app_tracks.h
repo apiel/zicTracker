@@ -12,8 +12,6 @@
 #include <zic_seq_loop.h>
 #include <zic_synth_file.h>
 
-#define APP_PD_TRACKS 1
-
 class App_Tracks {
 protected:
     const float mixerDivider = 1.0f / TRACK_COUNT;
@@ -29,7 +27,7 @@ protected:
 public:
     uint8_t trackId = TRACK_1;
 
-#if APP_PD_TRACKS == 1
+#if ZIC_TRACK_LAYOUT == 1
     App_Audio_TrackPd track0;
     App_Audio_TrackSynth track1, track2, track3;
 #else

@@ -8,6 +8,7 @@ ZIC_APP_CORE_LIB=../../zicAppCore
 # default
 CC=g++ -o zicTracker
 ZIC_TARGET=0
+ZIC_TRACK_LAYOUT=0
 # LV2=`pkg-config --libs lilv-0` -I/usr/include/lilv-0
 
 # For libpd_arm.so, we should first chroot into the arm environment
@@ -57,7 +58,7 @@ rg351:
 	make rg351MountChroot rg351Next
 
 rg351Next:
-	make rg351Puredata rg351Duk rg351Chroot rg351SCP
+	make ZIC_TRACK_LAYOUT=1 rg351Puredata rg351Duk rg351Chroot rg351SCP
 	
 rg351MountChroot:
 	sudo mount --bind /home/alex/Music/zic /mnt/data/arm64/home/alex/zic
@@ -94,7 +95,7 @@ rg351Libpd:
 
 build:
 	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) -I$(ZIC_APP_CORE_LIB) \
-	`sdl2-config --cflags --libs` $(LV2)  -DZIC_TARGET=$(ZIC_TARGET) \
+	`sdl2-config --cflags --libs` $(LV2)  -DZIC_TARGET=$(ZIC_TARGET) -DZIC_TRACK_LAYOUT=$(ZIC_TRACK_LAYOUT) \
 	 $(PUREDATA) $(JS_ENGINE) $(LIDSND)
 
 # -fopenmp for soundTouch "warning: ignoring #pragma omp parallel"
