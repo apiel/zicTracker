@@ -73,7 +73,7 @@ public:
 
     App_Synth()
     {
-        setModIntensity(MOD_SRC_LFO_1, MOD_TARGET_AMP, 1.0);
+        setModIntensity(MOD_SRC_LFO_1, MOD_TARGET_PITCH, 1.0);
         lfo[0].setFrequency(0.5);
     }
 

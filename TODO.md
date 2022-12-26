@@ -133,6 +133,12 @@ in pattern, we need to be able to add randomize feature!!
 
 https://github.com/free-audio/clap
 
+## Synth lib
+
+- https://github.com/TonicAudio/Tonic
+- https://github.com/thestk/stk
+- https://github.com/LancePutnam/Gamma
+
 ## RPi
 
 Might want to use an HDMI audio convertor:
@@ -144,3 +150,9 @@ However, would need to first get HDMI audio working...
 
 Or use a DAC hat but a bit annoying to setup:
 - https://www.amazon.de/-/en/gp/product/B07R8M3XFQ/
+
+## AE
+
+digital kick
+- https://www.youtube.com/watch?v=A_Bv5Ad-Cy8
+- https://www.youtube.com/watch?v=MK4ARnpljZg
