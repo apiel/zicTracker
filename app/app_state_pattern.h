@@ -4,6 +4,7 @@
 #include <app_core_file.h>
 #include <stdint.h>
 #include <zic_seq_pattern.h>
+#include <zic_note.h>
 
 // FIXME duplicated
 #define VELOCITY_ARR uint8_t velocity[6] = { 50, 70, 85, 100, 110, 127 };

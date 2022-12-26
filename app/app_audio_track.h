@@ -2,7 +2,7 @@
 #define APP_AUDIO_TRACK_H_
 
 #include "./app_def.h"
-#include "./app_instrument.h"
+// #include "./app_instrument.h"
 
 #include "./app_state.h"
 #include "./app_state_track.h"

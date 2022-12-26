@@ -11,7 +11,7 @@
 // Should modulation be activated/deactivated if not used...
 
 class App_Synth {
-protected:
+public:
     enum {
         MOD_TARGET_CUTOFF = 0,
         MOD_TARGET_RES,
@@ -36,6 +36,7 @@ protected:
         MOD_SRC_COUNT
     };
 
+protected:
     float modValue[MOD_TARGET_COUNT];
     float modIntensity[MOD_TARGET_COUNT][MOD_SRC_COUNT];
     float modSumIntensity[MOD_TARGET_COUNT] = { 0.0, 0.0, 0.0, 0.0, 0.0 };
