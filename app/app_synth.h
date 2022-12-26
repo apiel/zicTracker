@@ -8,6 +8,8 @@
 
 #define APP_SYNTH_LFO_COUNT 2
 
+// Should modulation be activated/deactivated if not used...
+
 class App_Synth {
 protected:
     enum {
@@ -73,7 +75,7 @@ public:
 
     App_Synth()
     {
-        setModIntensity(MOD_SRC_LFO_1, MOD_TARGET_PITCH, 1.0);
+        setModIntensity(MOD_SRC_LFO_1, MOD_TARGET_RES, 1.0);
         lfo[0].setFrequency(0.5);
     }
 
@@ -100,7 +102,9 @@ public:
                    osc.next(
                        modValue[MOD_TARGET_AMP] * modSumIntensity[MOD_TARGET_AMP],
                        modValue[MOD_TARGET_PITCH] * modSumIntensity[MOD_TARGET_PITCH],
-                       modValue[MOD_TARGET_MORPH] * modSumIntensity[MOD_TARGET_MORPH]))
+                       modValue[MOD_TARGET_MORPH] * modSumIntensity[MOD_TARGET_MORPH]),
+                   modValue[MOD_TARGET_CUTOFF] * modSumIntensity[MOD_TARGET_CUTOFF],
+                   modValue[MOD_TARGET_RES] * modSumIntensity[MOD_TARGET_RES])
             * envOut;
     }
 
