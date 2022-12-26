@@ -127,7 +127,8 @@ public:
         uint8_t voice = duk_get_int(ctx, 2);
         // printf(">>>>>>>>>>>>> cc: %d, val: %d voice: %d\n", cc, val, voice);
 
-        instance->tracks->cc(cc, val, voice);
+        // instance->tracks->cc(cc, val, voice);
+        instance->track->cc(cc, val, voice);
 
         return 0;
     }

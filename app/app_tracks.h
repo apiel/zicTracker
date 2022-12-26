@@ -33,6 +33,7 @@ public:
 #else
     App_Audio_TrackPd track0, track1;
     App_Audio_TrackSynth track2, track3;
+    // App_Audio_TrackPd track0, track1, track2, track3;
 #endif
 
     App_Audio_Track* tracks[TRACK_COUNT] = { &track0, &track1, &track2, &track3 };
@@ -93,13 +94,13 @@ public:
         return tracks[0]->looper.isPlaying();
     }
 
-    void cc(uint8_t num, uint8_t val, uint8_t voice)
-    {
-        // TODO should we select the right track?
-        for (uint8_t i = 0; i < TRACK_COUNT; i++) {
-            tracks[i]->cc(num, val, voice);
-        }
-    }
+    // void cc(uint8_t num, uint8_t val, uint8_t voice)
+    // {
+    //     // TODO should we select the right track?
+    //     for (uint8_t i = 0; i < TRACK_COUNT; i++) {
+    //         tracks[i]->cc(num, val, voice);
+    //     }
+    // }
 
     void quit()
     {

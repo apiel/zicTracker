@@ -31,6 +31,9 @@ Should there be a bootstrap js file? set per project
 App_Synth could have multiple layout using JS: a normal synth layout, but could also be a kick layout
 However, for kick, we might need a more complex envelop generator or to provide a way to create a custom LFO waveshap that would run only once....
 
+SDL audio record:
+- https://lazyfoo.net/tutorials/SDL/34_audio_recording/index.php
+
 
 Controller:
 - https://gamesx.com/wiki/doku.php?id=controls:nes_snes_controller
