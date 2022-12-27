@@ -2,6 +2,7 @@
 #define APP_AUDIO_TRACK_PD_H_
 
 #include "./app_audio_track.h"
+#include <APP_SDL/sdl2.h>
 
 #include <PdBase.hpp>
 #include <PdObject.h>
@@ -15,8 +16,8 @@ public:
     pd::PdBase pd;
     pd::Patch patch;
 
-    App_Audio_TrackPd(uint8_t _id = 0)
-        : App_Audio_Track(_id)
+    App_Audio_TrackPd(uint8_t _id = 0, const char* _name = NULL)
+        : App_Audio_Track(_id, _name)
         , pdObject(_id)
     {
         if (!pd.init(0, APP_CHANNELS, SAMPLE_RATE)) {

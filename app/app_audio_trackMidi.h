@@ -7,8 +7,8 @@
 
 class App_Audio_TrackMidi : public App_Audio_Track {
 public:
-    App_Audio_TrackMidi(uint8_t _id = 0)
-        : App_Audio_Track(_id)
+    App_Audio_TrackMidi(uint8_t _id = 0, const char * _name = NULL)
+        : App_Audio_Track(_id, _name)
     {
     }
 

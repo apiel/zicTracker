@@ -11,6 +11,8 @@
 #define GRID_VISIBLE_TRACKS 4
 #define VIEW_GRID_COL GRID_VISIBLE_TRACKS * 3
 
+uint8_t baseTrack = 0;
+
 class App_View_GridField : public App_View_TableField {
 public:
     App_Tracks* tracks;
@@ -24,7 +26,7 @@ public:
 
     App_Audio_Track* getTrack(uint8_t col)
     {
-        return tracks->tracks[uint8_t(col / 3) % GRID_VISIBLE_TRACKS];
+        return tracks->tracks[baseTrack + (uint8_t(col / 3) % GRID_VISIBLE_TRACKS)];
     }
 
     virtual bool isSelectable(uint8_t row, uint8_t col) override
@@ -127,7 +129,7 @@ public:
 
     static uint8_t getTrackId()
     {
-        return uint8_t(gridSelectedCol / 3) % GRID_VISIBLE_TRACKS;
+        return baseTrack + (uint8_t(gridSelectedCol / 3) % GRID_VISIBLE_TRACKS);
     }
 
     bool renderOn(uint8_t event) override
@@ -155,12 +157,27 @@ public:
         renderer->useColoredRow();
         renderer->useColoredRow(9, COLOR_MEDIUM);
         strcpy(renderer->text, "");
+        App_Tracks* tracks = App_Tracks::getInstance();
         for (uint8_t i = 0; i < GRID_VISIBLE_TRACKS; i++) {
-            sprintf(renderer->text + strlen(renderer->text), " TRACK%d", i + 1);
+            // sprintf(renderer->text + strlen(renderer->text), " TRACK%d", baseTrack + i + 1);
+            sprintf(renderer->text + strlen(renderer->text), " %s", tracks->tracks[baseTrack + i]->name);
         }
         strcat(renderer->text, "\n");
         App_View_Table::render(renderer);
         sprintf(renderer->text + strlen(renderer->text), " %s", description);
+    }
+
+    void onNextColOverflow(int8_t direction) override
+    {
+        int8_t nextBaseTrack = baseTrack + direction * GRID_VISIBLE_TRACKS;
+        if (nextBaseTrack >= 0 && nextBaseTrack < TRACK_COUNT) {
+            baseTrack = nextBaseTrack;
+            if (direction > 0) {
+                selectedCol = 0;
+            } else {
+                selectedCol = VIEW_GRID_COL - 1;
+            }
+        }
     }
 };
 

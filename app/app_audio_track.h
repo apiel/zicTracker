@@ -46,12 +46,14 @@ protected:
 
 public:
     uint8_t id = 0;
+    const char * name;
 
     App_State_Track state[APP_TRACK_STATE_SIZE];
     Zic_Seq_LoopMaster looper;
 
-    App_Audio_Track(uint8_t _id = 0)
-        : looper(components[0], APP_TRACK_STATE_SIZE)
+    App_Audio_Track(uint8_t _id = 0, const char * _name = NULL)
+        : name(_name)
+        , looper(components[0], APP_TRACK_STATE_SIZE)
     {
         id = _id;
         sprintf(statePath, "projects/current/track_%d.zic", id);

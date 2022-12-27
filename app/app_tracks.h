@@ -19,14 +19,14 @@ protected:
     uint8_t TRACK_AUDIO_COUNT = 0;
 
     App_Tracks()
-        : track0(TRACK_1)
-        , track1(TRACK_2)
-        , track2(TRACK_3)
-        , track3(TRACK_4)
-        , track4(MIDI_TRACK_1)
-        , track5(MIDI_TRACK_2)
-        , track6(MIDI_TRACK_3)
-        , track7(MIDI_TRACK_4)
+        : track0(TRACK_1, "Track1")
+        , track1(TRACK_2, "Track2")
+        , track2(TRACK_3, "Track3")
+        , track3(TRACK_4, "Track4")
+        , track4(MIDI_TRACK_1, "Midi_1")
+        , track5(MIDI_TRACK_2, "Midi_2")
+        , track6(MIDI_TRACK_3, "Midi_3")
+        , track7(MIDI_TRACK_4, "Midi_4")
     {
         for (uint8_t t = 0; t < TRACK_COUNT; t++) {
             if (tracks[t]->isAudioTrack()) {
