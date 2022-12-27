@@ -89,6 +89,10 @@ rg351Project:
 	sshpass -p "ark" ssh ark@$(RG351_IP) rm -rf /roms/ports/zic/projects
 	sshpass -p "ark" scp -r projects/ ark@$(RG351_IP):/roms/ports/zic/projects
 
+rg351Instr:
+	sshpass -p "ark" ssh ark@$(RG351_IP) rm -rf /roms/ports/zic/instruments
+	sshpass -p "ark" scp -r instruments/ ark@$(RG351_IP):/roms/ports/zic/instruments
+
 rg351Libpd:
 	sshpass -p "ark" ssh ark@$(RG351_IP) rm -rf /roms/ports/zic/libpd.so
 	sshpass -p "ark" scp -r libpd.so ark@$(RG351_IP):/roms/ports/zic/libpd.so

@@ -12,6 +12,10 @@ enum {
     TRACK_2,
     TRACK_3,
     TRACK_4,
+    MIDI_TRACK_1,
+    MIDI_TRACK_2,
+    MIDI_TRACK_3,
+    MIDI_TRACK_4,
     TRACK_COUNT
 };
 

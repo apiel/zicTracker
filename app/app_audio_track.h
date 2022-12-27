@@ -71,6 +71,11 @@ public:
         return false;
     }
 
+    virtual bool isAudioTrack()
+    {
+        return true;
+    }
+
     void saveState()
     {
         APP_LOG("Save state %s\n", statePath);

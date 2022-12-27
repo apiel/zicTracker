@@ -8,7 +8,8 @@
 
 #define VIEW_GRID_ROW APP_TRACK_STATE_SIZE
 
-#define VIEW_GRID_COL TRACK_COUNT * 3
+#define GRID_VISIBLE_TRACKS 4
+#define VIEW_GRID_COL GRID_VISIBLE_TRACKS * 3
 
 class App_View_GridField : public App_View_TableField {
 public:
@@ -23,7 +24,7 @@ public:
 
     App_Audio_Track* getTrack(uint8_t col)
     {
-        return tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+        return tracks->tracks[uint8_t(col / 3) % GRID_VISIBLE_TRACKS];
     }
 
     virtual bool isSelectable(uint8_t row, uint8_t col) override
@@ -55,7 +56,7 @@ public:
     {
         bool isSelected = selectedRow == row && selectedCol == col;
         if (col % 3 == 0) {
-            App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % TRACK_COUNT];
+            App_Audio_Track* track = tracks->tracks[uint8_t(col / 3) % GRID_VISIBLE_TRACKS];
             renderer->useColor(row + 1, col / 3 * 7, track->looper.isComponentPlaying(row) ? COLOR_PLAY : COLOR_HILIGHT);
             strcat(renderer->text,
                 track->looper.isComponentPlaying(row) ? ">"
@@ -126,7 +127,7 @@ public:
 
     static uint8_t getTrackId()
     {
-        return uint8_t(gridSelectedCol / 3) % TRACK_COUNT;
+        return uint8_t(gridSelectedCol / 3) % GRID_VISIBLE_TRACKS;
     }
 
     bool renderOn(uint8_t event) override
@@ -154,7 +155,7 @@ public:
         renderer->useColoredRow();
         renderer->useColoredRow(9, COLOR_MEDIUM);
         strcpy(renderer->text, "");
-        for (uint8_t i = 0; i < TRACK_COUNT; i++) {
+        for (uint8_t i = 0; i < GRID_VISIBLE_TRACKS; i++) {
             sprintf(renderer->text + strlen(renderer->text), " TRACK%d", i + 1);
         }
         strcat(renderer->text, "\n");
