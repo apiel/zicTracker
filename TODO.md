@@ -6,6 +6,11 @@ And send CC messages. Preset would also be available...
 Patch, could even execute a bash script, but we might want execute it only once, to not run multiple
 time the same? Or should it be a gloabl bash script that run only on start....?
 
+Use sunvox synth engine
+- https://warmplace.ru/soft/sunvox/sunvox_lib.php
+- https://github.com/bohwaz/sunvox
+- https://github.com/metrasynth/sunvox-guide
+
 Synth, should there even be an envelop? Enverything could be wavetable base, using LFO as an envelop,
 where one specific point could be sustain...
 Should LFO be morphable? If not, let's just close te file...
