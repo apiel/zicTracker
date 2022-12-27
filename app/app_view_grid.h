@@ -169,13 +169,25 @@ public:
 
     void onNextColOverflow(int8_t direction) override
     {
-        int8_t nextBaseTrack = baseTrack + direction * GRID_VISIBLE_TRACKS;
-        if (nextBaseTrack >= 0 && nextBaseTrack < TRACK_COUNT) {
+        // To switch 4 tracks at once
+        // int8_t nextBaseTrack = baseTrack + direction * GRID_VISIBLE_TRACKS;
+        // if (nextBaseTrack >= 0 && nextBaseTrack < TRACK_COUNT) {
+        //     baseTrack = nextBaseTrack;
+        //     if (direction > 0) {
+        //         selectedCol = 0;
+        //     } else {
+        //         selectedCol = VIEW_GRID_COL - 1;
+        //     }
+        // }
+
+        // To one track after the other
+        int8_t nextBaseTrack = baseTrack + direction;
+        if (nextBaseTrack >= 0 && nextBaseTrack <= TRACK_COUNT - GRID_VISIBLE_TRACKS) {
             baseTrack = nextBaseTrack;
-            if (direction > 0) {
-                selectedCol = 0;
+            if (direction < 0) {
+                selectedCol += 2;
             } else {
-                selectedCol = VIEW_GRID_COL - 1;
+                selectedCol -= 2;
             }
         }
     }
