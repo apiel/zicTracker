@@ -4,12 +4,14 @@
 #include <RtMidi.h>
 #include <stdint.h>
 
+// we should set midi output from project settings
+
 class App_Midi {
 protected:
     App_Midi()
     {
         std::vector<RtMidi::Api> apis;
-        RtMidi ::getCompiledApi(apis);
+        RtMidi::getCompiledApi(apis);
 
         for (unsigned int i = 0; i < apis.size(); i++) {
             RtMidiIn* midiin = 0;
