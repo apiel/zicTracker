@@ -1,5 +1,11 @@
 ## TODO
 
+Make grid UI more fancy (no need to stick to this text base UI)
+- bring 3 grid view to one
+- make pattern preview as background
+- only display used clip and give the possibility to add more clip
+
+
 Create 4 extra track, called MIDI_1 MIDI_2...
 By default they are assigned to the channel, but can use a patch js file to change the channel
 And send CC messages. Preset would also be available...

@@ -96,6 +96,16 @@ Need to download https://duktape.org/download.html (and not clone got repo)
 Might want to use shared library for duktape to make compilation quicker: `make -f Makefile.sharedlibrary`.
 For rg351, need to chroot...
 
+Need to install https://github.com/thestk/rtmidi
+
+Or install libs??
+
+```sh
+apt-get install libsdl2-dev libsndfile1 libduktape207 duktape-dev librtmidi-dev librtmidi6
+```
+
+Use `ldconfig -p | grep libduktape` to see what is already installed.
+
 ## Toolchain
 
 ### anbernic rg351

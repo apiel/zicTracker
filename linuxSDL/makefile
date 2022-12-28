@@ -22,15 +22,21 @@ PUREDATA = -I$(LIBPD_DIR)/libpd_wrapper -I$(LIBPD_DIR)/libpd_wrapper/util \
 
 #JSAMALGAM=../../jerryscript/amalgam
 #JERRYSCRIPT = $(JSAMALGAM)/jerryscript.c $(JSAMALGAM)/jerryscript-port.c -I$(JSAMALGAM)/
-JERRYSCRIPT = `pkg-config --cflags --libs libjerry-core libjerry-port libjerry-math`
+#JERRYSCRIPT = `pkg-config --cflags --libs libjerry-core libjerry-port libjerry-math`
 
 # Build without shared lib
 # DUKTAPE= -I../../duktape-2.7.0/src ../../duktape-2.7.0/src/duktape.c
 # Build with shared lib
-DUKTAPE= -I../../duktape-2.7.0/src ./libduktaped.so.207
+# DUKTAPE= -I../../duktape-2.7.0/src ./libduktaped.so.207
+DUKTAPE=`pkg-config --cflags --libs duktape`
 JS_ENGINE=$(DUKTAPE)
 
-LIDSND=-L . -I ../../libsndfile/include -lsndfile -DZIC_USE_LIBSNDFILE=1
+# http://www.mega-nerd.com/libsndfile/FAQ.html#Q008
+# TODO for RG351P, either the following line, or install libsndfile-dev in chroot, or build directly on device
+#LIDSND=-L . -I ../../libsndfile/include -lsndfile -DZIC_USE_LIBSNDFILE=1
+LIDSND=`pkg-config --cflags --libs sndfile`
+
+LIBRTMIDI=`pkg-config --cflags --libs rtmidi`
 
 #RG351_IP=192.168.1.108
 RG351_IP=192.168.1.109
@@ -100,7 +106,7 @@ rg351Libpd:
 build:
 	$(CC) -Wall zicTracker.cpp -fopenmp -Wno-narrowing -I$(ZIC_LIB) -I$(ZIC_APP_CORE_LIB) \
 	`sdl2-config --cflags --libs` $(LV2)  -DZIC_TARGET=$(ZIC_TARGET) -DZIC_TRACK_LAYOUT=$(ZIC_TRACK_LAYOUT) \
-	 $(PUREDATA) $(JS_ENGINE) $(LIDSND)
+	 $(PUREDATA) $(JS_ENGINE) $(LIDSND) $(LIBRTMIDI)
 
 # -fopenmp for soundTouch "warning: ignoring #pragma omp parallel"
 # -Wno-narrowing for font.h:62:56: warning: narrowing conversion of ‘(8 * ((int)size))’ from ‘int’ to ‘Uint16’ {aka ‘short unsigned int’} inside { } [-Wnarrowing]
