@@ -1,5 +1,9 @@
 ## TODO
 
+Separate the UI from the rest. Try to make everything as much accessible from JS.
+New view could be build using JS or lib.so
+State saving? 
+
 Make grid UI more fancy (no need to stick to this text base UI)
 - bring 3 grid view to one
 - make pattern preview as background

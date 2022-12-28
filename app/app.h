@@ -18,6 +18,8 @@
 #include <app_core_renderer.h>
 #include "./app_tempo.h"
 
+#include "./app_midi.h"
+
 class App {
 
 protected:
@@ -30,6 +32,8 @@ protected:
         tempo = App_Tempo::getInstance();
         menuView.initMenu();
         tracks = App_Tracks::getInstance();
+
+        App_Midi::getInstance();
     }
 
 public:
