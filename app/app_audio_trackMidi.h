@@ -59,7 +59,7 @@ public:
 
     void setMidiOutPort(int8_t direction)
     {
-        int portCount = midiout->getPortCount() - 1;
+        int portCount = midiout->getPortCount();
         port = (port + direction + portCount) % portCount;
         midiout->openPort(port);
     }

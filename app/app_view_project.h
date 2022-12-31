@@ -139,6 +139,7 @@ public:
             sprintf(renderer->text + strlen(renderer->text), "Midi%d ", row - 3);
         } else {
             App_Audio_TrackMidi* midiTrack = getMidiTrack(row);
+            // FIXME need to trim name and maybe move the name...
             sprintf(renderer->text + strlen(renderer->text), "%-22s", midiTrack->midiout->getPortName(midiTrack->port).c_str());
         }
     }
