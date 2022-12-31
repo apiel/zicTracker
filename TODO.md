@@ -2,7 +2,7 @@
 
 Separate the UI from the rest. Try to make everything as much accessible from JS.
 New view could be build using JS or lib.so
-State saving?  It's actually common thingy, however since it doesnt happen often it could be done in JS?
+State saving?  It's actually common thingy, however since it doesnt happen often it could be done in JS? Then state could save using JSON...
 Should tracks be some lib.so??
 
 Make grid UI more fancy (no need to stick to this text base UI)
