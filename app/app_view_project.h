@@ -1,6 +1,7 @@
 #ifndef APP_VIEW_PROJECT_H_
 #define APP_VIEW_PROJECT_H_
 
+#include "./app_midi.h"
 #include "./app_state.h"
 #include "./app_state_project.h"
 #include "./app_tempo.h"
@@ -8,7 +9,6 @@
 #include <app_core_renderer.h>
 #include <app_core_util.h>
 #include <app_core_view_table.h>
-#include "./app_midi.h"
 
 #define VIEW_PROJECT_ROW 8
 #define VIEW_PROJECT_COL 3
@@ -121,7 +121,6 @@ public:
     }
 };
 
-
 class App_View_ProjectMidi : public App_View_TableFieldCursor {
 public:
     App_View_ProjectMidi()
@@ -139,22 +138,36 @@ public:
         if (col == 0) {
             sprintf(renderer->text + strlen(renderer->text), "Midi%d ", row - 3);
         } else {
-            sprintf(renderer->text + strlen(renderer->text), "%22s", " ");
+            App_Audio_TrackMidi* midiTrack = getMidiTrack(row);
+            sprintf(renderer->text + strlen(renderer->text), "%-22s", midiTrack->midiout->getPortName(midiTrack->port).c_str());
         }
     }
 
     uint8_t update(UiKeys* keys, App_Renderer* renderer, uint8_t row, uint8_t col) override
     {
-        // if (keys->Right) {
-        //     tempo->set(tempo->getBpm() + 1);
-        // } else if (keys->Up) {
-        //     tempo->set(tempo->getBpm() + 10);
-        // } else if (keys->Left) {
-        //     tempo->set(tempo->getBpm() - 1);
-        // } else if (keys->Down) {
-        //     tempo->set(tempo->getBpm() - 10);
-        // }
+        int8_t direction = 0;
+        if (keys->Right || keys->Up) {
+            direction = +1;
+        } else if (keys->Left || keys->Down) {
+            direction = -1;
+        }
+        getMidiTrack(row)->setMidiOutPort(direction);
         return VIEW_CHANGED;
+    }
+
+    App_Audio_TrackMidi* getMidiTrack(uint8_t row)
+    {
+        uint8_t midiRow = row - 3;
+        if (midiRow == 1) {
+            return &App_Tracks::getInstance()->track4;
+        } else if (midiRow == 2) {
+            return &App_Tracks::getInstance()->track5;
+        } else if (midiRow == 3) {
+            return &App_Tracks::getInstance()->track6;
+        } else if (midiRow == 4) {
+            return &App_Tracks::getInstance()->track7;
+        }
+        return NULL;
     }
 };
 

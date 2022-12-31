@@ -16,7 +16,6 @@
 class App_Tracks {
 protected:
     float mixerDivider = 0.0f;
-    uint8_t TRACK_AUDIO_COUNT = 0;
 
     App_Tracks()
         : track0(TRACK_1, "Track1")
@@ -31,6 +30,8 @@ protected:
         for (uint8_t t = 0; t < TRACK_COUNT; t++) {
             if (tracks[t]->isAudioTrack()) {
                 TRACK_AUDIO_COUNT++;
+            } else {
+                TRACK_MIDI_COUNT++;
             }
         }
         mixerDivider = 1.0f / TRACK_AUDIO_COUNT;
@@ -38,6 +39,9 @@ protected:
 
 public:
     uint8_t trackId = TRACK_1;
+
+    uint8_t TRACK_AUDIO_COUNT = 0;
+    uint8_t TRACK_MIDI_COUNT = 0;
 
 #if ZIC_TRACK_LAYOUT == 1
     App_Audio_TrackPd track0;

@@ -4,14 +4,16 @@
 #include <RtMidi.h>
 #include <stdint.h>
 
+#include "./app_tracks.h"
+
 // we should set midi output from project settings
 
 class App_Midi {
 protected:
-
     App_Midi()
     {
         RtMidi::getCompiledApi(apis);
+        setNextApi(0);
 
         // for (unsigned int i = 0; i < apis.size(); i++) {
         //     RtMidiIn* midiin = 0;
@@ -58,7 +60,7 @@ public:
         return instance;
     }
 
-    const char *getApiName()
+    const char* getApiName()
     {
         return RtMidi::getApiDisplayName(apis[currentApi]).c_str();
     }
@@ -66,7 +68,17 @@ public:
     void setNextApi(int8_t direction)
     {
         currentApi = (currentApi + direction + apis.size()) % apis.size();
-        printf("Current API (%d): %s\n", currentApi, RtMidi::getApiDisplayName(apis[currentApi]).c_str());
+
+        App_Tracks* tracks = App_Tracks::getInstance();
+        // FIXME use loop to set midiout for all midi tracks
+        // for (uint8_t i = tracks->TRACK_AUDIO_COUNT; i < tracks->TRACK_MIDI_COUNT; i++)
+        // {
+        //     /* code */
+        // }
+        tracks->track4.setMidiOut(new RtMidiOut(apis[currentApi]));
+        tracks->track5.setMidiOut(new RtMidiOut(apis[currentApi]));
+        tracks->track6.setMidiOut(new RtMidiOut(apis[currentApi]));
+        tracks->track7.setMidiOut(new RtMidiOut(apis[currentApi]));
     }
 };
 

@@ -3,13 +3,22 @@
 
 #include "./app_audio_track.h"
 
+#include <RtMidi.h>
 #include <zic_note.h>
 
 class App_Audio_TrackMidi : public App_Audio_Track {
 public:
-    App_Audio_TrackMidi(uint8_t _id = 0, const char * _name = NULL)
+    RtMidiOut* midiout = 0;
+    uint8_t port = 0;
+
+    App_Audio_TrackMidi(uint8_t _id = 0, const char* _name = NULL)
         : App_Audio_Track(_id, _name)
     {
+    }
+
+    ~App_Audio_TrackMidi()
+    {
+        delete midiout;
     }
 
     bool isAudioTrack() override
@@ -39,6 +48,20 @@ public:
     const char* getPatchDirectory() override
     {
         return "instruments/midi";
+    }
+
+    void setMidiOut(RtMidiOut* _midiout)
+    {
+        delete midiout;
+        midiout = _midiout;
+        setMidiOutPort(0);
+    }
+
+    void setMidiOutPort(int8_t direction)
+    {
+        int portCount = midiout->getPortCount() - 1;
+        port = (port + direction + portCount) % portCount;
+        midiout->openPort(port);
     }
 };
 
