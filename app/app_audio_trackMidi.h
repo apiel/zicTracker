@@ -29,11 +29,25 @@ public:
     void noteOn(uint8_t note, uint8_t velocity, uint8_t voice)
     {
         APP_LOG("MIDI note on %d %d %d\n", note, velocity, voice);
+
+        std::vector<unsigned char> message;
+        // Note On: 144, 64, 90
+        message[0] = 144;
+        message[1] = note;
+        message[2] = velocity;
+        midiout->sendMessage(&message);
     }
 
     void noteOff(uint8_t note, uint8_t voice)
     {
         APP_LOG("MIDI note off %d %d\n", note, voice);
+
+        std::vector<unsigned char> message;
+        // Note Off: 128, 64, 40
+        message[0] = 128;
+        message[1] = note;
+        message[2] = 0;
+        midiout->sendMessage(&message);
     }
 
     void sample(float* buf, int len)
