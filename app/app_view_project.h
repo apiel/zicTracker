@@ -159,6 +159,7 @@ public:
     App_Audio_TrackMidi* getMidiTrack(uint8_t row)
     {
         uint8_t midiRow = row - 3;
+        // FIXME need to find better way to get midi track
         if (midiRow == 1) {
             return &App_Tracks::getInstance()->track4;
         } else if (midiRow == 2) {

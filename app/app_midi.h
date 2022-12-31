@@ -6,44 +6,12 @@
 
 #include "./app_tracks.h"
 
-// we should set midi output from project settings
-
 class App_Midi {
 protected:
     App_Midi()
     {
         RtMidi::getCompiledApi(apis);
         setNextApi(0);
-
-        // for (unsigned int i = 0; i < apis.size(); i++) {
-        //     RtMidiIn* midiin = 0;
-        //     RtMidiOut* midiout = 0;
-        //     try {
-        //         printf("Current API: %s\n", RtMidi::getApiDisplayName(apis[i]).c_str());
-
-        //         midiin = new RtMidiIn(apis[i]);
-        //         unsigned int nPorts = midiin->getPortCount();
-        //         if (nPorts) {
-        //             for (unsigned i = 0; i < nPorts; i++) {
-        //                 std::cout << "   Input Port #" << i << ": " << midiin->getPortName(i) << '\n';
-        //             }
-        //         }
-
-        //         midiout = new RtMidiOut(apis[i]);
-        //         nPorts = midiout->getPortCount();
-        //         if (nPorts) {
-        //             for (unsigned i = 0; i < nPorts; i++) {
-        //                 std::cout << "   Output Port #" << i << ": " << midiout->getPortName(i) << std::endl;
-        //             }
-        //         }
-        //         std::cout << std::endl;
-        //     } catch (RtMidiError& error) {
-        //         // error.printMessage();
-        //     }
-
-        //     delete midiin;
-        //     delete midiout;
-        // }
     }
 
 public:
