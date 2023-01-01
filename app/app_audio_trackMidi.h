@@ -31,10 +31,9 @@ public:
         APP_LOG("MIDI note on %d %d %d\n", note, velocity, voice);
 
         std::vector<unsigned char> message;
-        // Note On: 144, 64, 90
-        message[0] = 144;
-        message[1] = note;
-        message[2] = velocity;
+        message.push_back(144);
+        message.push_back(note);
+        message.push_back(velocity);
         midiout->sendMessage(&message);
     }
 
@@ -43,10 +42,9 @@ public:
         APP_LOG("MIDI note off %d %d\n", note, voice);
 
         std::vector<unsigned char> message;
-        // Note Off: 128, 64, 40
-        message[0] = 128;
-        message[1] = note;
-        message[2] = 0;
+        message.push_back(128);
+        message.push_back(note);
+        message.push_back(0);
         midiout->sendMessage(&message);
     }
 
@@ -75,7 +73,9 @@ public:
     {
         int portCount = midiout->getPortCount();
         port = (port + direction + portCount) % portCount;
+        midiout->closePort();
         midiout->openPort(port);
+        printf("set MIDI out port %d\n", port);
     }
 };
 
