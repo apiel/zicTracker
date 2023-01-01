@@ -28,10 +28,9 @@ public:
 
     void noteOn(uint8_t note, uint8_t velocity, uint8_t voice)
     {
-        APP_LOG("MIDI note on %d %d %d\n", note, velocity, voice);
-
+        // APP_LOG("MIDI note on %d %d %d\n", note, velocity, voice);
         std::vector<unsigned char> message;
-        message.push_back(144);
+        message.push_back(144); // + channel
         message.push_back(note);
         message.push_back(velocity);
         midiout->sendMessage(&message);
@@ -39,22 +38,26 @@ public:
 
     void noteOff(uint8_t note, uint8_t voice)
     {
-        APP_LOG("MIDI note off %d %d\n", note, voice);
-
+        // APP_LOG("MIDI note off %d %d\n", note, voice);
         std::vector<unsigned char> message;
-        message.push_back(128);
+        message.push_back(128); // + channel
         message.push_back(note);
         message.push_back(0);
         midiout->sendMessage(&message);
     }
 
-    void sample(float* buf, int len)
-    {
-    }
-
     void cc(uint8_t num, uint8_t val, uint8_t voice) override
     {
-        APP_LOG("MIDI cc %d %d %d\n", num, val, voice);
+        // APP_LOG("MIDI cc %d %d %d\n", num, val, voice);
+        std::vector<unsigned char> message;
+        message.push_back(176); // + channel
+        message.push_back(num);
+        message.push_back(val);
+        midiout->sendMessage(&message);
+    }
+
+    void sample(float* buf, int len)
+    {
     }
 
     const char* getPatchDirectory() override
