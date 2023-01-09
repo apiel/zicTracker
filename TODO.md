@@ -4,6 +4,17 @@ Separate the UI from the rest. Try to make everything as much accessible from JS
 New view could be build using JS or lib.so
 State saving?  It's actually common thingy, however since it doesnt happen often it could be done in JS? Then state could save using JSON...
 Should tracks be some lib.so??
+NODEJS!!!! Let's just use nodejs and load zic as an exertanl lib. Need to reduce the C++ part as much as possible, just to time critical task and nothing else (mainly audio stuff, midi, communication with SDL, ...).
+https://medium.com/jspoint/a-simple-guide-to-load-c-c-code-into-node-js-javascript-applications-3fcccf54fd32
+https://www.swig.org/
+https://github.com/node-ffi/node-ffi
+
+
+For the pattern, should we store & read midi file???
+https://github.com/craigsapp/midifile
+The problem of using midi format, is that we cannot use step probability and conditions...
+But step condition could be ended over to the js part,
+so storing data could be either done using midi file or using custom format to store step conditions
 
 Make grid UI more fancy (no need to stick to this text base UI)
 - bring 3 grid view to one
@@ -181,3 +192,7 @@ Or use a DAC hat but a bit annoying to setup:
 digital kick
 - https://www.youtube.com/watch?v=A_Bv5Ad-Cy8
 - https://www.youtube.com/watch?v=MK4ARnpljZg
+
+
+pad with encoder https://github.com/wuxx/nanoCH55x
+CH57X

@@ -34,7 +34,7 @@ JS_ENGINE=$(DUKTAPE)
 # http://www.mega-nerd.com/libsndfile/FAQ.html#Q008
 # TODO for RG351P, either the following line, or install libsndfile-dev in chroot, or build directly on device
 #LIDSND=-L . -I ../../libsndfile/include -lsndfile -DZIC_USE_LIBSNDFILE=1
-LIDSND=`pkg-config --cflags --libs sndfile`
+LIDSND=`pkg-config --cflags --libs sndfile` -DZIC_USE_LIBSNDFILE=1
 
 LIBRTMIDI=`pkg-config --cflags --libs rtmidi`
 
