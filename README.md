@@ -1,3 +1,5 @@
+DEPRECATED in favour of [zicLive](https://github.com/apiel/zicLive), having the same core engine but using NodeJs TypeScript to generate the UI.
+
 # Zic Tracker
 
 Zic Tracker is a groovebox engine base on samples and wavetables. It is intended to work on handheld linux console like anbernic rg351p (work as well on Linux desktop for development purpose). The user interface is using SDL2, inspired by some existing trackers like LSDJ, LittleGPTracker or M8.
